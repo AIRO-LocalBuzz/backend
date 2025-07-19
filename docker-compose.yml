@@ -1,0 +1,12 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: AIRO
+    env_file:
+      - .env
+#    environment:
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    restart: always
