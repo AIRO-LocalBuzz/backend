@@ -6,7 +6,8 @@ services:
     container_name: AIRO
     env_file:
       - .env
-#    environment:
+    environment:
+      SERVER_PORT: ${SERVER_PORT}
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     restart: always
