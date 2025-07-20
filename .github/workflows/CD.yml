@@ -1,0 +1,49 @@
+name: Deploy with Docker Compose
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SERVER_PORT: ${{ secrets.SERVER_PORT }}
+      DB_URL: ${{ secrets.DB_URL }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+    steps:
+      - name: 현재 저장소 코트 Clone
+        uses: actions/checkout@v4
+
+      - name: .env 파일 생성
+        run: |
+          cat <<EOF > .env
+          SERVER_PORT=$SERVER_PORT
+          DB_URL=$DB_URL
+          DB_USERNAME=$DB_USERNAME
+          DB_PASSWORD=$DB_PASSWORD
+          EOF
+
+      - name: 현재 코드 및 파일들을 서버로 전송
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "."
+          target: "~/matjalalzz"
+
+      - name: SSH를 통한 배포 시작 [ docker compose 실행 ]
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ~/matjalalzz
+            docker compose down
+            docker compose up --build -d
