@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: "airo"
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    generate-ddl: true
+
+
+server:
+  port: 9001
+  servlet:
+    context-path: /api
+
+
