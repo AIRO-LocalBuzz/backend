@@ -8,6 +8,9 @@ services:
       - .env
     environment:
       SERVER_PORT: ${SERVER_PORT}
+      DB_URL: ${DB_URL}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     restart: always
