@@ -23,6 +23,7 @@ public class TestController {
     @GetMapping("/test/controller")
     public Response<TestResponse> testGetController(@RequestParam Long request) {
         Test test = testUseCase.getTest(request);
+        System.out.println("f");
         return Response.success(new TestResponse(test.getId(), test.getTest()));
     }
 }
