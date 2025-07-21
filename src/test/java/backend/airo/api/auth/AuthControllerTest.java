@@ -1,51 +1,91 @@
 package backend.airo.api.auth;
 
+import backend.airo.api.auth.dto.AuthResponse;
 import backend.airo.api.auth.dto.SocialLoginRequest;
 import backend.airo.application.auth.service.SocialLoginService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@WebMvcTest(AuthController.class)
+@ExtendWith(MockitoExtension.class)
 class AuthControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
+    @Mock
     private SocialLoginService socialLoginService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @InjectMocks
+    private AuthController authController;
 
     @Test
-    void socialLoginEndpointExists() throws Exception {
+    void socialLoginSuccess() {
+        // Given
         SocialLoginRequest request = new SocialLoginRequest("test-token", "google");
+        AuthResponse expectedResponse = new AuthResponse("jwt-token", 
+            new AuthResponse.UserInfo(1L, "test@example.com", "Test User", null, "google"));
+        
+        when(socialLoginService.socialLogin(request)).thenReturn(expectedResponse);
 
-        mockMvc.perform(post("/auth/social-login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isUnauthorized()); // We expect 401 since token is invalid
+        // When
+        ResponseEntity<AuthResponse> response = authController.socialLogin(request);
+
+        // Then
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(expectedResponse, response.getBody());
+        verify(socialLoginService).socialLogin(request);
     }
 
     @Test
-    void googleLoginEndpointExists() throws Exception {
-        mockMvc.perform(post("/auth/google")
-                .param("token", "test-token"))
-                .andExpect(status().isUnauthorized()); // We expect 401 since token is invalid
+    void socialLoginFailure() {
+        // Given
+        SocialLoginRequest request = new SocialLoginRequest("invalid-token", "google");
+        
+        when(socialLoginService.socialLogin(request)).thenThrow(new RuntimeException("Invalid token"));
+
+        // When
+        ResponseEntity<AuthResponse> response = authController.socialLogin(request);
+
+        // Then
+        assertEquals(401, response.getStatusCodeValue());
+        assertNull(response.getBody());
     }
 
     @Test
-    void kakaoLoginEndpointExists() throws Exception {
-        mockMvc.perform(post("/auth/kakao")
-                .param("token", "test-token"))
-                .andExpect(status().isUnauthorized()); // We expect 401 since token is invalid
+    void googleLoginSuccess() {
+        // Given
+        String token = "test-google-token";
+        AuthResponse expectedResponse = new AuthResponse("jwt-token", 
+            new AuthResponse.UserInfo(1L, "test@example.com", "Test User", null, "google"));
+        
+        when(socialLoginService.loginWithGoogle(token)).thenReturn(expectedResponse);
+
+        // When
+        ResponseEntity<AuthResponse> response = authController.googleLogin(token);
+
+        // Then
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(expectedResponse, response.getBody());
+    }
+
+    @Test
+    void kakaoLoginSuccess() {
+        // Given
+        String token = "test-kakao-token";
+        AuthResponse expectedResponse = new AuthResponse("jwt-token", 
+            new AuthResponse.UserInfo(1L, "test@example.com", "Test User", null, "kakao"));
+        
+        when(socialLoginService.loginWithKakao(token)).thenReturn(expectedResponse);
+
+        // When
+        ResponseEntity<AuthResponse> response = authController.kakaoLogin(token);
+
+        // Then
+        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(expectedResponse, response.getBody());
     }
 }
