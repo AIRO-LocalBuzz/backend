@@ -36,6 +36,13 @@ public class SecurityConfig {
                         ).permitAll()
 //                        .anyRequest().authenticated()
                         .anyRequest().permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/v1/auth/logout")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
                 );
 
         return http.build();
