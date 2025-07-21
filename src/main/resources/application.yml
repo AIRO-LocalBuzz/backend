@@ -13,13 +13,12 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
     generate-ddl: true
 
 
 server:
-  port: ${SERVER_PORT:8080}
+  port: 9001
   servlet:
     context-path: /api
 
