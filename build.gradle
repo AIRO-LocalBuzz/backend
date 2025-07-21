@@ -30,6 +30,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'com.h2database:h2' // Added for development/testing
 
 	//security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
