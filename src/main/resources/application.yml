@@ -16,10 +16,23 @@ spring:
         format_sql: true
     generate-ddl: true
 
-
 server:
   port: 9001
   servlet:
     context-path: /api
+
+# Social Login Configuration
+social:
+  firebase:
+    service-account-key: ${FIREBASE_SERVICE_ACCOUNT_KEY:}
+    project-id: ${FIREBASE_PROJECT_ID:}
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID:}
+    redirect-uri: ${KAKAO_REDIRECT_URI:}
+
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:default-secret-key-for-development-only}
+  expiration: ${JWT_EXPIRATION:86400000} # 24 hours in milliseconds
 
 
