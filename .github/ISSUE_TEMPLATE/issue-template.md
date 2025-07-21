@@ -11,7 +11,7 @@ assignees: ""
 ex) 로그인 버튼이 작동하지 않아요.
 
 ---
-
+<!--
 ## 📝 이슈 타이틀 예시 (Issue Title Examples)
 > 아래 중 하나를 골라 제목을 시작해보세요
 - `[BUG] 로그인 버튼이 작동하지 않음`
@@ -20,22 +20,9 @@ ex) 로그인 버튼이 작동하지 않아요.
 - `[QUESTION] API 사용법 문의`
 - `[TASK] 테스트 코드 작성`
 - `[CHORE] 패키지 업데이트`
-
+-->
 ---
 
-## 📋 라벨 선택 (Label Selection)
-> 아래 라벨 중 하나 이상 선택해 주세요!
-- `bug` : 버그/오류
-- `enhancement` : 기능 개선/추가
-- `question` : 질문/문의
-- `documentation` : 문서 관련
-- `help wanted` : 도움이 필요함
-- `good first issue` : 초보자에게 적합
-- `wontfix` : 수정하지 않을 예정
-- `invalid` : 무효 이슈
-
-
----
 
 ## 🚩 상세 설명 (Details)
 <!-- 문제 상황/요청 사항을 상세하게 설명해주세요. -->
@@ -60,3 +47,18 @@ ex) 로그인 버튼이 작동하지 않아요.
 
 ---
 
+
+<!--
+## 📋 라벨 선택 (Label Selection)
+> 아래 라벨 중 하나 이상 선택해 주세요!
+- `bug` : 버그/오류
+- `enhancement` : 기능 개선/추가
+- `question` : 질문/문의
+- `documentation` : 문서 관련
+- `help wanted` : 도움이 필요함
+- `good first issue` : 초보자에게 적합
+- `wontfix` : 수정하지 않을 예정
+- `invalid` : 무효 이슈
+-->
+
+---
