@@ -2,7 +2,7 @@
 name: 🦄 Issue Template
 about: 이슈를 남겨주세요.
 title: "[TYPE] 제목을 입력해주세요"
-labels: ["question"]
+labels: ["enhancement"]
 assignees: ""
 ---
 
