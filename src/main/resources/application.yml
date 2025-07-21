@@ -16,6 +16,31 @@ spring:
         format_sql: true
     generate-ddl: true
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: method
+    display-request-duration: true
+    groups-order: desc
+  api-docs:
+    path: /api-docs
+    groups:
+      enabled: true
+  show-actuator: false
+  group-configs:
+    - group: 'All API'
+      packages-to-scan: backend.airo.api
+    - group: 'Example API'
+      packages-to-scan: backend.airo.api.example
+    - group: 'User API'
+      packages-to-scan: backend.airo.api.user
+    - group: 'Review API'
+      packages-to-scan: backend.airo.api.review
+    - group: 'Content API'
+      packages-to-scan: backend.airo.api.content
+
+
 server:
   port: 9001
   servlet:

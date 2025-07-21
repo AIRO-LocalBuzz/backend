@@ -4,12 +4,14 @@ import backend.airo.api.global.dto.Response;
 import backend.airo.api.example.dto.TestResponse;
 import backend.airo.application.example.usecase.TestUseCase;
 import backend.airo.domain.example.Test;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1")
 @RequiredArgsConstructor
+@Tag(name = "Test", description = "테스트 관련 API")
 public class TestController {
 
     private final TestUseCase testUseCase;
