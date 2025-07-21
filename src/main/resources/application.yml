@@ -22,4 +22,8 @@ server:
   servlet:
     context-path: /api
 
+firebase:
+  service-account-key: ${FIREBASE_SERVICE_ACCOUNT_KEY:}
+  project-id: ${FIREBASE_PROJECT_ID:airo-default}
+
 
