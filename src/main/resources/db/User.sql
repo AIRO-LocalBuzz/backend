@@ -1,3 +1,4 @@
+USE `local_buzz`;
 
 -- 1. users: 사용자 기본 정보
 CREATE TABLE users (
