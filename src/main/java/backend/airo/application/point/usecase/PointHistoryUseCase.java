@@ -9,6 +9,7 @@ import backend.airo.domain.point.exception.PointException;
 import backend.airo.domain.point.query.GetPointListQuery;
 import backend.airo.domain.point.query.GetPointScoreQuery;
 import backend.airo.domain.point.query.GetTradePointScoreQuery;
+import backend.airo.domain.point.vo.TradePointStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -50,7 +51,7 @@ public class PointHistoryUseCase {
      * @param userId 포인트를 차감 할 회원
      * @return 포인트 차감 여부
      */
-    public void usePoints(Long userId, Long itemPoint, String itemName) {
+    public Long usePoints(Long userId, Long itemPoint, String itemName) {
         Long tradeScore = tradePointScoreQuery.handle(userId);
         Long pointScore = getPointScoreQuery.handle(userId);
 
@@ -68,13 +69,14 @@ public class PointHistoryUseCase {
 
         try{
             if (usePoint < 0) {
-                tradePoint.markFailure();
+                tradePoint.markFailure(TradePointStatus.NOT_ENOUGH_POINT);
                 throw PointException.notEnoughPoint(DomainErrorCode.NOT_ENOUGH_POINT, "PointUseCase");
             }
             tradePoint.markSuccess();
         }finally {
             publisher.publishEvent(new TradePointAddedEvent(tradePoint));
         }
+        return usePoint;
     }
 
 }

@@ -29,7 +29,7 @@ public class TradePoint{
         tradePointStatus = TradePointStatus.SUCCESS;
     }
 
-    public void markFailure() {
-        this.tradePointStatus = TradePointStatus.FAILED;
+    public void markFailure(TradePointStatus tradePointStatus) {
+        this.tradePointStatus = tradePointStatus;
     }
 }

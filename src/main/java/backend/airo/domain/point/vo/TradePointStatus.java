@@ -1,5 +1,5 @@
 package backend.airo.domain.point.vo;
 
 public enum TradePointStatus {
-    SUCCESS, FAILED
+    SUCCESS, NOT_ENOUGH_POINT
 }
