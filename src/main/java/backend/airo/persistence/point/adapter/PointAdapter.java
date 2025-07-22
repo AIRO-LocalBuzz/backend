@@ -44,6 +44,11 @@ public class PointAdapter implements PointRepository {
         return pointEntitiesByUserId.stream().map(PointEntity::toDomain).toList();
     }
 
+    @Override
+    public Long getPointScoreByUserId(Long userId) {
+        return pointJpaRepository.getPointScoreByUserId(userId);
+    }
+
     //TODO 현재는 쓰지 않음.
     @Override
     public Collection<Point> saveAll(Collection<Point> aggregates) {

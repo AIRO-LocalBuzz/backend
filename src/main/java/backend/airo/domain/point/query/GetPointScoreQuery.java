@@ -1,20 +1,17 @@
 package backend.airo.domain.point.query;
 
-import backend.airo.domain.point.Point;
 import backend.airo.domain.point.repository.PointRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 @RequiredArgsConstructor
-public class GetPointListQuery {
+public class GetPointScoreQuery {
 
     private final PointRepository pointRepository;
 
-    public List<Point> handle(Long userId) {
-        return pointRepository.getPointListByUserId(userId);
+    public Long handle(Long userId) {
+        return pointRepository.getPointScoreByUserId(userId);
     }
 
 }

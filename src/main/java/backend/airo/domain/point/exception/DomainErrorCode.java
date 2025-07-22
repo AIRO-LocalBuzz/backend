@@ -1,1 +1,0 @@
-package backend.airo.domain.point.exception;

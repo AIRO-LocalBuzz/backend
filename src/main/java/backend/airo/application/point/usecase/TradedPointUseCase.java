@@ -1,8 +1,8 @@
 package backend.airo.application.point.usecase;
 
-import backend.airo.domain.point.Point;
-import backend.airo.domain.point.command.CreatePointCommand;
-import backend.airo.domain.point.query.GetPointListQuery;
+import backend.airo.domain.point.TradePoint;
+import backend.airo.domain.point.command.CreateTradePointCommand;
+import backend.airo.domain.point.query.GetTradePointListQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,15 +12,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TradedPointUseCase {
 
-    private final CreatePointCommand createPointCommand;
-    private final GetPointListQuery getPointListQuery;
+    private final CreateTradePointCommand createTradePointCommand;
+    private final GetTradePointListQuery getTradePointListQuery;
 
-    public Point savePoint(Long userId, Long point) {
-        return createPointCommand.handle(userId, point);
-    }
+//    /**
+//     * 사용자의 구매 이력을 저장한다.
+//     * @param userId 포인트를 적립할 회원
+//     * @param point  구매 상품의 가격 ( 포인트 )
+//     * @param itemName  구매 상품 이름
+//     * @return 저장이 완료된 {@link TradePoint} 도메인 객체
+//     */
+//    public TradePoint saveTradePoint(Long userId, Long point, String itemName) {
+//        return createTradePointCommand.handle(userId, point, itemName);
+//    }
 
-    public List<Point> getPointList(Long userId) {
-        return getPointListQuery.getPointList(userId);
+    /**
+     * 사용자의 구매 이력을 반환한다.
+     * @param userId 구매이력을 조회할 회원
+     * @return 저장이 완료된 {@link TradePoint} 도메인 객체 List
+     */
+    public List<TradePoint> getTradePointList(Long userId) {
+        return getTradePointListQuery.handle(userId);
     }
 
 }

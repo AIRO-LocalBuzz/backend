@@ -1,8 +1,6 @@
 package backend.airo.persistence.point.entity;
 
-import backend.airo.domain.point.Point;
 import backend.airo.domain.point.TradePoint;
-import backend.airo.domain.point.vo.PointType;
 import backend.airo.persistence.abstracts.ImmutableEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

@@ -9,4 +9,6 @@ public interface PointRepository extends AggregateSupport<Point, Long> {
 
     List<Point> getPointListByUserId(Long userId);
 
+    Long getPointScoreByUserId(Long userId);
+
 }

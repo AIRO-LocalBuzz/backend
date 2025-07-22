@@ -10,6 +10,8 @@ public enum DomainErrorCode implements BaseErrorCode {
     //Test 전용
     TEST_ERROR(400, "TEST_ERROR", "Test 저장 실패"),
 
+    //Point
+    NOT_ENOUGH_POINT(400, "NOT_ENOUGH_POINT", "사용자의 포인트가 부족 합니다.")
     ;
 
     private final Integer status;

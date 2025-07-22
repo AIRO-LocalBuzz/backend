@@ -1,20 +1,18 @@
 package backend.airo.domain.point.query;
 
-import backend.airo.domain.point.TradePoint;
+import backend.airo.domain.point.repository.PointRepository;
 import backend.airo.domain.point.repository.TradePointRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 @RequiredArgsConstructor
-public class GetTradePointListQuery {
+public class GetTradePointScoreQuery {
 
     private final TradePointRepository tradePointRepository;
 
-    public List<TradePoint> handle(Long userId) {
-        return tradePointRepository.getTradePointListByUserId(userId);
+    public Long handle(Long userId) {
+        return tradePointRepository.getTradePointScore(userId);
     }
 
 }

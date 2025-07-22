@@ -1,12 +1,8 @@
 package backend.airo.persistence.point.adapter;
 
-import backend.airo.domain.point.Point;
 import backend.airo.domain.point.TradePoint;
-import backend.airo.domain.point.repository.PointRepository;
 import backend.airo.domain.point.repository.TradePointRepository;
-import backend.airo.persistence.point.entity.PointEntity;
 import backend.airo.persistence.point.entity.TradePointEntity;
-import backend.airo.persistence.point.repository.PointJpaRepository;
 import backend.airo.persistence.point.repository.TradePointJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -40,12 +36,17 @@ public class TradePointAdapter implements TradePointRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public List<TradePoint> getPointListByUserId(Long userId) {
+    public List<TradePoint> getTradePointListByUserId(Long userId) {
         List<TradePointEntity> pointEntitiesByUserId = tradePointJpaRepository.getTradePointEntitiesByUserId(userId);
         if (pointEntitiesByUserId.isEmpty()) {
             return List.of();
         }
         return pointEntitiesByUserId.stream().map(TradePointEntity::toDomain).toList();
+    }
+
+    @Override
+    public Long getTradePointScore(Long userId) {
+        return tradePointJpaRepository.getPointScoreByUserId(userId);
     }
 
     //TODO 현재는 쓰지 않음.
