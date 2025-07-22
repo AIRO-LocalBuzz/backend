@@ -1,8 +1,7 @@
 package backend.airo.application.point.listener;
 
 import backend.airo.application.point.usecase.TradedPointUseCase;
-import backend.airo.domain.point.event.PointAddedEvent;
-import backend.airo.domain.point.event.TradePointAddedEvent;
+import backend.airo.domain.point_history.event.TradePointAddedEvent;
 import jdk.jfr.Description;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;

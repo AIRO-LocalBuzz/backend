@@ -1,7 +1,7 @@
 package backend.airo.application.point.listener;
 
 import backend.airo.application.point.usecase.PointHistoryUseCase;
-import backend.airo.domain.point.event.PointAddedEvent;
+import backend.airo.domain.point_history.event.PointAddedEvent;
 import jdk.jfr.Description;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;

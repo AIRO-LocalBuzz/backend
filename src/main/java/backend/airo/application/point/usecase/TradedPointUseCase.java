@@ -1,9 +1,9 @@
 package backend.airo.application.point.usecase;
 
-import backend.airo.domain.point.TradePoint;
-import backend.airo.domain.point.command.CreateTradePointCommand;
-import backend.airo.domain.point.query.GetTradePointListQuery;
-import backend.airo.domain.point.vo.TradePointStatus;
+import backend.airo.domain.point_history.TradePoint;
+import backend.airo.domain.point_history.command.CreateTradePointCommand;
+import backend.airo.domain.point_history.query.GetTradePointListQuery;
+import backend.airo.domain.point_history.vo.TradePointStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

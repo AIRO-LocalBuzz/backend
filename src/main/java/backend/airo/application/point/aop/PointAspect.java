@@ -1,8 +1,8 @@
 package backend.airo.application.point.aop;
 
-import backend.airo.domain.point.command.CreateTradePointCommand;
-import backend.airo.domain.point.event.PointAddedEvent;
-import backend.airo.persistence.point.entity.PointHistoryEntity;
+import backend.airo.domain.point_history.command.CreateTradePointCommand;
+import backend.airo.domain.point_history.event.PointAddedEvent;
+import backend.airo.persistence.point_history.entity.PointHistoryEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
