@@ -15,9 +15,11 @@ public class CreatePointCommand {
     public Point handle(Long userId, Long point) {
         return pointRepository.save(
                 new Point(
+                        0L,
                         point,
                         userId,
-                        PointType.REPORT
+                        PointType.REPORT,
+                        null
                 )
         );
     }

@@ -1,6 +1,6 @@
 package backend.airo.domain.point;
 
-import backend.airo.domain.point.vo.PointType;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -8,12 +8,12 @@ import java.time.LocalDateTime;
 
 @Getter
 @RequiredArgsConstructor
-public class Point {
+public class TradePoint{
 
     private final Long id;
-    private final Long point;
+    private final Long useedPoint;
     private final Long userId;
-    private final PointType type;
-    private final LocalDateTime createAt;
+    private final String item_name;
+    private final LocalDateTime exchangedAt;
 
 }

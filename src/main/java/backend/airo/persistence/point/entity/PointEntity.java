@@ -3,6 +3,7 @@ package backend.airo.persistence.point.entity;
 import backend.airo.domain.point.Point;
 import backend.airo.domain.point.vo.PointType;
 import backend.airo.persistence.abstracts.BaseEntity;
+import backend.airo.persistence.abstracts.ImmutableEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,7 +12,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class PointEntity extends BaseEntity {
+@Table(name = "user_points")
+public class PointEntity extends ImmutableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +45,8 @@ public class PointEntity extends BaseEntity {
                 pointEntity.id,
                 pointEntity.point,
                 pointEntity.userId,
-                pointEntity.type
+                pointEntity.type,
+                pointEntity.getCreatedAt()
         );
     }
 }
