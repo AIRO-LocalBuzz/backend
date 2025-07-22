@@ -1,7 +1,8 @@
 package backend.airo.application.point.aop;
 
+import backend.airo.domain.point.command.CreateTradePointCommand;
 import backend.airo.domain.point.event.PointAddedEvent;
-import backend.airo.persistence.point.entity.PointEntity;
+import backend.airo.persistence.point.entity.PointHistoryEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 public class PointAspect {
 
     private final ApplicationEventPublisher publisher;
+    private final CreateTradePointCommand createTradePointCommand;
 
     //TODO 후기 save 이후로 pointcut 범위 조절
     @AfterReturning(
@@ -24,7 +26,7 @@ public class PointAspect {
     )
     public void afterSave(JoinPoint joinPoint) {
         Object arg = joinPoint.getArgs()[0];
-        if (arg instanceof PointEntity inquiry) {
+        if (arg instanceof PointHistoryEntity inquiry) {
             PointAddedEvent event = new PointAddedEvent(
                     inquiry.getPoint(),
                     inquiry.getUserId(),

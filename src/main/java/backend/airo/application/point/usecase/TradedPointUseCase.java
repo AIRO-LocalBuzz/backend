@@ -3,6 +3,7 @@ package backend.airo.application.point.usecase;
 import backend.airo.domain.point.TradePoint;
 import backend.airo.domain.point.command.CreateTradePointCommand;
 import backend.airo.domain.point.query.GetTradePointListQuery;
+import backend.airo.domain.point.vo.TradePointStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,16 +16,16 @@ public class TradedPointUseCase {
     private final CreateTradePointCommand createTradePointCommand;
     private final GetTradePointListQuery getTradePointListQuery;
 
-//    /**
-//     * 사용자의 구매 이력을 저장한다.
-//     * @param userId 포인트를 적립할 회원
-//     * @param point  구매 상품의 가격 ( 포인트 )
-//     * @param itemName  구매 상품 이름
-//     * @return 저장이 완료된 {@link TradePoint} 도메인 객체
-//     */
-//    public TradePoint saveTradePoint(Long userId, Long point, String itemName) {
-//        return createTradePointCommand.handle(userId, point, itemName);
-//    }
+    /**
+     * 사용자의 구매 이력을 저장한다.
+     * @param userId 포인트를 적립할 회원
+     * @param point  구매 상품의 가격 ( 포인트 )
+     * @param itemName  구매 상품 이름
+     * @return 저장이 완료된 {@link TradePoint} 도메인 객체
+     */
+    public TradePoint saveTradePoint(Long userId, Long point, String itemName, TradePointStatus tradePointStatus) {
+        return createTradePointCommand.handle(userId, point, itemName, tradePointStatus);
+    }
 
     /**
      * 사용자의 구매 이력을 반환한다.

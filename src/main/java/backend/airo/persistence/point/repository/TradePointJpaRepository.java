@@ -10,7 +10,7 @@ public interface TradePointJpaRepository extends JpaRepository<TradePointEntity,
 
     List<TradePointEntity> getTradePointEntitiesByUserId(Long userId);
 
-    @Query("SELECT SUM(tp.useedPoint) FROM TradePointEntity tp WHERE tp.userId = :userId")
+    @Query("SELECT COALESCE(SUM(tp.usedPoint), 0) FROM TradePointEntity tp WHERE tp.userId = :userId")
     Long getPointScoreByUserId(Long userId);
 
 }

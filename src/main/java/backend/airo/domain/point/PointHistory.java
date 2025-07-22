@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @RequiredArgsConstructor
-public class Point {
+public class PointHistory {
 
     private final Long id;
     private final Long point;

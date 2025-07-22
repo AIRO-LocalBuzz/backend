@@ -45,6 +45,7 @@ public class TradePointAdapter implements TradePointRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Long getTradePointScore(Long userId) {
         return tradePointJpaRepository.getPointScoreByUserId(userId);
     }
