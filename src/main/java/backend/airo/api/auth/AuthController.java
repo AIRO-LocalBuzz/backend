@@ -4,8 +4,11 @@ import backend.airo.api.auth.dto.AuthResponse;
 import backend.airo.api.auth.dto.AuthTokenRequest;
 import backend.airo.api.auth.dto.AuthTokenResponse;
 import backend.airo.api.auth.dto.SocialLoginRequest;
-import backend.airo.application.auth.oauth2.AuthTokenService;
-import backend.airo.application.auth.service.SocialLoginService;
+import backend.airo.application.auth.usecase.AuthTokenUseCase;
+import backend.airo.application.auth.usecase.RefreshTokenUseCase;
+import backend.airo.application.auth.usecase.SocialLoginUseCase;
+import backend.airo.domain.auth.query.ValidateTokenQuery;
+import com.google.api.client.auth.oauth2.RefreshTokenRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,20 +16,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/v1/auth")
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
 
-    private final SocialLoginService socialLoginService;
-    private final AuthTokenService authTokenService;
+    private final SocialLoginUseCase socialLoginUseCase;
+    private final RefreshTokenUseCase refreshTokenUseCase;
+    private final ValidateTokenQuery validateTokenQuery;
+    private final AuthTokenUseCase authTokenUseCase;
 
     /**
      * OAuth2 토큰 교환
      */
     @PostMapping("/exchange-token")
     public ResponseEntity<AuthTokenResponse> exchangeToken(@Valid @RequestBody AuthTokenRequest request) {
-        AuthTokenResponse response = authTokenService.exchangeToken(request);
+        AuthTokenResponse response = authTokenUseCase.exchangeToken(request);
         return ResponseEntity.ok(response);
     }
 
@@ -36,30 +41,10 @@ public class AuthController {
      */
     @PostMapping("/social-login")
     public ResponseEntity<AuthResponse> socialLogin(@RequestBody SocialLoginRequest request) {
-            log.info("Social login attempt with provider: {}", request.getProvider());
-            AuthResponse response = socialLoginService.socialLogin(request);
-            return ResponseEntity.ok(response);
+        AuthResponse response = socialLoginUseCase.execute(request);
+        return ResponseEntity.ok(response);
     }
 
-    /**
-     * 구글 토큰 로그인
-     */
-    @PostMapping("/google")
-    public ResponseEntity<AuthResponse> googleLogin(@RequestParam String token) {
-            log.info("Google token login attempt");
-            AuthResponse response = socialLoginService.loginWithGoogle(token);
-            return ResponseEntity.ok(response);
-    }
-
-    /**
-     * 카카오 토큰 로그인
-     */
-    @PostMapping("/kakao")
-    public ResponseEntity<AuthResponse> kakaoLogin(@RequestParam String token) {
-            log.info("Kakao token login attempt");
-            AuthResponse response = socialLoginService.loginWithKakao(token);
-            return ResponseEntity.ok(response);
-    }
 
     /**
      * 로그아웃
@@ -76,10 +61,9 @@ public class AuthController {
      * 토큰 갱신
      */
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refreshToken(@RequestParam String refreshToken) {
-            log.info("Token refresh attempt");
-            AuthResponse response = socialLoginService.refreshAccessToken(refreshToken);
-            return ResponseEntity.ok(response);
+    public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+        AuthResponse response = refreshTokenUseCase.execute(request.getRefreshToken());
+        return ResponseEntity.ok(response);
     }
 
     /**
@@ -88,7 +72,7 @@ public class AuthController {
     @GetMapping("/validate")
     public ResponseEntity<Void> validateToken(@RequestHeader("Authorization") String token) {
             String cleanToken = token.replace("Bearer ", "");
-            boolean isValid = socialLoginService.validateToken(cleanToken);
+            boolean isValid = validateTokenQuery.execute(cleanToken);
             return isValid ? ResponseEntity.ok().build() : ResponseEntity.status(401).build();
     }
 

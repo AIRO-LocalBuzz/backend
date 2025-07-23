@@ -1,12 +1,15 @@
 package backend.airo.api.auth.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthTokenRequest {
-    @NotBlank(message = "인증 코드는 필수입니다.")
-    private final String code;
+
+    @JsonProperty("code")
+    private String code;
 }

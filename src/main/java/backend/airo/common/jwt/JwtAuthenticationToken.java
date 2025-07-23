@@ -1,8 +1,9 @@
 package backend.airo.common.jwt;
 
+import backend.airo.domain.user.User;
+import backend.airo.persistence.user.entity.UserEntity;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import backend.airo.domain.user.User;
 
 import java.util.Collection;
 

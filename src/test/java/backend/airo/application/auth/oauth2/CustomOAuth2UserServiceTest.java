@@ -1,27 +1,15 @@
 package backend.airo.application.auth.oauth2;
 
-import backend.airo.domain.auth.oauth2.CustomOAuth2User;
-import backend.airo.domain.user.User;
-import backend.airo.domain.user.enums.ProviderType;
+import backend.airo.persistence.user.entity.ProviderType;
+import backend.airo.persistence.user.entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CustomOAuth2UserServiceTest {
@@ -32,11 +20,11 @@ class CustomOAuth2UserServiceTest {
     @InjectMocks
     private CustomOAuth2UserService customOAuth2UserService;
 
-    private User mockUser;
+    private UserEntity mockUser;
 
     @BeforeEach
     void setUp() {
-        mockUser = User.createOAuth2User(
+        mockUser = UserEntity.createOAuth2User(
                 "test@example.com",
                 "Test User",
                 ProviderType.GOOGLE,

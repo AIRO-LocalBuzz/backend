@@ -2,7 +2,7 @@ package backend.airo.security.filter;
 
 import backend.airo.common.jwt.JwtAuthenticationToken;
 import backend.airo.common.jwt.JwtTokenProvider;
-import backend.airo.domain.auth.oauth2.query.OAuth2UserQuery;
+import backend.airo.domain.auth.oauth2.query.FindOAuth2UserQuery;
 import backend.airo.domain.user.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,17 +10,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.util.List;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Component
@@ -29,7 +26,7 @@ import java.util.Optional;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final OAuth2UserQuery oauth2UserQuery;
+    private final FindOAuth2UserQuery findOAuth2UserQuery;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -44,10 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Long userId = jwtTokenProvider.getUserIdFromToken(token);
 
                 // 사용자 정보 조회
-                Optional<User> userOptional = oauth2UserQuery.findById(userId);
-
-                if (userOptional.isPresent()) {
-                    User user = userOptional.get();
+                User user = findOAuth2UserQuery.findById(userId);
 
                     // Spring Security 인증 객체 생성
                     JwtAuthenticationToken authentication = new JwtAuthenticationToken(
@@ -60,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
                     log.debug("JWT 인증 성공 - User ID: {}", userId);
-                }
+
             } catch (Exception e) {
                 log.error("JWT 인증 처리 중 오류 발생", e);
                 SecurityContextHolder.clearContext();

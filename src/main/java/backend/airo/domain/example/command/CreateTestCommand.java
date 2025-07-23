@@ -11,6 +11,7 @@ public class CreateTestCommand {
 
     private final TestRepository testRepository;
 
+
     public Test handle(String content) {
         return testRepository.save(
                 new Test(content)

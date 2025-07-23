@@ -11,5 +11,4 @@ public class AuthTokenResponse {
     private final String tokenType;
     private final Long expiresIn;
     private final Long userId;
-    private final String nickname;
 }
