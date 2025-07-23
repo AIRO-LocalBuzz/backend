@@ -1,7 +1,11 @@
 package backend.airo.security.config;
 
 import backend.airo.application.auth.oauth2.CustomOAuth2UserService;
+import backend.airo.domain.auth.oauth2.query.OAuth2UserQuery;
+import backend.airo.domain.user.User;
+import backend.airo.domain.user.enums.ProviderType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,12 +14,18 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.data.redis.core.RedisTemplate;
+
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 
 @Configuration
@@ -24,6 +34,8 @@ import java.util.List;
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2UserQuery oauth2UserQuery;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -55,10 +67,28 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService)
                         )
                         .successHandler((request, response, authentication) -> {
-                            response.sendRedirect("http://localhost:3000/auth/success");
-                        })
-                        .failureHandler((request, response, exception) -> {
-                            response.sendRedirect("http://localhost:3000/auth/failure");
+                            OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+                            String providerId = oauth2User.getAttribute("provider_id");
+                            ProviderType providerType = oauth2User.getAttribute("provider_type");
+
+                            Optional<User> userOptional = oauth2UserQuery.findByProviderIdAndProviderType(providerId, providerType);
+
+                            if (userOptional.isPresent()) {
+                                User user = userOptional.get();
+
+                                // 임시 코드 생성 (1분 유효)
+                                String tempCode = UUID.randomUUID().toString();
+                                redisTemplate.opsForValue().set(
+                                        "auth_code:" + tempCode,
+                                        user.getId().toString(),
+                                        1, TimeUnit.MINUTES
+                                );
+
+                                String redirectUrl = "http://localhost:3000/auth/success?code=" + tempCode;
+                                response.sendRedirect(redirectUrl);
+                            } else {
+                                response.sendRedirect("http://localhost:3000/auth/failure");
+                            }
                         })
                 );
 
