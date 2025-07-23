@@ -38,3 +38,5 @@ out/
 .env
 
 application-*.yml
+
+docker-compose-dev.yml
