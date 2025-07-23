@@ -5,7 +5,7 @@ import backend.airo.domain.auth.oauth2.query.OAuth2UserQuery;
 import backend.airo.domain.user.User;
 import backend.airo.domain.user.enums.ProviderType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -67,28 +67,43 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService)
                         )
                         .successHandler((request, response, authentication) -> {
+                            log.info("OAuth2 로그인 성공 핸들러 시작");
+
                             OAuth2User oauth2User = (OAuth2User) authentication.getPrincipal();
+                            log.info("OAuth2User 정보: {}", oauth2User.getAttributes());
+
                             String providerId = oauth2User.getAttribute("provider_id");
                             ProviderType providerType = oauth2User.getAttribute("provider_type");
+
+                            log.info("Provider ID: {}, Provider Type: {}", providerId, providerType);
 
                             Optional<User> userOptional = oauth2UserQuery.findByProviderIdAndProviderType(providerId, providerType);
 
                             if (userOptional.isPresent()) {
                                 User user = userOptional.get();
+                                log.info("기존 사용자 찾음 - User ID: {}, Email: {}", user.getId(), user.getEmail());
 
-                                // 임시 코드 생성 (1분 유효)
+                                // 임시 코드 생성 (1분 유효) - Redis에 저장
                                 String tempCode = UUID.randomUUID().toString();
+                                log.info("임시 인증 코드 생성: {}", tempCode);
+
                                 redisTemplate.opsForValue().set(
                                         "auth_code:" + tempCode,
                                         user.getId().toString(),
                                         1, TimeUnit.MINUTES
                                 );
+                                log.info("Redis에 임시 코드 저장 완료");
 
                                 String redirectUrl = "http://localhost:3000/auth/success?code=" + tempCode;
+                                log.info("성공 리다이렉트 URL: {}", redirectUrl);
                                 response.sendRedirect(redirectUrl);
                             } else {
+                                log.warn("사용자를 찾을 수 없음 - Provider ID: {}, Provider Type: {}", providerId, providerType);
+                                log.info("실패 리다이렉트 URL: http://localhost:3000/auth/failure");
                                 response.sendRedirect("http://localhost:3000/auth/failure");
                             }
+
+                            log.info("OAuth2 로그인 성공 핸들러 완료");
                         })
                 );
 

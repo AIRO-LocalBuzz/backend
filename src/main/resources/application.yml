@@ -82,17 +82,17 @@ server:
     context-path: /api
 
 # Social Login Configuration
-#social:
-#  firebase:
-#    service-account-key: ${FIREBASE_SERVICE_ACCOUNT_KEY:}
-#    project-id: ${FIREBASE_PROJECT_ID:}
-#  kakao:
-#    client-id: ${KAKAO_CLIENT_ID:}
-#    redirect-uri: ${KAKAO_REDIRECT_URI:}
+social:
+  firebase:
+    service-account-key: ${FIREBASE_SERVICE_ACCOUNT_KEY:}
+    project-id: ${FIREBASE_PROJECT_ID:}
+  kakao:
+    client-id: ${KAKAO_CLIENT_ID:}
+    redirect-uri: ${KAKAO_REDIRECT_URI:}
 
 # JWT Configuration
-#jwt:
-#  secret: ${JWT_SECRET:default-secret-key-for-development-only}
-#  expiration: ${JWT_EXPIRATION:86400000} # 24 hours
+jwt:
+  secret: ${JWT_SECRET:mySecretKey1234567890123456789012345678901234567890}
+  expiration: ${JWT_EXPIRATION:86400000} # 24 hours
 
 
