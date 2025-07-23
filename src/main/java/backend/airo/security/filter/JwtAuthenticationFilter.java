@@ -1,6 +1,9 @@
 package backend.airo.security.filter;
 
+import backend.airo.common.jwt.JwtAuthenticationToken;
 import backend.airo.common.jwt.JwtTokenProvider;
+import backend.airo.domain.auth.oauth2.query.OAuth2UserQuery;
+import backend.airo.domain.user.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,13 +11,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import java.util.List;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -22,32 +29,60 @@ import java.util.ArrayList;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final OAuth2UserQuery oauth2UserQuery;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-        
-        String token = getTokenFromRequest(request);
-        
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+
+        // Authorization 헤더에서 토큰 추출
+        String token = extractTokenFromRequest(request);
+
         if (token != null && jwtTokenProvider.validateToken(token)) {
-            Long userId = jwtTokenProvider.getUserIdFromToken(token);
-            String email = jwtTokenProvider.getEmailFromToken(token);
-            
-            UsernamePasswordAuthenticationToken authentication = 
-                new UsernamePasswordAuthenticationToken(userId, null, new ArrayList<>());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            try {
+                // 토큰에서 사용자 ID 추출
+                Long userId = jwtTokenProvider.getUserIdFromToken(token);
+
+                // 사용자 정보 조회
+                Optional<User> userOptional = oauth2UserQuery.findById(userId);
+
+                if (userOptional.isPresent()) {
+                    User user = userOptional.get();
+
+                    // Spring Security 인증 객체 생성
+                    JwtAuthenticationToken authentication = new JwtAuthenticationToken(
+                            user,
+                            null,
+                            List.of(new SimpleGrantedAuthority("ROLE_USER"))
+                    );
+
+                    // SecurityContext에 인증 정보 설정
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                    log.debug("JWT 인증 성공 - User ID: {}", userId);
+                }
+            } catch (Exception e) {
+                log.error("JWT 인증 처리 중 오류 발생", e);
+                SecurityContextHolder.clearContext();
+            }
         }
-        
+
         filterChain.doFilter(request, response);
     }
 
-    private String getTokenFromRequest(HttpServletRequest request) {
+    private String extractTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.startsWith("/auth/") ||
+                path.startsWith("/swagger-ui/") ||
+                path.startsWith("/v3/api-docs/");
     }
 }

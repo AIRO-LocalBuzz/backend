@@ -1,12 +1,23 @@
 package backend.airo.api.auth;
 
 import backend.airo.api.auth.dto.AuthResponse;
+import backend.airo.api.auth.dto.AuthTokenRequest;
+import backend.airo.api.auth.dto.AuthTokenResponse;
 import backend.airo.api.auth.dto.SocialLoginRequest;
+import backend.airo.application.auth.oauth2.AuthTokenService;
 import backend.airo.application.auth.service.SocialLoginService;
+import backend.airo.common.jwt.JwtTokenProvider;
+import backend.airo.domain.auth.oauth2.query.OAuth2UserQuery;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import backend.airo.domain.user.User;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -15,6 +26,17 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final SocialLoginService socialLoginService;
+    private final AuthTokenService authTokenService;
+
+    /**
+     * OAuth2 토큰 교환
+     */
+    @PostMapping("/exchange-token")
+    public ResponseEntity<AuthTokenResponse> exchangeToken(@Valid @RequestBody AuthTokenRequest request) {
+        AuthTokenResponse response = authTokenService.exchangeToken(request);
+        return ResponseEntity.ok(response);
+    }
+
 
     /**
      * 소셜 로그인 (토큰 기반)

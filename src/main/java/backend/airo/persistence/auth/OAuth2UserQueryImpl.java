@@ -19,4 +19,9 @@ public class OAuth2UserQueryImpl implements OAuth2UserQuery {
     public Optional<User> findByProviderIdAndProviderType(String providerId, ProviderType providerType) {
         return userRepository.findByProviderIdAndProviderType(providerId, providerType);
     }
+
+    @Override
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
 }

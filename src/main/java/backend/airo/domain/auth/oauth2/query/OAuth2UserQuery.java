@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface OAuth2UserQuery {
     Optional<User> findByProviderIdAndProviderType(String providerId, ProviderType providerType);
+
+    Optional<User> findById(Long id);
 }
