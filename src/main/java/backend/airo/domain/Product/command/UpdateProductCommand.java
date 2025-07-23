@@ -11,8 +11,8 @@ public class UpdateProductCommand {
 
     private final ProductRepository productRepository;
 
-    public Product handle(Product product, Long shopId) {
-        Product findProductInfo = productRepository.findById(shopId);
+    public Product handle(Product product, Long productId) {
+        Product findProductInfo = productRepository.findById(productId);
         Product updateProductInfo = findProductInfo.updateShopInfo(product);
         return productRepository.save(updateProductInfo);
     }

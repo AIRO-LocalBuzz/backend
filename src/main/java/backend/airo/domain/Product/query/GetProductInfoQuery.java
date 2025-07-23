@@ -11,9 +11,9 @@ public class GetProductInfoQuery {
 
     private final ProductRepository productRepository;
 
-    public Product handle(Long shopId) {
+    public Product handle(Long productId) {
         return productRepository.findById(
-                shopId
+                productId
         );
     }
 }

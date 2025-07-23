@@ -27,9 +27,9 @@ public class ProductController {
 
     @PatchMapping("/product")
     public Response<ProductResponse> updateShopInfo(
-            @RequestParam Long shopId,
+            @RequestParam Long productId,
             @RequestBody ProductRequest productRequest) {
-        Product saveProductItem = productUseCase.updateProduct(productRequest.itemName(), productRequest.itemURL(), productRequest.itemPrice(), productRequest.itemDescriptionOrEmpty(), shopId);
+        Product saveProductItem = productUseCase.updateProduct(productRequest.itemName(), productRequest.itemURL(), productRequest.itemPrice(), productRequest.itemDescriptionOrEmpty(), productId);
         return Response.success(ProductResponse.from(saveProductItem));
     }
 
@@ -40,14 +40,14 @@ public class ProductController {
     }
 
     @GetMapping("/product/Info")
-    public Response<ProductResponse> getShopInfo(@RequestParam Long shopId) {
-        Product getProductInfo = productUseCase.getProductInfo(shopId);
+    public Response<ProductResponse> getShopInfo(@RequestParam Long productId) {
+        Product getProductInfo = productUseCase.getProductInfo(productId);
         return Response.success(ProductResponse.from(getProductInfo));
     }
 
     @DeleteMapping("/product")
-    public Response<Void> deleteShop(@RequestParam Long shopId) {
-        productUseCase.deleteProduct(shopId);
+    public Response<Void> deleteShop(@RequestParam Long productId) {
+        productUseCase.deleteProduct(productId);
         return Response.success();
     }
 

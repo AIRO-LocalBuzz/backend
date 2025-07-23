@@ -10,8 +10,8 @@ public class DeleteProductCommand {
 
     private final ProductRepository productRepository;
 
-    public void handle(Long shopId) {
-        productRepository.deleteByShopId(shopId);
+    public void handle(Long productId) {
+        productRepository.deleteByShopId(productId);
     }
 
 }

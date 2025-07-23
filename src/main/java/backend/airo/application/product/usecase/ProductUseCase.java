@@ -33,28 +33,28 @@ public class ProductUseCase {
         );
     }
 
-    public Product updateProduct(String itemName, String itemURL, Long itemPrice, String itemDescription, Long shopId) {
+    public Product updateProduct(String itemName, String itemURL, Long itemPrice, String itemDescription, Long productId) {
         return updateProductCommand.handle(
                 new Product(
-                        shopId,
+                        productId,
                         itemName,
                         itemURL,
                         itemPrice,
                         itemDescription
-                ), shopId
+                ), productId
         );
     }
 
-    public void deleteProduct(Long shopId) {
-        deleteProductCommand.handle(shopId);
+    public void deleteProduct(Long productId) {
+        deleteProductCommand.handle(productId);
     }
 
     public List<Product> getProductList() {
         return getProductListQuery.handle();
     }
 
-    public Product getProductInfo(Long shopId) {
-        return getProductInfoQuery.handle(shopId);
+    public Product getProductInfo(Long productId) {
+        return getProductInfoQuery.handle(productId);
     }
 
 }
