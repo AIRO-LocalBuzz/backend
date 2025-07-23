@@ -27,7 +27,7 @@ public class OAuth2UserProcessingService {
 
         OAuth2UserInfo oauth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, attributes);
 
-        validateUserInfo(oauth2UserInfo);
+        validateUserInfo(oauth2UserInfo, providerType);
 
         Optional<User> existingUser = oauth2UserQuery.findByProviderIdAndProviderType(
                 oauth2UserInfo.getId(), providerType);
@@ -52,11 +52,14 @@ public class OAuth2UserProcessingService {
 //                .orElseGet(() -> createNewUser(oauth2UserInfo, providerType));
 //    }
 
-    private void validateUserInfo(OAuth2UserInfo oauth2UserInfo) {
+private void validateUserInfo(OAuth2UserInfo oauth2UserInfo, ProviderType providerType) {
+    // 구글은 실제 이메일 필수, 카카오는 검증 생략
+    if (providerType == ProviderType.GOOGLE) {
         if (oauth2UserInfo.getEmail() == null || oauth2UserInfo.getEmail().isEmpty()) {
             throw new IllegalArgumentException("Email not found from OAuth2 provider");
         }
     }
+}
 
     private User createNewUser(OAuth2UserInfo oauth2UserInfo, ProviderType providerType) {
         User user = User.createOAuth2User(
