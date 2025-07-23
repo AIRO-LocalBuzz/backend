@@ -62,11 +62,11 @@ public class OAuth2UserProcessingService {
     }
 
     private User createNewUser(OAuth2UserInfo oauth2UserInfo, ProviderType providerType) {
-        User user = new User(
+        User user = User.createOAuth2User(
                 oauth2UserInfo.getEmail(),
-                oauth2UserInfo.getName() != null ? oauth2UserInfo.getName() : oauth2UserInfo.getEmail(),
+                oauth2UserInfo.getName(),
                 providerType,
-                oauth2UserInfo.getId()
+                oauth2UserInfo.getId() // 이게 Google의 "sub" 값
         );
 
         log.info("Creating new user with provider: {}, id: {}", providerType, oauth2UserInfo.getId());

@@ -68,6 +68,16 @@ public class User {
         this.providerId = providerId;
     }
 
+
+    public static User createOAuth2User(String email, String name, ProviderType providerType, String providerId) {
+        return new User(
+                email,
+                name != null ? name : email, // name이 null이면 email을 nickname으로 사용
+                providerType,
+                providerId
+        );
+    }
+
     public void updateProfile(String name) {
         if (name != null && !name.trim().isEmpty()) {
             this.name = name.trim();

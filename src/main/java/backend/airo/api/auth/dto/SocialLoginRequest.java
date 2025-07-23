@@ -3,11 +3,11 @@ package backend.airo.api.auth.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SocialLoginRequest {
-    private String token;
-    private String provider; // "google" or "kakao"
+    private final String token;
+    private final String provider; // "google" or "kakao"
 }
