@@ -28,7 +28,7 @@ public class JwtTokenProvider {
 
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);  // hmacShaKeyWith → hmacShaKeyFor
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     // 토큰 검증
