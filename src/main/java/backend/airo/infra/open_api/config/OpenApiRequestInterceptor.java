@@ -1,4 +1,4 @@
-package backend.airo.infra.config;
+package backend.airo.infra.open_api.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

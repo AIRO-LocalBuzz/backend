@@ -1,4 +1,4 @@
-package backend.airo.infra.clure_fatvl_open_api.vo;
+package backend.airo.infra.open_api.clure_fatvl.vo;
 
 import java.time.LocalDate;
 

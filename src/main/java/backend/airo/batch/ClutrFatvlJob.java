@@ -1,8 +1,8 @@
 package backend.airo.batch;
 
-import backend.airo.infra.clure_fatvl_open_api.client.OpenApiFeignClient;
-import backend.airo.infra.clure_fatvl_open_api.dto.OpenApiResponse;
-import backend.airo.infra.clure_fatvl_open_api.vo.ClutrFatvlInfo;
+import backend.airo.infra.open_api.clure_fatvl.client.OpenApiFeignClient;
+import backend.airo.infra.open_api.clure_fatvl.dto.OpenApiClureFatvlResponse;
+import backend.airo.infra.open_api.clure_fatvl.vo.ClutrFatvlInfo;
 import backend.airo.persistence.clutrfatvl.adapter.ClutrFatvlAdapter;
 import backend.airo.persistence.clutrfatvl.entity.ClutrFatvlEntity;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class ClutrFatvlJob {
         LocalDate today = LocalDate.now();
         LocalDate oneMonthLater = today.plusMonths(1);
 
-        OpenApiResponse<List<ClutrFatvlInfo>> res =
+        OpenApiClureFatvlResponse<List<ClutrFatvlInfo>> res =
                 openApiFeignClient.getClutrFatvlInfo(today.format(YYYYMMDD), oneMonthLater.format(YYYYMMDD));
 
         List<ClutrFatvlInfo> item = res.getItems();

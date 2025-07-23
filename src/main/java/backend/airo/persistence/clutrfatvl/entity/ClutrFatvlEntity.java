@@ -1,6 +1,6 @@
 package backend.airo.persistence.clutrfatvl.entity;
 
-import backend.airo.infra.clure_fatvl_open_api.vo.ClutrFatvlInfo;
+import backend.airo.infra.open_api.clure_fatvl.vo.ClutrFatvlInfo;
 import backend.airo.persistence.clutrfatvl.entity.vo.Address;
 import backend.airo.persistence.clutrfatvl.entity.vo.FestivalPeriod;
 import backend.airo.persistence.clutrfatvl.entity.vo.GeoPoint;

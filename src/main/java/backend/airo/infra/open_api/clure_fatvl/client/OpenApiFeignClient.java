@@ -1,8 +1,8 @@
-package backend.airo.infra.clure_fatvl_open_api.client;
+package backend.airo.infra.open_api.clure_fatvl.client;
 
-import backend.airo.infra.config.OpenApiFeignClientConfiguration;
-import backend.airo.infra.clure_fatvl_open_api.dto.OpenApiResponse;
-import backend.airo.infra.clure_fatvl_open_api.vo.ClutrFatvlInfo;
+import backend.airo.infra.open_api.clure_fatvl.dto.OpenApiClureFatvlResponse;
+import backend.airo.infra.open_api.clure_fatvl.vo.ClutrFatvlInfo;
+import backend.airo.infra.open_api.config.OpenApiFeignClientConfiguration;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +20,7 @@ import java.util.List;
 public interface OpenApiFeignClient {
 
     @GetMapping("/tn_pubr_public_cltur_fstvl_api")
-    OpenApiResponse<List<ClutrFatvlInfo>> getClutrFatvlInfo(
+    OpenApiClureFatvlResponse<List<ClutrFatvlInfo>> getClutrFatvlInfo(
             @RequestParam(value = "fstvlStartDate") String fstvlStartDate,
             @RequestParam(value = "fstvlEndDate") String fstvlEndDate
             );

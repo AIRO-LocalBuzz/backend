@@ -1,11 +1,10 @@
-package backend.airo.infra.clure_fatvl_open_api.dto;//package garbege.open_api.dto;
+package backend.airo.infra.open_api.clure_fatvl.dto;//package garbege.open_api.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-//소상공인시장진흥공단 상가 정보는 이게 맞음.
 //TODO 전국문화축제 정보는 아직 모름 확인 필요
-public record OpenApiResponse<T>(
+public record OpenApiClureFatvlResponse<T>(
         @JsonProperty("response") Response<T> response) {
 
     public record Response<T>(

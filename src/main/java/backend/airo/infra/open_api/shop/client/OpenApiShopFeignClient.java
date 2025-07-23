@@ -1,9 +1,8 @@
-package backend.airo.infra.clure_fatvl_open_api.client;
+package backend.airo.infra.open_api.shop.client;
 
-import backend.airo.infra.clure_fatvl_open_api.dto.OpenApiResponse;
-import backend.airo.infra.clure_fatvl_open_api.vo.ClutrFatvlInfo;
-import backend.airo.infra.clure_fatvl_open_api.vo.ShopInfo;
-import backend.airo.infra.config.OpenApiFeignClientConfiguration;
+import backend.airo.infra.open_api.config.OpenApiFeignClientConfiguration;
+import backend.airo.infra.open_api.shop.dto.OpenApiShopResponse;
+import backend.airo.infra.open_api.shop.vo.ShopInfo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,7 +20,7 @@ import java.util.List;
 public interface OpenApiShopFeignClient {
 
     @GetMapping("/B553077/api/open/sdsc2")
-    OpenApiResponse<List<ShopInfo>> getShopInfo(
+    OpenApiShopResponse<List<ShopInfo>> getShopInfo(
             //페이지 번호
             @RequestParam(value = "pageNo") String pageNo,
             //한 페이지 결과수,

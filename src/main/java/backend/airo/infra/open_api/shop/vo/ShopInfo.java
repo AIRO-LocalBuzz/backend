@@ -1,4 +1,4 @@
-package backend.airo.infra.clure_fatvl_open_api.vo;
+package backend.airo.infra.open_api.shop.vo;
 
 public record ShopInfo(
         // 식별·기본 정보
