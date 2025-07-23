@@ -16,6 +16,10 @@ spring:
         format_sql: true
     generate-ddl: true
 
+openapi:
+  service:
+    key: ${SERVICE_KEY}
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

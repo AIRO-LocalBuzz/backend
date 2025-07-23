@@ -1,10 +1,10 @@
 package backend.airo.persistence.clutrfatvl.entity;
 
-import backend.airo.infra.open_api.vo.ClutrFatvlInfo;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import backend.airo.infra.clure_fatvl_open_api.vo.ClutrFatvlInfo;
+import backend.airo.persistence.clutrfatvl.entity.vo.Address;
+import backend.airo.persistence.clutrfatvl.entity.vo.FestivalPeriod;
+import backend.airo.persistence.clutrfatvl.entity.vo.GeoPoint;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,68 +19,84 @@ public class ClutrFatvlEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id = 0L;
+    private Long id;
+
     private String fstvlNm;
+
     private String opar;
-    private LocalDate fstvlStartDate;
-    private LocalDate fstvlEndDate;
+
     private String fstvlCo;
+
+    @Embedded
+    private FestivalPeriod period;
+
+    @Embedded
+    private GeoPoint location;
+
+    @Embedded
+    private Address address;
+
     private String mnnstNm;
+
     private String auspcInsttNm;
+
     private String suprtInsttNm;
+
     private String phoneNumber;
+
     private String homepageUrl;
+
     private String relateInfo;
-    private String rdnmadr;
-    private String lnmadr;
-    private Double latitude;
-    private Double longitude;
+
     private LocalDate referenceDate;
+
     private String insttCode;
+
     private String insttNm;
 
     @Builder
-    public ClutrFatvlEntity(String fstvlNm, String opar, LocalDate fstvlStartDate, LocalDate fstvlEndDate, String fstvlCo, String mnnstNm, String auspcInsttNm, String suprtInsttNm, String phoneNumber, String homepageUrl, String relateInfo, String rdnmadr, String lnmadr, Double latitude, Double longitude, LocalDate referenceDate, String insttCode, String insttNm) {
+    public ClutrFatvlEntity(
+            String fstvlNm, String opar, String fstvlCo,
+            FestivalPeriod period, GeoPoint location, Address address,
+            String mnnstNm, String auspcInsttNm, String suprtInsttNm,
+            String phoneNumber, String homepageUrl, String relateInfo,
+            LocalDate referenceDate, String insttCode, String insttNm) {
+
         this.fstvlNm = fstvlNm;
         this.opar = opar;
-        this.fstvlStartDate = fstvlStartDate;
-        this.fstvlEndDate = fstvlEndDate;
         this.fstvlCo = fstvlCo;
+        this.period = period;
+        this.location = location;
+        this.address = address;
         this.mnnstNm = mnnstNm;
         this.auspcInsttNm = auspcInsttNm;
         this.suprtInsttNm = suprtInsttNm;
         this.phoneNumber = phoneNumber;
         this.homepageUrl = homepageUrl;
         this.relateInfo = relateInfo;
-        this.rdnmadr = rdnmadr;
-        this.lnmadr = lnmadr;
-        this.latitude = latitude;
-        this.longitude = longitude;
         this.referenceDate = referenceDate;
         this.insttCode = insttCode;
         this.insttNm = insttNm;
     }
 
-    public static ClutrFatvlEntity create(ClutrFatvlInfo clutrFatvlInfo) {
+    public static ClutrFatvlEntity create(ClutrFatvlInfo dto) {
         return ClutrFatvlEntity.builder()
-                .fstvlNm(clutrFatvlInfo.fstvlNm())
-                .opar(clutrFatvlInfo.opar())
-                .fstvlStartDate(clutrFatvlInfo.fstvlStartDate())
-                .fstvlEndDate(clutrFatvlInfo.fstvlEndDate())
-                .fstvlCo(clutrFatvlInfo.fstvlCo())
-                .mnnstNm(clutrFatvlInfo.mnnstNm())
-                .auspcInsttNm(clutrFatvlInfo.auspcInsttNm())
-                .suprtInsttNm(clutrFatvlInfo.suprtInsttNm())
-                .phoneNumber(clutrFatvlInfo.phoneNumber())
-                .homepageUrl(clutrFatvlInfo.homepageUrl())
-                .relateInfo(clutrFatvlInfo.relateInfo())
-                .rdnmadr(clutrFatvlInfo.rdnmadr())
-                .lnmadr(clutrFatvlInfo.lnmadr())
-                .latitude(clutrFatvlInfo.latitude())
-                .longitude(clutrFatvlInfo.longitude())
-                .referenceDate(clutrFatvlInfo.referenceDate())
-                .insttCode(clutrFatvlInfo.instt_code())
-                .insttNm(clutrFatvlInfo.instt_nm())
+                .fstvlNm(dto.fstvlNm())
+                .opar(dto.opar())
+                .fstvlCo(dto.fstvlCo())
+                .period(new FestivalPeriod(dto.fstvlStartDate(), dto.fstvlEndDate()))
+                .location(new GeoPoint(dto.latitude(), dto.longitude()))
+                .address(new Address(dto.rdnmadr(), dto.lnmadr()))
+                .mnnstNm(dto.mnnstNm())
+                .auspcInsttNm(dto.auspcInsttNm())
+                .suprtInsttNm(dto.suprtInsttNm())
+                .phoneNumber(dto.phoneNumber())
+                .homepageUrl(dto.homepageUrl())
+                .relateInfo(dto.relateInfo())
+                .referenceDate(dto.referenceDate())
+                .insttCode(dto.instt_code())
+                .insttNm(dto.instt_nm())
                 .build();
     }
 }
+

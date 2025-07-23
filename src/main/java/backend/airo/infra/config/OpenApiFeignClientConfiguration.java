@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Bean;
 public class OpenApiFeignClientConfiguration {
 
     @Bean
-    public OpenApiFeignClientConfiguration openApiRequestInterceptor() {
-        return new OpenApiFeignClientConfiguration();
+    public OpenApiRequestInterceptor openApiRequestInterceptor() {
+        return new OpenApiRequestInterceptor();
     }
 
 }

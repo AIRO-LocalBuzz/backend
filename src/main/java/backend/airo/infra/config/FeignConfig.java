@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableFeignClients(
-        basePackages = "backend.airo.infra.open_api.client"
+        basePackages = "backend.airo.infra.clure_fatvl_open_api.client"
 )
 public class FeignConfig {
 }
