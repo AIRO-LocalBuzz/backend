@@ -1,11 +1,11 @@
-package backend.airo.domain.shop;
+package backend.airo.domain.Product;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class Shop {
+public class Product {
 
     private Long id = 0L;
     private String itemName;
@@ -13,7 +13,7 @@ public class Shop {
     private Long itemPrice;
     private String itemDescription;
 
-    public Shop(Long id, String itemName, String itemURL, Long itemPrice, String itemDescription) {
+    public Product(Long id, String itemName, String itemURL, Long itemPrice, String itemDescription) {
         this.id = id;
         this.itemName = itemName;
         this.itemURL = itemURL;
@@ -21,12 +21,12 @@ public class Shop {
         this.itemDescription = itemDescription;
     }
 
-    public Shop updateShopInfo(Shop shop) {
-        this.id = shop.id;
-        this.itemName = shop.itemName;
-        this.itemURL = shop.itemURL;
-        this.itemPrice = shop.itemPrice;
-        this.itemDescription = shop.itemDescription;
+    public Product updateShopInfo(Product product) {
+        this.id = product.id;
+        this.itemName = product.itemName;
+        this.itemURL = product.itemURL;
+        this.itemPrice = product.itemPrice;
+        this.itemDescription = product.itemDescription;
         return this;
     }
 }

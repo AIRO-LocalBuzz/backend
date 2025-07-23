@@ -1,14 +1,11 @@
-package backend.airo.domain.shop.exception;
+package backend.airo.domain.Product.exception;
 
 import backend.airo.common.exception.BaseErrorCode;
 import backend.airo.common.exception.ErrorReason;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum DomainErrorCode implements BaseErrorCode {
-
-    //Test 전용
-    TEST_ERROR(400, "TEST_ERROR", "Test 저장 실패"),
+public enum ProductErrorCode implements BaseErrorCode {
 
     ;
 
@@ -16,7 +13,7 @@ public enum DomainErrorCode implements BaseErrorCode {
     private final String errorCode;
     private final String message;
 
-    DomainErrorCode(int status, String errorCode, String message) {
+    ProductErrorCode(int status, String errorCode, String message) {
         this.status = status;
         this.errorCode = errorCode;
         this.message = message;

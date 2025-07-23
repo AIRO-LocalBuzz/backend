@@ -1,8 +1,8 @@
-package backend.airo.api.shop.dto;
+package backend.airo.api.product.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record ShopRequest(
+public record ProductRequest(
 
         @NotBlank(message = "아이템 이름은 필수 입니다.")
         String itemName,
