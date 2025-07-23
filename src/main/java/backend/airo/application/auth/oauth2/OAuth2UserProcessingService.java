@@ -1,10 +1,7 @@
-// backend/airo/application/auth/oauth2/OAuth2UserProcessingService.java
 package backend.airo.application.auth.oauth2;
 
-import backend.airo.domain.auth.oauth2.OAuth2KaKaoUserInfo;
 import backend.airo.domain.auth.oauth2.OAuth2UserInfo;
 import backend.airo.domain.auth.oauth2.OAuth2UserInfoFactory;
-import backend.airo.domain.auth.oauth2.OAuth2KaKaoUserInfoFactory;
 import backend.airo.domain.auth.oauth2.command.OAuth2UserCommand;
 import backend.airo.domain.auth.oauth2.query.OAuth2UserQuery;
 import backend.airo.domain.user.User;

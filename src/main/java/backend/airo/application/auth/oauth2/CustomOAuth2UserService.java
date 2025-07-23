@@ -35,11 +35,23 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
     }
 
-    private ProviderType getProviderType(String registrationId) {
+//    private ProviderType getProviderType(String registrationId) {
+//        return switch (registrationId.toLowerCase()) {
+//            case "google" -> ProviderType.GOOGLE;
+//            case "kakao" -> ProviderType.KAKAO;
+//            default -> throw new OAuth2AuthenticationException("지원하지 않는 OAuth2 제공자입니다: " + registrationId);
+//        };
+//    }
+
+    protected OAuth2User callSuperLoadUser(OAuth2UserRequest userRequest) {
+        return super.loadUser(userRequest);
+    }
+
+    protected ProviderType getProviderType(String registrationId) {
         return switch (registrationId.toLowerCase()) {
             case "google" -> ProviderType.GOOGLE;
             case "kakao" -> ProviderType.KAKAO;
-            default -> throw new OAuth2AuthenticationException("Unsupported provider: " + registrationId);
+            default -> throw new IllegalArgumentException("지원하지 않는 OAuth2 제공자입니다: " + registrationId);
         };
     }
 }
