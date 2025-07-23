@@ -20,10 +20,10 @@ public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.access-token-validity}")
+    @Value("${jwt.expiration}")
     private long accessTokenValidityInSeconds;
 
-    @Value("${jwt.refresh-token-validity}")
+    @Value("${jwt.refresh}")
     private long refreshTokenValidityInSeconds;
 
     private SecretKey getSigningKey() {
