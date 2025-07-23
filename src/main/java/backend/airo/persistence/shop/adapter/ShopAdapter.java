@@ -1,7 +1,5 @@
 package backend.airo.persistence.shop.adapter;
 
-import backend.airo.domain.example.Test;
-import backend.airo.domain.example.repository.TestRepository;
 import backend.airo.domain.shop.Shop;
 import backend.airo.domain.shop.repository.ShopRepository;
 import backend.airo.persistence.shop.entity.ShopEntity;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @Transactional
@@ -35,7 +32,7 @@ public class ShopAdapter implements ShopRepository {
     @Override
     public Shop findById(Long aggregates) {
         ShopEntity shopEntity = shopJpaRepository.findById(aggregates).orElseThrow(() ->
-                new IllegalArgumentException("Test Not Found with id - " + aggregates)
+                new IllegalArgumentException("Shop Not Found with id - " + aggregates)
         );
         return ShopEntity.toDomain(shopEntity);
     }

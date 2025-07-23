@@ -1,6 +1,5 @@
 package backend.airo.domain.shop.query;
 
-import backend.airo.domain.example.Test;
 import backend.airo.domain.shop.Shop;
 import backend.airo.domain.shop.repository.ShopRepository;
 import lombok.RequiredArgsConstructor;

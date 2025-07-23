@@ -1,11 +1,9 @@
 package backend.airo.api.shop;
 
-import backend.airo.api.example.dto.TestResponse;
 import backend.airo.api.global.dto.Response;
 import backend.airo.api.shop.dto.ShopRequest;
 import backend.airo.api.shop.dto.ShopResponse;
 import backend.airo.application.shop.usecase.ShopUseCase;
-import backend.airo.domain.example.Test;
 import backend.airo.domain.shop.Shop;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
