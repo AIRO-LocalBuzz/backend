@@ -17,18 +17,29 @@ public class JwtTokenProvider {
     private final long jwtExpiration;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String jwtSecret,
-                           @Value("${jwt.expiration}") long jwtExpiration) {
+                            @Value("${jwt.expiration}") long jwtExpiration) {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
         this.jwtExpiration = jwtExpiration;
     }
 
-    public String generateToken(Long userId, String email) {
+    public String generateAccessToken(Long userId) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
 
         return Jwts.builder()
                 .setSubject(userId.toString())
-                .claim("email", email)
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    public String generateRefreshToken(Long userId) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtExpiration * 7); // 7배로 변경 (일주일)
+
+        return Jwts.builder()
+                .setSubject(userId.toString())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(key, SignatureAlgorithm.HS512)
@@ -58,12 +69,40 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token);
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token);
             return true;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    // 추가 필요한 메서드들
+    public Long getAccessTokenValidityInSeconds() {
+        return jwtExpiration / 1000;
+    }
+
+    public Long getRefreshTokenValidityInSeconds() {
+        return (jwtExpiration * 7) / 1000;
+    }
+
+    public Date getExpirationDateFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getExpiration();
+    }
+
+    public boolean isTokenExpired(String token) {
+        try {
+            Date expiration = getExpirationDateFromToken(token);
+            return expiration.before(new Date());
+        } catch (Exception e) {
+            return true;
         }
     }
 }

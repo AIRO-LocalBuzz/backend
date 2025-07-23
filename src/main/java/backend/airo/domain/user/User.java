@@ -5,6 +5,11 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -22,25 +27,50 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    private String profileImageUrl;
+    @Column(nullable = false, unique = true)
+    private String nickname;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "birth_date")
+    private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "provider_type", nullable = false)
     private ProviderType providerType;
 
-    @Column(nullable = false)
+    @Column(name = "provider_id", nullable = false, unique = true)
     private String providerId;
 
-    public User(String email, String name, String profileImageUrl, ProviderType providerType, String providerId) {
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    public User(String email, String name, String nickname, String phoneNumber, LocalDate birthDate, ProviderType providerType, String providerId) {
         this.email = email;
         this.name = name;
-        this.profileImageUrl = profileImageUrl;
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
         this.providerType = providerType;
         this.providerId = providerId;
     }
 
-    public void updateProfile(String name, String profileImageUrl) {
-        this.name = name;
-        this.profileImageUrl = profileImageUrl;
+    public User(String email, String nickname, ProviderType providerType, String providerId){
+        this.email = email;
+        this.nickname = nickname;
+        this.providerType = providerType;
+        this.providerId = providerId;
+    }
+
+    public void updateProfile(String name) {
+        if (name != null && !name.trim().isEmpty()) {
+            this.name = name.trim();
+        }
     }
 }

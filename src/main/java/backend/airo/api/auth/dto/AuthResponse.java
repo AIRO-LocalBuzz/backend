@@ -1,27 +1,21 @@
 package backend.airo.api.auth.dto;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
+@Builder
 public class AuthResponse {
-    private String accessToken;
-    private String tokenType = "Bearer";
-    private UserInfo user;
+    private final String accessToken;
+    private final String refreshToken;
+    private final String tokenType;
+    private final Long expiresIn;
+    private final Long userId;
+    private final String email;
+    private final String name;
+    private final String provider;
 
-    public AuthResponse(String accessToken, UserInfo user) {
-        this.accessToken = accessToken;
-        this.user = user;
-    }
-
-    @Getter
-    @AllArgsConstructor
-    public static class UserInfo {
-        private Long id;
-        private String email;
-        private String name;
-        private String profileImageUrl;
-        private String provider;
-    }
 }
+

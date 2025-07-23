@@ -23,7 +23,7 @@ class JwtTokenProviderTest {
         String email = "test@example.com";
 
         // When
-        String token = jwtTokenProvider.generateToken(userId, email);
+        String token = jwtTokenProvider.generateAccessToken(userId);
 
         // Then
         assertNotNull(token);
@@ -35,7 +35,7 @@ class JwtTokenProviderTest {
         // Given
         Long userId = 1L;
         String email = "test@example.com";
-        String token = jwtTokenProvider.generateToken(userId, email);
+        String token = jwtTokenProvider.generateAccessToken(userId);
 
         // When
         boolean isValid = jwtTokenProvider.validateToken(token);
@@ -49,7 +49,7 @@ class JwtTokenProviderTest {
         // Given
         Long userId = 1L;
         String email = "test@example.com";
-        String token = jwtTokenProvider.generateToken(userId, email);
+        String token = jwtTokenProvider.generateAccessToken(userId);
 
         // When
         Long extractedUserId = jwtTokenProvider.getUserIdFromToken(token);
@@ -63,7 +63,7 @@ class JwtTokenProviderTest {
         // Given
         Long userId = 1L;
         String email = "test@example.com";
-        String token = jwtTokenProvider.generateToken(userId, email);
+        String token = jwtTokenProvider.generateAccessToken(userId);
 
         // When
         String extractedEmail = jwtTokenProvider.getEmailFromToken(token);

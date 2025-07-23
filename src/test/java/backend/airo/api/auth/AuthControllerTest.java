@@ -27,7 +27,7 @@ class AuthControllerTest {
         // Given
         SocialLoginRequest request = new SocialLoginRequest("test-token", "google");
         AuthResponse expectedResponse = new AuthResponse("jwt-token", 
-            new AuthResponse.UserInfo(1L, "test@example.com", "Test User", null, "google"));
+            new AuthResponse.UserInfo(1L, "test@example.com", "Test User", "google"));
         
         when(socialLoginService.socialLogin(request)).thenReturn(expectedResponse);
 
@@ -43,7 +43,7 @@ class AuthControllerTest {
     @Test
     void socialLoginFailure() {
         // Given
-        SocialLoginRequest request = new SocialLoginRequest("invalid-token", "google");
+        SocialLoginRequest request = new SocialLoginRequest("invalid-token", null);
         
         when(socialLoginService.socialLogin(request)).thenThrow(new RuntimeException("Invalid token"));
 
@@ -60,7 +60,7 @@ class AuthControllerTest {
         // Given
         String token = "test-google-token";
         AuthResponse expectedResponse = new AuthResponse("jwt-token", 
-            new AuthResponse.UserInfo(1L, "test@example.com", "Test User", null, "google"));
+            new AuthResponse.UserInfo(1L, "test@example.com", "Test User", "google"));
         
         when(socialLoginService.loginWithGoogle(token)).thenReturn(expectedResponse);
 
@@ -77,7 +77,7 @@ class AuthControllerTest {
         // Given
         String token = "test-kakao-token";
         AuthResponse expectedResponse = new AuthResponse("jwt-token", 
-            new AuthResponse.UserInfo(1L, "test@example.com", "Test User", null, "kakao"));
+            new AuthResponse.UserInfo(1L, "test@example.com", "Test User", "kakao"));
         
         when(socialLoginService.loginWithKakao(token)).thenReturn(expectedResponse);
 

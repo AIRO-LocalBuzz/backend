@@ -1,38 +1,39 @@
 package backend.airo.security.config;
 
-import backend.airo.security.filter.JwtAuthenticationFilter;
+import backend.airo.application.auth.oauth2.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
+
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(CsrfConfigurer::disable) // CSRF 비활성화
-                .httpBasic(HttpBasicConfigurer::disable) // HTTP Basic 인증 비활성화
-                //JWT 사용시 session 비활성화
+                .csrf(CsrfConfigurer::disable)
+                .httpBasic(HttpBasicConfigurer::disable)
+                .formLogin(FormLoginConfigurer::disable)
                 .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(authRequests -> authRequests
                         .requestMatchers(
                                 "/swagger-ui/**",
@@ -40,27 +41,38 @@ public class SecurityConfig {
                                 "/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**",
-                                "/auth/**", // Allow all auth endpoints
-                                "/webjars/**",
-                                "/v1/test/**",
-                                "/v1/**",
-                                "/actuator/health"
+                                "/api/auth/**",
+                                "/api/oauth2/**",
+                                "/api/login/oauth2/**",
+                                "/api/v1/test/**",
+                                "/api/v1/**",
+                                "/api/actuator/health"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(customOAuth2UserService)
+                        )
+                        .successHandler((request, response, authentication) -> {
+                            response.sendRedirect("http://localhost:3000/auth/success");
+                        })
+                        .failureHandler((request, response, exception) -> {
+                            response.sendRedirect("http://localhost:3000/auth/failure");
+                        })
+                );
 
         return http.build();
     }
 
-    //TODO 임시
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080", "http://localhost:9001"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.addAllowedOriginPattern("*");
+        corsConfiguration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
