@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ClutrFatvlSyncJob {
+public class ClutrFatvlJob {
 
     private final OpenApiFeignClient openApiFeignClient;
     private final ClutrFatvlAdapter clutrFatvlAdapter;
