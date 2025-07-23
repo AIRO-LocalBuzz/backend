@@ -6,18 +6,11 @@ import backend.airo.api.auth.dto.AuthTokenResponse;
 import backend.airo.api.auth.dto.SocialLoginRequest;
 import backend.airo.application.auth.oauth2.AuthTokenService;
 import backend.airo.application.auth.service.SocialLoginService;
-import backend.airo.common.jwt.JwtTokenProvider;
-import backend.airo.domain.auth.oauth2.query.OAuth2UserQuery;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import backend.airo.domain.user.User;
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
