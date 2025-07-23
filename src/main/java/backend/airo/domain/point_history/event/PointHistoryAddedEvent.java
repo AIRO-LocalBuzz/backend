@@ -6,13 +6,13 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class PointAddedEvent {
+public class PointHistoryAddedEvent {
 
     private Long point;
     private Long userId;
     private PointType type;
 
-    public PointAddedEvent(Long point, Long userId, PointType type) {
+    public PointHistoryAddedEvent(Long point, Long userId, PointType type) {
         this.point = point;
         this.userId = userId;
         this.type = type;

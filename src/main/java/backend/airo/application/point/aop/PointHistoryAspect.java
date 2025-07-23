@@ -1,7 +1,7 @@
 package backend.airo.application.point.aop;
 
 import backend.airo.domain.point_history.command.CreateTradePointCommand;
-import backend.airo.domain.point_history.event.PointAddedEvent;
+import backend.airo.domain.point_history.event.PointHistoryAddedEvent;
 import backend.airo.persistence.point_history.entity.PointHistoryEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,19 +15,18 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class PointAspect {
+public class PointHistoryAspect {
 
     private final ApplicationEventPublisher publisher;
-    private final CreateTradePointCommand createTradePointCommand;
 
-    //TODO 후기 save 이후로 pointcut 범위 조절
+    //Point의 Repository에서 save호출 시, 포인트 적립 내역 기록
     @AfterReturning(
-//            pointcut = "execution(* backend.airo.domain.point.repository.*Repository.save(..))"
+            pointcut = "execution(* backend.airo.domain.point.repository.*Repository.save(..))"
     )
     public void afterSave(JoinPoint joinPoint) {
         Object arg = joinPoint.getArgs()[0];
         if (arg instanceof PointHistoryEntity inquiry) {
-            PointAddedEvent event = new PointAddedEvent(
+            PointHistoryAddedEvent event = new PointHistoryAddedEvent(
                     inquiry.getPoint(),
                     inquiry.getUserId(),
                     inquiry.getType()
