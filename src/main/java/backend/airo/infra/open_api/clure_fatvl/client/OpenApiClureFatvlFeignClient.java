@@ -14,15 +14,17 @@ import java.util.List;
  * <a href="https://www.data.go.kr/data/15013104/standard.do">...</a>
  */
 @FeignClient(
-        name = "openApi",
+        name = "openApi-clutr-fstvl",
         url = "http://api.data.go.kr/openapi",
         configuration = OpenApiFeignClientConfiguration.class)
-public interface OpenApiFeignClient {
+public interface OpenApiClureFatvlFeignClient {
 
     @GetMapping("/tn_pubr_public_cltur_fstvl_api")
-    OpenApiClureFatvlResponse<List<ClutrFatvlInfo>> getClutrFatvlInfo(
-            @RequestParam(value = "fstvlStartDate") String fstvlStartDate,
-            @RequestParam(value = "fstvlEndDate") String fstvlEndDate
+    OpenApiClureFatvlResponse<ClutrFatvlInfo> getClutrFatvlInfo(
+            @RequestParam(value = "pageNo", defaultValue = "1", required = false) String pageNo,
+            @RequestParam(value = "numOfRows", defaultValue = "10000", required = false) String numOfRows,
+            @RequestParam(value = "fstvlStartDate") String fstvlStartDate
+//            @RequestParam(value = "fstvlEndDate", required = false) String fstvlEndDate
             );
 
 }

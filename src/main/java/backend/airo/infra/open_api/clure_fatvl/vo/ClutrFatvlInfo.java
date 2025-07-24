@@ -1,25 +1,88 @@
 package backend.airo.infra.open_api.clure_fatvl.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
+
 import java.time.LocalDate;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public record ClutrFatvlInfo(
-        String fstvlNm,        // 축제명
-        String opar,           // 개최 장소
-        LocalDate fstvlStartDate, // 축제 시작일자 (yyyy‑MM‑dd)
-        LocalDate fstvlEndDate,   // 축제 종료일자
-        String fstvlCo,        // 축제 내용
-        String mnnstNm,        // 주관 기관명
-        String auspcInsttNm,   // 주최 기관명
-        String suprtInsttNm,   // 후원 기관명
-        String phoneNumber,    // 전화번호
-        String homepageUrl,    // 홈페이지 주소
-        String relateInfo,     // 관련 정보
-        String rdnmadr,        // 소재지 도로명 주소
-        String lnmadr,         // 소재지 지번 주소
-        Double latitude,       // 위도
-        Double longitude,      // 경도
-        LocalDate referenceDate, // 데이터 기준 일자
-        String instt_code,     // 제공 기관 코드
-        String instt_nm        // 제공 기관명
+        @JsonProperty("fstvlNm")
+        @JsonSetter(nulls = Nulls.AS_EMPTY)
+        String fstvlNm,
+
+        @JsonProperty("opar")
+        @JsonSetter(nulls = Nulls.AS_EMPTY)
+        String opar,
+
+        @JsonProperty("fstvlStartDate")
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        LocalDate fstvlStartDate,
+
+        @JsonProperty("fstvlEndDate")
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        LocalDate fstvlEndDate,
+
+        @JsonProperty("fstvlCo")
+        @JsonSetter(nulls = Nulls.AS_EMPTY)
+        String fstvlCo,
+
+        @JsonProperty("mnnstNm")
+        @JsonSetter(nulls = Nulls.AS_EMPTY)
+        String mnnstNm,
+
+        @JsonProperty("auspcInsttNm")
+        @JsonSetter(nulls = Nulls.AS_EMPTY)
+        String auspcInsttNm,
+
+        @JsonProperty("suprtInsttNm")
+        @JsonSetter(nulls = Nulls.AS_EMPTY)
+        String suprtInsttNm,
+
+        @JsonProperty("phoneNumber")
+        @JsonSetter(nulls = Nulls.AS_EMPTY)
+        String phoneNumber,
+
+        @JsonProperty("homepageUrl")
+        @JsonSetter(nulls = Nulls.AS_EMPTY)
+        String homepageUrl,
+
+        @JsonProperty("relateInfo")
+        @JsonSetter(nulls = Nulls.AS_EMPTY)
+        String relateInfo,
+
+        @JsonProperty("rdnmadr")
+        @JsonSetter(nulls = Nulls.AS_EMPTY)
+        String rdnmadr,
+
+        @JsonProperty("lnmadr")
+        @JsonSetter(nulls = Nulls.AS_EMPTY)
+        String lnmadr,
+
+        @JsonProperty("latitude")
+        Double latitude,
+
+        @JsonProperty("longitude")
+        Double longitude,
+
+        @JsonProperty("referenceDate")
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        LocalDate referenceDate,
+
+        @JsonProperty("insttCode")
+        @JsonSetter(nulls = Nulls.AS_EMPTY)
+        String insttCode,
+
+        @JsonProperty("insttNm")
+        @JsonSetter(nulls = Nulls.AS_EMPTY)
+        String insttNm
 ) {
+        public ClutrFatvlInfo {
+                latitude  = latitude  == null ? 0.0 : latitude;
+                longitude = longitude == null ? 0.0 : longitude;
+        }
+
 }

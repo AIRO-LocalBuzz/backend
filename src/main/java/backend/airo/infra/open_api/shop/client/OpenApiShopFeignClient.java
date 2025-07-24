@@ -14,7 +14,7 @@ import java.util.List;
  * <a href="https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15012005">...</a>
  */
 @FeignClient(
-        name = "openApi",
+        name = "openApi-shop",
         url = "https://apis.data.go.kr/",
         configuration = OpenApiFeignClientConfiguration.class)
 public interface OpenApiShopFeignClient {

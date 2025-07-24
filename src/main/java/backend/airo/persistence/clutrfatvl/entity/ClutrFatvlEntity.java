@@ -1,9 +1,10 @@
 package backend.airo.persistence.clutrfatvl.entity;
 
+import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.infra.open_api.clure_fatvl.vo.ClutrFatvlInfo;
-import backend.airo.persistence.clutrfatvl.entity.vo.Address;
-import backend.airo.persistence.clutrfatvl.entity.vo.FestivalPeriod;
-import backend.airo.persistence.clutrfatvl.entity.vo.GeoPoint;
+import backend.airo.domain.clure_fatvl.vo.Address;
+import backend.airo.domain.clure_fatvl.vo.FestivalPeriod;
+import backend.airo.domain.clure_fatvl.vo.GeoPoint;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -79,8 +80,28 @@ public class ClutrFatvlEntity {
         this.insttNm = insttNm;
     }
 
-    public static ClutrFatvlEntity create(ClutrFatvlInfo dto) {
+    public static ClutrFatvlEntity toEntity(ClutrFatvl dto) {
         return ClutrFatvlEntity.builder()
+                .fstvlNm(dto.getFstvlNm())
+                .opar(dto.getOpar())
+                .fstvlCo(dto.getFstvlCo())
+                .period(new FestivalPeriod(dto.getPeriod().start(), dto.getPeriod().end()))
+                .location(new GeoPoint(dto.getLocation().lat(), dto.getLocation().lon()))
+                .address(new Address(dto.getAddress().road(), dto.getAddress().lot()))
+                .mnnstNm(dto.getMnnstNm())
+                .auspcInsttNm(dto.getAuspcInsttNm())
+                .suprtInsttNm(dto.getSuprtInsttNm())
+                .phoneNumber(dto.getPhoneNumber())
+                .homepageUrl(dto.getHomepageUrl())
+                .relateInfo(dto.getRelateInfo())
+                .referenceDate(dto.getReferenceDate())
+                .insttCode(dto.getInsttCode())
+                .insttNm(dto.getInsttNm())
+                .build();
+    }
+
+    public static ClutrFatvl toDomain(ClutrFatvlInfo dto) {
+        return ClutrFatvl.builder()
                 .fstvlNm(dto.fstvlNm())
                 .opar(dto.opar())
                 .fstvlCo(dto.fstvlCo())
@@ -94,9 +115,30 @@ public class ClutrFatvlEntity {
                 .homepageUrl(dto.homepageUrl())
                 .relateInfo(dto.relateInfo())
                 .referenceDate(dto.referenceDate())
-                .insttCode(dto.instt_code())
-                .insttNm(dto.instt_nm())
+                .insttCode(dto.insttCode())
+                .insttNm(dto.insttNm())
                 .build();
     }
+
+    public static ClutrFatvl toDomain(ClutrFatvlEntity clutrFatvlEntity) {
+        return ClutrFatvl.builder()
+                .fstvlNm(clutrFatvlEntity.getFstvlNm())
+                .opar(clutrFatvlEntity.getOpar())
+                .fstvlCo(clutrFatvlEntity.getFstvlCo())
+                .period(new FestivalPeriod(clutrFatvlEntity.getPeriod().start(), clutrFatvlEntity.getPeriod().end()))
+                .location(new GeoPoint(clutrFatvlEntity.getLocation().lat(), clutrFatvlEntity.getLocation().lon()))
+                .address(new Address(clutrFatvlEntity.getAddress().road(), clutrFatvlEntity.getAddress().lot()))
+                .mnnstNm(clutrFatvlEntity.getMnnstNm())
+                .auspcInsttNm(clutrFatvlEntity.getAuspcInsttNm())
+                .suprtInsttNm(clutrFatvlEntity.getSuprtInsttNm())
+                .phoneNumber(clutrFatvlEntity.getPhoneNumber())
+                .homepageUrl(clutrFatvlEntity.getHomepageUrl())
+                .relateInfo(clutrFatvlEntity.getRelateInfo())
+                .referenceDate(clutrFatvlEntity.getReferenceDate())
+                .insttCode(clutrFatvlEntity.getInsttCode())
+                .insttNm(clutrFatvlEntity.getInsttNm())
+                .build();
+    }
+
 }
 
