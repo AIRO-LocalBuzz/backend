@@ -1,4 +1,4 @@
-package backend.airo.persistence.user.entity;
+package backend.airo.domain.user.enums;
 
 public enum ProviderType {
     GOOGLE, KAKAO, APP

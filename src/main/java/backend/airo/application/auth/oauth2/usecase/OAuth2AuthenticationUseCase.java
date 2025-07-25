@@ -3,7 +3,7 @@ package backend.airo.application.auth.oauth2.usecase;
 import backend.airo.domain.auth.oauth2.command.GenerateTempCodeCommand;
 import backend.airo.domain.auth.oauth2.query.FindOAuth2UserQuery;
 import backend.airo.domain.user.User;
-import backend.airo.persistence.user.entity.ProviderType;
+import backend.airo.domain.user.enums.ProviderType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

@@ -2,7 +2,7 @@ package backend.airo.domain.auth.oauth2.query;
 
 import backend.airo.domain.user.User;
 import backend.airo.domain.user.repository.UserRepository;
-import backend.airo.persistence.user.entity.ProviderType;
+import backend.airo.domain.user.enums.ProviderType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -35,6 +35,20 @@ public class FindOAuth2UserQuery {
         log.info("user id로 사용자 조회 - user ID: {}", id);
 
         User user = userRepository.findById(id);
+
+        return user;
+    }
+
+    public Optional<User> findByEmail(String email) {
+        log.info("이메일로 사용자 조회 - Email: {}", email);
+
+        Optional<User> user = userRepository.findByEmail(email);
+
+        if (user.isPresent()) {
+            log.info("기존 사용자 발견 - User ID: {}", user.get().getId());
+        } else {
+            log.info("사용자를 찾을 수 없음 - Email: {}", email);
+        }
 
         return user;
     }

@@ -1,8 +1,7 @@
 package backend.airo.persistence.user.entity;
 
-import backend.airo.domain.example.Test;
 import backend.airo.persistence.abstracts.BaseEntity;
-import backend.airo.persistence.example.entity.TestEntity;
+import backend.airo.domain.user.enums.ProviderType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

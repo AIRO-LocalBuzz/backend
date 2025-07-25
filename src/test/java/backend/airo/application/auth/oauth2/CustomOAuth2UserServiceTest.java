@@ -1,6 +1,6 @@
 package backend.airo.application.auth.oauth2;
 
-import backend.airo.persistence.user.entity.ProviderType;
+import backend.airo.domain.user.enums.ProviderType;
 import backend.airo.persistence.user.entity.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

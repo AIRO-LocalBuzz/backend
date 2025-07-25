@@ -5,7 +5,7 @@ import backend.airo.api.auth.dto.SocialLoginRequest;
 import backend.airo.application.auth.oauth2.usecase.OAuth2UserProcessingUseCase;
 import backend.airo.domain.auth.command.GenerateJwtTokenCommand;
 import backend.airo.domain.auth.query.ValidateTokenQuery;
-import backend.airo.persistence.user.entity.ProviderType;
+import backend.airo.domain.user.enums.ProviderType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -17,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SocialLoginUseCase {
 
-    private final OAuth2UserProcessingUseCase oauth2UserProcessingUseCase;
-    private final GenerateJwtTokenCommand generateJwtTokenCommand;
-    private final ValidateTokenQuery validateTokenQuery;
-    private final GoogleOAuth2LoginUseCase googleOAuth2LoginUseCase;
+//    private final OAuth2UserProcessingUseCase oauth2UserProcessingUseCase;
+//    private final GenerateJwtTokenCommand generateJwtTokenCommand;
+//    private final ValidateTokenQuery validateTokenQuery;
+    private final GoogleFirebaseLoginUseCase googleOAuth2LoginUseCase;
     private final KakaoOAuth2LoginUseCase kakaoOAuth2LoginUseCase;
 
     public AuthResponse execute(SocialLoginRequest request) {

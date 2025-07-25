@@ -1,4 +1,4 @@
-package backend.airo.application.auth.oauth2.usecase;
+package backend.airo.application.auth.usecase;
 
 import backend.airo.domain.auth.oauth2.OAuth2UserInfo;
 import backend.airo.domain.auth.oauth2.OAuth2UserInfoFactory;
@@ -17,22 +17,23 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class OAuth2UserProcessingUseCase {
+public class SocialUserProcessingUseCase {
 
     private final FindOAuth2UserQuery findOAuth2UserQuery;
     private final CreateOAuth2UserCommand createOAuth2UserCommand;
 
     @Transactional
-    public User processOAuth2User(ProviderType providerType, Map<String, Object> attributes) {
+    public User processSocialUser(ProviderType providerType, Map<String, Object> attributes) {
         log.info("OAuth2 사용자 처리 시작 - Provider: {}", providerType);
+        String email = (String) attributes.get("email");
 
         // 1. OAuth2 정보 추출 및 검증
         OAuth2UserInfo oauth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, attributes);
         validateUserInfo(oauth2UserInfo, providerType);
 
-        // 2. 기존 사용자 조회
-        Optional<User> existingUser = findOAuth2UserQuery.findByProviderIdAndType(
-                oauth2UserInfo.getId(), providerType);
+        // 2. 기존 사용자 이메일로 조회
+        Optional<User> existingUser = findOAuth2UserQuery.findByEmail(email);
+
 
         if (!existingUser.isPresent()) {
             User newUser = createOAuth2UserCommand.execute(existingUser, oauth2UserInfo, providerType);

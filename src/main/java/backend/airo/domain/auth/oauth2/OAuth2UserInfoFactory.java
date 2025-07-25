@@ -1,6 +1,6 @@
 package backend.airo.domain.auth.oauth2;
 
-import backend.airo.persistence.user.entity.ProviderType;
+import backend.airo.domain.user.enums.ProviderType;
 import java.util.Map;
 
 public class OAuth2UserInfoFactory {

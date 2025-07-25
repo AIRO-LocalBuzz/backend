@@ -3,7 +3,7 @@ package backend.airo.application.auth.oauth2;
 import backend.airo.application.auth.oauth2.usecase.OAuth2UserProcessingUseCase;
 import backend.airo.domain.auth.oauth2.CustomOAuth2User;
 import backend.airo.domain.user.User;
-import backend.airo.persistence.user.entity.ProviderType;
+import backend.airo.domain.user.enums.ProviderType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

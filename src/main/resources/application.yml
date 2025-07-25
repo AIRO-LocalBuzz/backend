@@ -85,6 +85,7 @@ server:
 social:
   firebase:
     service-account-key: ${FIREBASE_SERVICE_ACCOUNT_KEY:}
+    service-account-path: "src/main/resources/firebase/service-account.json"
     project-id: ${FIREBASE_PROJECT_ID:}
   kakao:
     client-id: ${KAKAO_CLIENT_ID:}

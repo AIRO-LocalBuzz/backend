@@ -1,0 +1,21 @@
+firebase:
+  auth:
+    # 토큰 만료 시간 설정
+    token-expiration: 3600000  # 1시간
+    # 허용된 이메일 도메인
+    allowed-domains:
+      - gmail.com
+    # 사용자 권한 설정
+    roles:
+      - USER
+      - ADMIN
+  security:
+    # CORS 설정
+    allowed-origins:
+      - http://localhost:3000
+      - https://your-production-domain.com
+    # API 접근 제한
+    rate-limits:
+      - path: /api/**
+        limit: 100
+        per: 60  # 1분당 100회 요청 제한
