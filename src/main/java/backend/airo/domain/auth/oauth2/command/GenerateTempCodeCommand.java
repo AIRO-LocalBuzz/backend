@@ -21,7 +21,7 @@ public class GenerateTempCodeCommand {
         redisTemplate.opsForValue().set(
                 "auth_code:" + accessToken,
                 userId.toString(),
-                1, TimeUnit.MINUTES
+                5, TimeUnit.MINUTES
         );
         log.info("Redis에 토큰 저장 완료 - User ID: {}", userId);
 

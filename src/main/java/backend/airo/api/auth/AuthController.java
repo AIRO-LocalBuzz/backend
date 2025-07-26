@@ -2,9 +2,11 @@ package backend.airo.api.auth;
 
 import backend.airo.api.auth.dto.AuthResponse;
 import backend.airo.api.auth.dto.AuthTokenRequest;
+import backend.airo.api.auth.dto.SignInRequest;
 import backend.airo.api.auth.dto.SocialLoginRequest;
 import backend.airo.application.auth.usecase.AuthTokenUseCase;
 import backend.airo.application.auth.usecase.RefreshTokenUseCase;
+import backend.airo.application.auth.usecase.SignInUseCase;
 import backend.airo.application.auth.usecase.SocialLoginUseCase;
 import backend.airo.common.jwt.JwtTokenProvider;
 import backend.airo.domain.auth.command.LogoutCommand;
@@ -26,6 +28,7 @@ public class AuthController {
     private final RefreshTokenUseCase refreshTokenUseCase;
     private final ValidateTokenQuery validateTokenQuery;
     private final AuthTokenUseCase authTokenUseCase;
+    private final SignInUseCase signInUseCase;
     private final LogoutCommand logoutCommand;
 
     /**
@@ -33,7 +36,15 @@ public class AuthController {
      */
     @PostMapping("/exchange-token")
     public ResponseEntity<AuthResponse> exchangeToken(@Valid @RequestBody AuthTokenRequest request) {
-        AuthResponse response = authTokenUseCase.exchangeToken(request);
+        AuthResponse response = authTokenUseCase.exchangeToken(request.getCode());
+        return ResponseEntity.ok(response);
+    }
+
+
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<AuthResponse>signUp(@Valid @RequestBody SignInRequest request) {
+        AuthResponse response = signInUseCase.exchangeTokenForNewUser(request);
         return ResponseEntity.ok(response);
     }
 
