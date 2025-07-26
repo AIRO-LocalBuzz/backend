@@ -18,10 +18,10 @@ public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${jwt.expiration}")
+    @Value("${jwt.access-token.expiration}")
     private long accessTokenValidityInSeconds;
 
-    @Value("${jwt.refresh}")
+    @Value("${jwt.refresh-token.expiration}")
     private long refreshTokenValidityInSeconds;
 
     private SecretKey getSigningKey() {

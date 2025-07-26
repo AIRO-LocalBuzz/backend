@@ -26,7 +26,7 @@ public class OAuth2AuthenticationUseCase {
     @Value("${app.oauth2.failure-url:http://localhost:3000/auth/failure}")
     private String failureUrl;
 
-    public String handleAuthenticationSuccess(OAuth2User oauth2User) {
+    public String handleAuthenticationSuccess(OAuth2User oauth2User, String accessToken) {
         // 1. OAuth2 정보 추출
         String providerId = oauth2User.getAttribute("provider_id");
         ProviderType providerType = oauth2User.getAttribute("provider_type");
@@ -40,11 +40,11 @@ public class OAuth2AuthenticationUseCase {
             User user = userOptional.get();
             log.info("기존 사용자 찾음 - User ID: {}, Email: {}", user.getId(), user.getEmail());
 
-            // 3. 임시 코드 생성 및 저장
-            String tempCode = generateTempCodeCommand.generate(user.getId());
+            // 3. 토큰 저장
+            generateTempCodeCommand.generate(user.getId(), accessToken);
 
             // 4. 성공 URL 반환
-            return successBaseUrl + "?code=" + tempCode;
+            return successBaseUrl + "?token=" + accessToken;
 
         } else {
             log.warn("사용자를 찾을 수 없음 - Provider ID: {}, Provider Type: {}", providerId, providerType);

@@ -30,9 +30,15 @@ public class OAuth2UserProcessingUseCase {
         OAuth2UserInfo oauth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, attributes);
         validateUserInfo(oauth2UserInfo, providerType);
 
+        Optional<User> existingUser = Optional.empty();
+
         // 2. 기존 사용자 조회
-        Optional<User> existingUser = findOAuth2UserQuery.findByProviderIdAndType(
-                oauth2UserInfo.getId(), providerType);
+        if (providerType == ProviderType.GOOGLE) {
+            existingUser = findOAuth2UserQuery.findByEmail(oauth2UserInfo.getEmail());
+        }else{
+            existingUser = findOAuth2UserQuery.findByProviderIdAndType(
+                    oauth2UserInfo.getId(), providerType);
+        }
 
         if (!existingUser.isPresent()) {
             User newUser = createOAuth2UserCommand.execute(existingUser, oauth2UserInfo, providerType);

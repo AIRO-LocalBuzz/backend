@@ -15,19 +15,15 @@ public class GenerateTempCodeCommand {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    public String generate(Long userId) {
-        // 임시 코드 생성
-        String tempCode = UUID.randomUUID().toString();
-        log.info("임시 인증 코드 생성: {}", tempCode);
+    public void generate(Long userId, String accessToken) {
 
         // Redis에 저장 (1분 유효)
         redisTemplate.opsForValue().set(
-                "auth_code:" + tempCode,
+                "auth_code:" + accessToken,
                 userId.toString(),
                 1, TimeUnit.MINUTES
         );
-        log.info("Redis에 임시 코드 저장 완료 - User ID: {}", userId);
+        log.info("Redis에 토큰 저장 완료 - User ID: {}", userId);
 
-        return tempCode;
     }
 }
