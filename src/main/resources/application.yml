@@ -73,8 +73,6 @@ springdoc:
       packages-to-scan: backend.airo.api.review
     - group: 'Content API'
       packages-to-scan: backend.airo.api.content
-    - group: 'Example API'
-      packages-to-scan: backend.airo.api.auth
 
 
 server:
