@@ -41,6 +41,6 @@ services:
       - "${SERVER_PORT}:${SERVER_PORT}"
     restart: always
     volumes:
-      - "${FIRE_BASE_ADMIN_RASP_KEY_PATH}:${FIRE_BASE_ADMIN_KEY_PATH}"
+      - "${FIRE_BASE_ADMIN_RASS_KEY_PATH}:${FIRE_BASE_ADMIN_KEY_PATH}"
 volumes:
   redis_data:
