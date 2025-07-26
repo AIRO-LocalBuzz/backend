@@ -2,11 +2,12 @@ package backend.airo.api.auth;
 
 import backend.airo.api.auth.dto.AuthResponse;
 import backend.airo.api.auth.dto.AuthTokenRequest;
-import backend.airo.api.auth.dto.AuthTokenResponse;
 import backend.airo.api.auth.dto.SocialLoginRequest;
 import backend.airo.application.auth.usecase.AuthTokenUseCase;
 import backend.airo.application.auth.usecase.RefreshTokenUseCase;
 import backend.airo.application.auth.usecase.SocialLoginUseCase;
+import backend.airo.common.jwt.JwtTokenProvider;
+import backend.airo.domain.auth.command.LogoutCommand;
 import backend.airo.domain.auth.query.ValidateTokenQuery;
 import com.google.api.client.auth.oauth2.RefreshTokenRequest;
 import jakarta.validation.Valid;
@@ -20,18 +21,19 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
-
+    private final JwtTokenProvider jwtTokenProvider;
     private final SocialLoginUseCase socialLoginUseCase;
     private final RefreshTokenUseCase refreshTokenUseCase;
     private final ValidateTokenQuery validateTokenQuery;
     private final AuthTokenUseCase authTokenUseCase;
+    private final LogoutCommand logoutCommand;
 
     /**
      * OAuth2 토큰 교환
      */
     @PostMapping("/exchange-token")
-    public ResponseEntity<AuthTokenResponse> exchangeToken(@Valid @RequestBody AuthTokenRequest request) {
-        AuthTokenResponse response = authTokenUseCase.exchangeToken(request);
+    public ResponseEntity<AuthResponse> exchangeToken(@Valid @RequestBody AuthTokenRequest request) {
+        AuthResponse response = authTokenUseCase.exchangeToken(request);
         return ResponseEntity.ok(response);
     }
 
@@ -50,11 +52,20 @@ public class AuthController {
      * 로그아웃
      */
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout() {
-            log.info("User logout attempt");
-            // JWT는 stateless이므로 클라이언트에서 토큰 삭제
-            // 필요시 블랙리스트 로직 추가
-            return ResponseEntity.ok().build();
+    public ResponseEntity<Void> logout(@RequestHeader(value = "Authorization", required = true) String bearerToken) {
+        if (!bearerToken.startsWith("Bearer ")) {
+            throw new IllegalArgumentException("Invalid Authorization header format");
+        }
+
+        String accessToken = bearerToken.substring(7);
+        if (accessToken.isEmpty()) {
+            throw new IllegalArgumentException("Access token is empty");
+        }
+
+        Long userId = jwtTokenProvider.getUserIdFromToken(accessToken);
+        logoutCommand.execute(accessToken, userId);
+
+        return ResponseEntity.ok().build();
     }
 
     /**
@@ -82,7 +93,7 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String token) {
             String cleanToken = token.replace("Bearer ", "");
-            // 현재 사용자 정보 반환 로직 추가
+            // Todo 현재 사용자 정보 반환 로직 추가
             return ResponseEntity.ok().build();
     }
 }

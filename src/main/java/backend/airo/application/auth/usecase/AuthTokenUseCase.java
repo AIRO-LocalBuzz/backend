@@ -1,7 +1,9 @@
 package backend.airo.application.auth.usecase;
 
+import backend.airo.api.auth.dto.AuthResponse;
 import backend.airo.api.auth.dto.AuthTokenRequest;
 import backend.airo.api.auth.dto.AuthTokenResponse;
+import backend.airo.domain.auth.command.GenerateJwtTokenCommand;
 import backend.airo.domain.auth.oauth2.command.ExchangeTokenCommand;
 import backend.airo.domain.auth.oauth2.query.GetUserByTempCodeQuery;
 import backend.airo.domain.user.User;
@@ -14,13 +16,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AuthTokenUseCase {
     private final GetUserByTempCodeQuery getUserByTempCodeQuery;
-    private final ExchangeTokenCommand exchangeTokenCommand;
+    private final GenerateJwtTokenCommand generateJwtTokenCommand;
 
-    public AuthTokenResponse exchangeToken(AuthTokenRequest request) {
+    public AuthResponse exchangeToken(AuthTokenRequest request) {
 
         User user = getUserByTempCodeQuery.getUserByTempCode(request.getCode());
 
-        AuthTokenResponse response = exchangeTokenCommand.execute(user.getId(), request.getCode());
+        AuthResponse response = generateJwtTokenCommand.execute(user);
 
         log.info("토큰 교환 성공 - User ID: {}", user.getId());
         return response;
