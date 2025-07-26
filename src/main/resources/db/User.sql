@@ -3,7 +3,7 @@ USE `local_buzz`;
 -- 1. users: 사용자 기본 정보
 CREATE TABLE users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    provider VARCHAR(20) NOT NULL,            -- ex) 'GOOGLE', 'KAKAO'
+    provider_type ENUM('GOOGLE', 'KAKAO', 'APP') NOT NULL,            -- ex) 'GOOGLE', 'KAKAO'
     provider_id VARCHAR(100) NOT NULL UNIQUE, -- 소셜 로그인 고유 ID
     nickname VARCHAR(50) NOT NULL UNIQUE,
     name VARCHAR(50),
