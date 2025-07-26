@@ -1,14 +1,15 @@
-package backend.airo.domain.clure_fatvl.vo;
+package backend.airo.domain.shop.vo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public record Address(
+public record ShopAddress(
         @Column(name = "road_addr", length = 512)
         String road,
         @Column(name = "lot_addr",  length = 512)
-        String lot
+        String lot,
+        String newZipcd
 ) {
     public String checkAddress() {
         if (road.isEmpty() && lot.isEmpty()) {

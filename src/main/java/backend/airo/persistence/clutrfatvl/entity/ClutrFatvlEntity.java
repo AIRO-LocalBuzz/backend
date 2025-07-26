@@ -5,6 +5,7 @@ import backend.airo.infra.open_api.clure_fatvl.vo.ClutrFatvlInfo;
 import backend.airo.domain.clure_fatvl.vo.Address;
 import backend.airo.domain.clure_fatvl.vo.FestivalPeriod;
 import backend.airo.domain.clure_fatvl.vo.GeoPoint;
+import backend.airo.persistence.abstracts.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,7 +17,7 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class ClutrFatvlEntity {
+public class ClutrFatvlEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

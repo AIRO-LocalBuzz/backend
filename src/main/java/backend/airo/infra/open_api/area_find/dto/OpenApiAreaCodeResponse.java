@@ -1,31 +1,31 @@
-package backend.airo.infra.open_api.shop.dto;
+package backend.airo.infra.open_api.area_find.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public record OpenApiShopResponse<T>(
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record OpenApiAreaCodeResponse<T>(
         @JsonProperty("header") Header header,
         @JsonProperty("body") Body<T> body
 ) {
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public record Header(
             @JsonProperty("description") String description,
             @JsonProperty("columns") List<String> columns,
-            @JsonProperty("stdrYm") String stdrYm,
             @JsonProperty("resultCode") String resultCode,
             @JsonProperty("resultMsg") String resultMsg
     ) {}
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record Body<T>(
-            @JsonProperty("items") T items,
-            @JsonProperty("numOfRows") int numOfRows,
-            @JsonProperty("pageNo") int pageNo,
-            @JsonProperty("totalCount") long totalCount
+            @JsonProperty("items") List<T> items
     ) {}
 
-    public T getItems() {
+    public List<T> items() {
         return body.items();
     }
 }
+

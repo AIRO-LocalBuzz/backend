@@ -19,7 +19,7 @@ import java.util.List;
         configuration = OpenApiFeignClientConfiguration.class)
 public interface OpenApiShopFeignClient {
 
-    @GetMapping("/B553077/api/open/sdsc2")
+    @GetMapping("/B553077/api/open/sdsc2/storeListInDong")
     OpenApiShopResponse<List<ShopInfo>> getShopInfo(
             //페이지 번호
             @RequestParam(value = "pageNo") String pageNo,
@@ -28,10 +28,10 @@ public interface OpenApiShopFeignClient {
             //시도는 ctprvnCd, 시군구는 signguCd, 행정동은 adongCd 코드 사용
             @RequestParam(value = "divId") String divId,
             //시도 코드값 or 시군구 코드값 or 행정동은 행정동 코드 값
-            @RequestParam(value = "key") String fstvlEndDate,
-            @RequestParam(value = "indsLclsCd") String indsLclsCd,
-            @RequestParam(value = "indsMclsCd") String indsMclsCd,
-            @RequestParam(value = "indsSclsCd") String indsSclsCd
+            @RequestParam(value = "key") String key
+//            @RequestParam(value = "indsLclsCd") String indsLclsCd,
+//            @RequestParam(value = "indsMclsCd") String indsMclsCd,
+//            @RequestParam(value = "indsSclsCd") String indsSclsCd
             );
 
 }

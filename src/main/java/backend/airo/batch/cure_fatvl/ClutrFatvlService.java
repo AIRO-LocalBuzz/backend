@@ -1,9 +1,8 @@
-package backend.airo.batch.ClureFatvl;
+package backend.airo.batch.cure_fatvl;
 
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
+import backend.airo.domain.clure_fatvl.command.CreateAllClutrFatvlCommand;
 import backend.airo.domain.clure_fatvl.repository.ClutrFatvlRepository;
-import backend.airo.persistence.clutrfatvl.adapter.ClutrFatvlAdapter;
-import backend.airo.persistence.clutrfatvl.entity.ClutrFatvlEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,11 +18,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-class ClutrFatvlService {
+public class ClutrFatvlService {
 
-    private final ClutrFatvlRepository clutrFatvlRepository;
-    private final ClutrFatvlAdapter clutrFatvlAdapter;
-    private final AsyncFestivalDataCollector asyncFestivalDataCollector;
+    private final CreateAllClutrFatvlCommand createAllClutrFatvlCommand;
+    private final AsyncClutrFatvlDataCollector asyncClutrFatvlDataCollector;
 
     public void collectFestivalOf(YearMonth ym) {
 //        LocalDate start = ym.atDay(1);
@@ -32,14 +30,12 @@ class ClutrFatvlService {
         LocalDate start = LocalDate.of(year, 6, 1);        // 6월 1일
         LocalDate end   = LocalDate.of(year, 12, 31);      // 12월 31일
 
-        log.info("Starting festival data collection for {} using async processing", ym);
-
         // 각 날짜별로 비동기 작업 생성 (다른 클래스의 @Async 메서드 호출)
         List<CompletableFuture<List<ClutrFatvl>>> futures = new ArrayList<>();
 
         for (LocalDate day = start; !day.isAfter(end); day = day.plusDays(1)) {
             CompletableFuture<List<ClutrFatvl>> future =
-                    asyncFestivalDataCollector.fetchAllByStartDateAsync(day);
+                    asyncClutrFatvlDataCollector.fetchAllByStartDateAsync(day);
             futures.add(future);
         }
 
@@ -51,8 +47,8 @@ class ClutrFatvlService {
 
 
         if (!allEntities.isEmpty()) {
-            Collection<ClutrFatvl> clutrFatvls = clutrFatvlRepository.saveAll(allEntities);
-            log.info("문화 축제 데이터 수집이 정상적으로 이루어 졌습니다. {}", clutrFatvls.size());
+            int size = createAllClutrFatvlCommand.handle(allEntities);
+            log.info("문화 축제 데이터 수집이 정상적으로 이루어 졌습니다. {}", size);
         }
     }
 }

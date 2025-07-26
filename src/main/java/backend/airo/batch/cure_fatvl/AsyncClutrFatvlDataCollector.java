@@ -1,4 +1,4 @@
-package backend.airo.batch.ClureFatvl;
+package backend.airo.batch.cure_fatvl;
 
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.infra.open_api.clure_fatvl.client.OpenApiClureFatvlFeignClient;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class AsyncFestivalDataCollector {
+public class AsyncClutrFatvlDataCollector {
 
     private final OpenApiClureFatvlFeignClient openApiClureFatvlFeignClient;
     private static final DateTimeFormatter DASHED = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -44,8 +44,6 @@ public class AsyncFestivalDataCollector {
     private List<ClutrFatvlInfo> fetchAllByStartDate(LocalDate startDate) {
         int page = 1;
         List<ClutrFatvlInfo> acc = new ArrayList<>();
-        String threadName = Thread.currentThread().getName();
-
         while (true) {
             try {
                 OpenApiClureFatvlResponse<ClutrFatvlInfo> res =
@@ -72,14 +70,10 @@ public class AsyncFestivalDataCollector {
                 page++;
 
             } catch (Exception e) {
-                log.error("Error fetching page {} for date {} on thread {}: {}",
-                        page, startDate, threadName, e.getMessage());
                 break;
             }
         }
 
-        log.debug("Fetched total {} items for date {} on thread: {}",
-                acc.size(), startDate, threadName);
         return acc;
     }
 }

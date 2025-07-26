@@ -52,14 +52,6 @@ public record ShopInfo(
 
         // 좌표
         Double lon,
-        Double lat,
-
-        // 메타데이터
-        Integer numOfRows,
-        Integer pageNo,
-        Long totalCount,
-        String stdrYm,
-        String resultCode,
-        String resultMsg
+        Double lat
 ) {
 }
