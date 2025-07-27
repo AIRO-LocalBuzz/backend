@@ -24,7 +24,7 @@ public class AreaCodeController implements AreaCodeControllerSwagger {
     private final AreaCodeUseCase areaCodeUseCase;
 
     @Override
-    @GetMapping("/shop/info")
+    @GetMapping("/area/mega/code")
     public Response<List<MegaCodeResponse>> getMegaCodes(){
         List<MegaCode> megaCodes = areaCodeUseCase.getMegaCodeList();
         return Response.success(
@@ -35,7 +35,7 @@ public class AreaCodeController implements AreaCodeControllerSwagger {
     }
 
     @Override
-    @GetMapping("/shop/info")
+    @GetMapping("/area/city/code")
     public Response<List<CityCodeResponse>> getCityCodes() {
         List<CityCode> cityCodes = areaCodeUseCase.getCityCodeList();
         return Response.success(cityCodes.stream().map(list ->

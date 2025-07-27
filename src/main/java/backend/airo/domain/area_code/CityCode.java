@@ -11,16 +11,16 @@ public class CityCode {
 
     private final String ctprvnNm;
 
-    private final String megaCodeId;
+    private final Long megaCodeId;
 
-    public CityCode(Long id, String ctprvnCd, String ctprvnNm, String megaCodeId) {
+    public CityCode(Long id, String ctprvnCd, String ctprvnNm, Long megaCodeId) {
         this.id = id;
         this.ctprvnCd = ctprvnCd;
         this.ctprvnNm = ctprvnNm;
         this.megaCodeId = megaCodeId;
     }
 
-    public CityCode(String ctprvnCd, String ctprvnNm, String megaCodeId) {
+    public CityCode(String ctprvnCd, String ctprvnNm, Long megaCodeId) {
         this.ctprvnCd = ctprvnCd;
         this.ctprvnNm = ctprvnNm;
         this.megaCodeId = megaCodeId;

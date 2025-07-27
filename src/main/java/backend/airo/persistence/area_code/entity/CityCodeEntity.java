@@ -22,9 +22,9 @@ public class CityCodeEntity {
 
     private String ctprvnNm;
 
-    private String megaCodeId;
+    private Long megaCodeId;
 
-    public CityCodeEntity(String ctprvnCd, String ctprvnNm, String megaCodeId) {
+    public CityCodeEntity(String ctprvnCd, String ctprvnNm, Long megaCodeId) {
         this.ctprvnCd = ctprvnCd;
         this.ctprvnNm = ctprvnNm;
         this.megaCodeId = megaCodeId;

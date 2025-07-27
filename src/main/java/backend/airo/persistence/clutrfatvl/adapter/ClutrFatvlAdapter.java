@@ -4,15 +4,12 @@ import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.domain.clure_fatvl.repository.ClutrFatvlRepository;
 import backend.airo.persistence.clutrfatvl.entity.ClutrFatvlEntity;
 import backend.airo.persistence.clutrfatvl.repository.ClutrFatvlJpaRepository;
-import backend.airo.persistence.example.entity.TestEntity;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
