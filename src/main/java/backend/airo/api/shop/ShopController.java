@@ -26,16 +26,20 @@ public class ShopController implements ShopControllerSwagger {
 
     private final ShopUseCase shopUseCase;
 
-//    @Override
-//    @GetMapping("/shop")
-//    public Response<List<ShopListResponse>> getShoplList(
-//            @RequestParam(defaultValue = "1") String end,
-//            @RequestParam(defaultValue = "10") String numOfRows,
-//            @RequestParam(defaultValue = "") String divId
-//    ) {
-//        List<Shop> shopList = shopUseCase.getShopList(end, numOfRows, divId);
-//        return Response.success(shopList.stream().map(list -> new ShopListResponse(list.getId(), list)));
-//    }
+    @Override
+    @GetMapping("/shop")
+    public Response<List<ShopListResponse>> getShoplList(
+            @RequestParam() String megaNmae,
+            @RequestParam() String cityName
+    ) {
+        List<Shop> shopList = shopUseCase.getShopList(megaNmae, cityName);
+        return Response.success(shopList.stream().map(list ->
+                new ShopListResponse(
+                        list.getId(),
+                        list
+                )
+        ));
+    }
 
     @Override
     @GetMapping("/shop/info")

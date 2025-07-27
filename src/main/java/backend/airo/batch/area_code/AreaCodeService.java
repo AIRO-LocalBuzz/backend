@@ -1,6 +1,8 @@
 package backend.airo.batch.area_code;
 
+import backend.airo.domain.area_code.CityCode;
 import backend.airo.domain.area_code.MegaCode;
+import backend.airo.domain.area_code.command.CreateAllCityCodeCommand;
 import backend.airo.domain.area_code.command.CreateAllMegaCodeCommand;
 import backend.airo.infra.open_api.area_find.vo.OpenApiCtyCode;
 import backend.airo.infra.open_api.area_find.vo.OpenApiMegaCode;
@@ -18,6 +20,7 @@ public class AreaCodeService {
 
     private final AsyncAreaCodeDataCollector asyncAreaCodeDataCollector;
     private final CreateAllMegaCodeCommand createAllMegaCodeCommand;
+    private final CreateAllCityCodeCommand createAllCityCodeCommand;
     private final TimeCatch timeCatch = new TimeCatch("AreaCode Time Check");
 
 //    private final
@@ -27,7 +30,10 @@ public class AreaCodeService {
         List<OpenApiMegaCode> openApiMegaCode = asyncAreaCodeDataCollector.getMegaCode();
         List<MegaCode> megaCodes = openApiMegaCode.stream().map(list -> new MegaCode(list.ctprvnCd(), list.ctprvnNm())).toList();
         createAllMegaCodeCommand.handle(megaCodes);
-        List<OpenApiCtyCode> cityCode = asyncAreaCodeDataCollector.getCityCode(openApiMegaCode);
+
+        List<OpenApiCtyCode> openApiCtyCodes = asyncAreaCodeDataCollector.getCityCode(openApiMegaCode);
+        List<CityCode> codeCodes = openApiCtyCodes.stream().map(list -> new CityCode(list.ctprvnCd(), list.ctprvnNm(), list.ctprvnCd())).toList();
+        createAllCityCodeCommand.handle(codeCodes);
 //        List<AdmiCode> admiCode = asyncAreaCodeDataCollector.getAdmiCode(cityCode);
 //        List<ZoneCode> zoneCode = asyncAreaCodeDataCollector.getZoneCode(cityCode);
         timeCatch.end();

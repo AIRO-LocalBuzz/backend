@@ -16,7 +16,6 @@ public class MegaCodeAdapter implements MegaRepository {
 
     private final MegaCodeJpaRepository megaCodeJpaRepository;
 
-
     @Override
     public MegaCode save(MegaCode aggregate) {
         return null;

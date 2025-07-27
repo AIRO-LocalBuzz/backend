@@ -16,20 +16,21 @@ import java.util.List;
 
 public interface ShopControllerSwagger {
 
-//    @Operation(summary = "각 지역별 소상공인 상점 조회", description = "각 지역별 소상공인 상점 조회 API")
-//    @Parameters({
-//            @Parameter(name = "clutrFatvlId", description = "문화/축제 ID", example = "1")
-//    })
-//    @ApiResponse(
-//            responseCode = "200",
-//            description = "소상공인 상점 조회 성공",
-//            content = @Content(schema = @Schema(implementation = ShopListResponse.class))
-//    )
-//    Response<List<ShopListResponse>> getShoplList(
-//            @RequestParam(defaultValue = "1") String end,
-//            @RequestParam(defaultValue = "10") String numOfRows,
-//            @RequestParam(defaultValue = "") String divId
-//    );
+    @Operation(summary = "각 지역별 소상공인 상점 조회", description = "각 지역별 소상공인 상점 조회 API")
+    @Parameters({
+            @Parameter(name = "megaNmae", description = "각 도시 이름", example = "서울특별시"),
+            @Parameter(name = "cityName", description = "각 도시 지역구 이름", example = "마포구")
+    })
+
+    @ApiResponse(
+            responseCode = "200",
+            description = "소상공인 상점 조회 성공",
+            content = @Content(schema = @Schema(implementation = ShopListResponse.class))
+    )
+    Response<List<ShopListResponse>> getShoplList(
+            @RequestParam() String megaNmae,
+            @RequestParam() String cityName
+    );
 
     @Operation(summary = "소상공인 상점 정보 상세 조회", description = "소상공인 상점 정보 조회 API")
     @Parameters({

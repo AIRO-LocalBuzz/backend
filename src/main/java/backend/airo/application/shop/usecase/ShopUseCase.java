@@ -15,7 +15,7 @@ public class ShopUseCase {
     private final GetShopListQuery getShopListQuery;
     private final GetShopQuery getShopQuery;
 
-    public List<Shop> getShopList(String pageNo, String numOfRows, String divId) {
+    public List<Shop> getShopList(String megaName, String cityName) {
         return getShopListQuery.handle();
     }
 
