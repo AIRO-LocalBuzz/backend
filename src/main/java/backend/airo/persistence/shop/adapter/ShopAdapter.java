@@ -2,7 +2,6 @@ package backend.airo.persistence.shop.adapter;
 
 import backend.airo.domain.shop.Shop;
 import backend.airo.domain.shop.repository.ShopRepository;
-import backend.airo.persistence.example.entity.TestEntity;
 import backend.airo.persistence.shop.entity.ShopEntity;
 import backend.airo.persistence.shop.repository.ShopJpaRepository;
 import jakarta.transaction.Transactional;
@@ -20,8 +19,9 @@ public class ShopAdapter implements ShopRepository {
     private final ShopJpaRepository shopJpaRepository;
 
     @Override
-    public List<Shop> findAll() {
-        return List.of();
+    public List<Shop> findAll(String megaName, String cityName) {
+        List<ShopEntity> shopEntities = shopJpaRepository.findByShopList(megaName, cityName);
+        return shopEntities.stream().map(ShopEntity::toDomain).toList();
     }
 
     @Override

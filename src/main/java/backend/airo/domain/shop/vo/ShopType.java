@@ -7,7 +7,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum ShopType {
 
-    I1, I2
+    I1("숙박"), I2("음식")
     ;
+
+
+    private final String typeName;
     // I1 -> 숙박업, I2 -> 음식점업
 }

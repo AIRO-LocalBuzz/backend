@@ -36,9 +36,13 @@ public class ShopController implements ShopControllerSwagger {
         return Response.success(shopList.stream().map(list ->
                 new ShopListResponse(
                         list.getId(),
-                        list
+                        list.getShopName(),
+                        "dd",
+                        list.getAddress().lot(),
+                        list.getAddress().road(),
+                        list.getShopType().getTypeName()
                 )
-        ));
+        ).toList());
     }
 
     @Override

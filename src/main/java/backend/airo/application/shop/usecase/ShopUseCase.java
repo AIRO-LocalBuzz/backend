@@ -16,7 +16,7 @@ public class ShopUseCase {
     private final GetShopQuery getShopQuery;
 
     public List<Shop> getShopList(String megaName, String cityName) {
-        return getShopListQuery.handle();
+        return getShopListQuery.handle(megaName, cityName);
     }
 
     public Shop getShopInfo(Long shopId) {

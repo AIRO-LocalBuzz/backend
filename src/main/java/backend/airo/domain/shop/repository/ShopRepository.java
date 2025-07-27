@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ShopRepository extends AggregateSupport<Shop, Long> {
 
-    List<Shop> findAll();
+    List<Shop> findAll(String megaName, String cityName);
 }

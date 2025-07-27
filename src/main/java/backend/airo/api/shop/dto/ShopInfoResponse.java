@@ -26,5 +26,4 @@ public record ShopInfoResponse(
                 .build();
     }
 
-    private static String nz(String s) { return s == null ? "" : s; }
 }
