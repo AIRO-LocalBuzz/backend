@@ -13,8 +13,8 @@ public class GetShopListQuery {
 
     private final ShopRepository shopRepository;
 
-    public List<Shop> handle() {
-        return shopRepository.findAll();
+    public List<Shop> handle(String megaName, String cityName) {
+        return shopRepository.findAll(megaName, cityName);
     }
 
 }
