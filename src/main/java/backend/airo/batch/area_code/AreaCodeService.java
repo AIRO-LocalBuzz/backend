@@ -28,8 +28,6 @@ public class AreaCodeService {
 //    private final
 
     public void collectCodeOf() {
-
-
         timeCatch.start();
         List<OpenApiMegaCode> openApiMegaCode = asyncAreaCodeDataCollector.getMegaCode();
         List<MegaCode> megaCodes = openApiMegaCode.stream()
