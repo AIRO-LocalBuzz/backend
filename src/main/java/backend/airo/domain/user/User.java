@@ -20,6 +20,7 @@ public class User {
     private final String providerId;
     private String bio;
     private String profileImageUrl;
+    private Long viewCount = 0L;
     private LocalDateTime lastLoginAt;
     private LocalDateTime createdAt;
 
