@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ShopService {
 
-    private final ShopDataCollector shopDataCollector;
+    private final AsyncShopProcess asyncShopProcess;
     private final TimeCatch timeCatch = new TimeCatch("ShopService Time Check");
 
     public void collectShopOf() {
         timeCatch.start();
-        shopDataCollector.getShopDataList();
+        asyncShopProcess.getShopDataList();
         timeCatch.end();
     }
 
