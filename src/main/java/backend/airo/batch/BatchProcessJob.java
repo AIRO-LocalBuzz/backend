@@ -25,7 +25,7 @@ public class BatchProcessJob {
         areaCodeService.collectCodeOf();
     }
 
-    // 1월 1일, 7월 1일 새벽 3시 30분에 배치 작업 시작 [ 행정동,법정동 등 코드 수집 ]
+    // 1월 1일, 7월 1일 새벽 3시 30분에 배치 작업 시작 [ 각 소상공인 상점 정보 수집 ]
     @Scheduled(cron = "0 30 3 1 1,7 *", zone = "Asia/Seoul")
     public void syncShop() {
         shopService.collectShopOf();
