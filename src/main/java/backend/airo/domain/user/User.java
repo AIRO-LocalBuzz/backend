@@ -18,6 +18,8 @@ public class User {
     private LocalDate birthDate;
     private final ProviderType providerType;
     private final String providerId;
+    private String bio;
+    private String profileImageUrl;
     private LocalDateTime lastLoginAt;
     private LocalDateTime createdAt;
 
