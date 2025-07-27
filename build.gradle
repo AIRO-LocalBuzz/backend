@@ -27,6 +27,8 @@ repositories {
 dependencies {
 	// Spring Boot Starters
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	//RDB
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -34,11 +36,30 @@ dependencies {
 	// Database
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
+	// Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'io.lettuce:lettuce-core'
+
 	// Documentation
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+	//security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
+	// JWT
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 	// Development Tools
+	// Firebase Admin SDK
+	implementation 'com.google.firebase:firebase-admin:9.2.0'
+
+	// HTTP Client for KakaoTalk API
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
 	compileOnly 'org.projectlombok:lombok'
+//	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	//developmentOnly 'org.springframework.boot:spring-boot-devtools'  // 개발 편의성
 
@@ -48,17 +69,15 @@ dependencies {
 	// Configuration Processor (IDE 지원)
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
-	// OpenFeign for HTTP client communication
-	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.3'
-	implementation 'org.springframework.cloud:spring-cloud-commons:4.1.4'
+	// firebase
+	implementation 'com.google.firebase:firebase-admin:9.2.0'
 
 	// Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testRuntimeOnly 'com.h2database:h2'
 }
-
-
 
 tasks.named('test') {
 	useJUnitPlatform()

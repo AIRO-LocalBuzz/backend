@@ -38,3 +38,8 @@ out/
 .env
 
 application-*.yml
+
+docker-compose-dev.yml
+
+LocalBuzzFirebaseAdminKey.json
+src/main/resources/static/
