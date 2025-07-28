@@ -43,6 +43,15 @@ public class UserEntity extends BaseEntity {
     @Column(name = "provider_id", nullable = false, unique = true)
     private String providerId;
 
+    @Column(name = "bio", length = 500)
+    private String bio;
+
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
+    @Column(name = "veiw_count")
+    private Long viewCount = 0L;
+
 
     public UserEntity(String email, String name, String nickname, String phoneNumber, LocalDate birthDate, ProviderType providerType, String providerId) {
         this.email = email;
