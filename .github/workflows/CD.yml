@@ -24,7 +24,7 @@ jobs:
       FIRE_BASE_ADMIN_RASS_KEY_PATH: ${{ secrets.FIRE_BASE_ADMIN_RASS_KEY_PATH }}
 
     steps:
-      - name: 현재 저장소 코트 Clone
+      - name: 현재 저장소 코드 Clone
         uses: actions/checkout@v4
 
       - name: .env 파일 생성
