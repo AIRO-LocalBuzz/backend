@@ -9,4 +9,5 @@ public interface CityRepository extends AggregateSupport<CityCode, Long> {
 
     List<CityCode> findAll();
 
+    CityCode findByCtprvnCode(Long ctprvnCode);
 }
