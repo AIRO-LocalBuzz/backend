@@ -28,9 +28,21 @@ public class init {
         shopService.collectShopOf();
     }
 
+    @GetMapping("clutrFatvl/data")
+    public void initControl2() {
+        YearMonth target = YearMonth.now();
+        clutrFatvlService.collectFestivalOf(target);
+    }
+
+    @GetMapping("shop/data")
+    public void initControl3() {
+        YearMonth target = YearMonth.now();
+        clutrFatvlService.collectFestivalOf(target);
+    }
+
 
     @GetMapping("all/data/area_code")
-    public void initControl2() {
+    public void initControl4() {
         areaCodeService.collectCodeOf();
     }
 

@@ -19,8 +19,8 @@ public interface ShopControllerSwagger {
 
     @Operation(summary = "각 지역별 소상공인 상점 조회", description = "각 지역별 소상공인 상점 조회 API")
     @Parameters({
-            @Parameter(name = "megaCode", description = "도시 코드", example = "11"),
-            @Parameter(name = "cityCode", description = "도시 지역구 코드", example = "11"),
+            @Parameter(name = "megaCode", description = "도시 코드", example = "48"),
+            @Parameter(name = "cityCode", description = "도시 지역구 코드", example = "48310"),
             @Parameter(name = "page", description = "시작 페이지 번호", example = "0"),
             @Parameter(name = "size", description = "페이지에 표시할 갯수", example = "20")
     })
