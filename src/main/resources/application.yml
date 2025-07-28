@@ -18,7 +18,7 @@ spring:
           kakao:
             client-id: ${KAKAO_CLIENT_ID}
             client-secret: ${KAKAO_CLIENT_SECRET}
-            scope: profile_nickname, account_email
+            scope: profile_nickname
             client-name: Kakao
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
@@ -65,6 +65,8 @@ springdoc:
   group-configs:
     - group: 'All API'
       packages-to-scan: backend.airo.api
+    - group: 'Auth API'
+      packages-to-scan: backend.airo.api.auth
     - group: 'Example API'
       packages-to-scan: backend.airo.api.example
     - group: 'User API'

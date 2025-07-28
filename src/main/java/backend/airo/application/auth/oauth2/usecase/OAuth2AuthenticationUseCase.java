@@ -7,10 +7,14 @@ import backend.airo.domain.user.enums.ProviderType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
@@ -19,11 +23,15 @@ public class OAuth2AuthenticationUseCase {
 
     private final FindOAuth2UserQuery findOAuth2UserQuery;
     private final GenerateTempCodeCommand generateTempCodeCommand;
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    private static final String OAUTH2_USER_PREFIX = "oauth2:temp:";
+    private static final long REDIS_TTL_MINUTES = 30;
 
     @Value("${app.oauth2.success-url:http://localhost:3000/auth/success}")
     private String successBaseUrl;
 
-    @Value("${app.oauth2.failure-url:http://localhost:3000/auth/failure}")
+    @Value("${app.oauth2.failure-url:http://localhost:3000/auth/nickname}")
     private String failureUrl;
 
     public String handleAuthenticationSuccess(OAuth2User oauth2User, String accessToken) {
@@ -48,7 +56,33 @@ public class OAuth2AuthenticationUseCase {
 
         } else {
             log.warn("사용자를 찾을 수 없음 - Provider ID: {}, Provider Type: {}", providerId, providerType);
-            return failureUrl;
+            // OAuth2User 속성들을 Redis에 저장
+            saveOAuth2UserToRedis(accessToken, oauth2User);
+            return failureUrl + "?token=" + accessToken;
+        }
+    }
+
+    private void saveOAuth2UserToRedis(String accessToken, OAuth2User oauth2User) {
+        String redisKey = OAUTH2_USER_PREFIX + accessToken;
+        Map<String, Object> attributes = new HashMap<>();
+
+        oauth2User.getAttributes().forEach((key, value) -> {
+            if (value != null) {
+                // provider_id로 저장
+                if (key.equals("id")) {
+                    attributes.put("provider_id", value.toString());
+                } else {
+                    attributes.put(key, value.toString());
+                }
+            }
+        });
+
+        try {
+            redisTemplate.opsForHash().putAll(redisKey, attributes);
+            redisTemplate.expire(redisKey, REDIS_TTL_MINUTES, TimeUnit.MINUTES);
+            log.info("OAuth2 사용자 정보 Redis 저장 완료 - Access Token: {}", accessToken);
+        } catch (Exception e) {
+            log.error("OAuth2 사용자 정보 Redis 저장 실패 - Access Token: {}, Error: {}", accessToken, e.getMessage());
         }
     }
 }
