@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import backend.airo.api.user.dto.UpdateUserInfoRequest;
 
+import java.time.LocalDate;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -14,12 +16,9 @@ public class UpdateExistingUserCommand {
 
     private final UserRepository userRepository;
 
-    public User execute(User existingUser, UpdateUserInfoRequest updateUserInfoRequest) {
-        log.info("기존 사용자 정보 업데이트 - User ID: {}", existingUser.getId());
-
-        User updatedUser = userRepository.save(existingUser);
-        log.info("사용자 정보 업데이트 완료 - User ID: {}", updatedUser.getId());
-
-        return updatedUser;
+    public User handle(Long userId, String name, String nickname, String phoneNumber, LocalDate birthDate) {
+        User user = userRepository.findById(userId);
+        User updateUser = user.updateUserInfo(name, nickname, phoneNumber, birthDate);
+        return userRepository.save(updateUser);
     }
 }

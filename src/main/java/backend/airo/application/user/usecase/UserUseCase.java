@@ -6,6 +6,8 @@ import backend.airo.domain.user.query.GetUserCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 @Component
 @RequiredArgsConstructor
 public class UserUseCase {
@@ -17,8 +19,8 @@ public class UserUseCase {
         return getUserCommand.handle(userId);
     }
 
-//    public User updateUser(Long userId, String nickname, String email) {
-//
-//    }
+    public User updateUser(Long userId, String name, String nickname, String phoneNumber, LocalDate birthDate) {
+        return updateExistingUserCommand.handle(userId, name, nickname, phoneNumber, birthDate);
+    }
 
 }

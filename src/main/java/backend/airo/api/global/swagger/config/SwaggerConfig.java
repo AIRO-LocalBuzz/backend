@@ -71,7 +71,7 @@ public class SwaggerConfig {
     private List<Server> getServers() {
         return List.of(
                 new Server()
-                        .url("http://localhost:8080/api")
+                        .url("http://localhost:9001/api")
                         .description("로컬 개발 서버"),
                 new Server()
                         .url("https://localbuzz/api")
