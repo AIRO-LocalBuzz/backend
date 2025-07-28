@@ -36,8 +36,8 @@ public class UserController implements UserControllerSwagger {
             @RequestBody UpdateUserInfoRequest updateUserInfoRequest
     ) {
         Long userId = jwtTokenProvider.getUserIdFromToken(bearerToken);
-        User user = userUseCase.updateUser(userId, updateUserInfoRequest.getNickname(), updateUserInfoRequest.getEmail());
-        return Response.success(UserResponse.create(user));
+//        User user = userUseCase.updateUser(userId, updateUserInfoRequest.getNickname(), updateUserInfoRequest.getEmail());
+        return Response.success(UserResponse.create(null));
     }
 
 }

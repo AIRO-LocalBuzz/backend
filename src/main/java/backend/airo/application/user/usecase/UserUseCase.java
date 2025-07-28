@@ -17,8 +17,8 @@ public class UserUseCase {
         return getUserCommand.handle(userId);
     }
 
-    public User updateUser(Long userId, String nickname, String email) {
-
-    }
+//    public User updateUser(Long userId, String nickname, String email) {
+//
+//    }
 
 }

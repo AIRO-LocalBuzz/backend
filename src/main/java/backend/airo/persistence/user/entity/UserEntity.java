@@ -76,8 +76,7 @@ public class UserEntity extends BaseEntity {
             this.name = name.trim();
         }
     }
-    public void updateUserInfo(String email, String name, String nickname, String phoneNumber, LocalDate birDate) {
-        this.email = email;
+    public void updateUserInfo(String name, String nickname, String phoneNumber, LocalDate birDate) {
         this.name = name.trim();
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
