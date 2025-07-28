@@ -96,4 +96,8 @@ jwt:
   refresh-token:
     expiration: 604800 #days
 
-
+# Discord
+discord:
+  bot:
+    token: ${DISCORD_BOT_TOKEN}
+    channel_id: ${DISCORD_BOT_CHANNEL_ID}

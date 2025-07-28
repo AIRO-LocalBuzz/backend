@@ -72,6 +72,12 @@ dependencies {
 	// firebase
 	implementation 'com.google.firebase:firebase-admin:9.2.0'
 
+	//Discord Bot
+	implementation('net.dv8tion:JDA:5.0.0-beta.20') {
+		exclude module: 'opus-java'
+		exclude module: 'tink'
+	}
+
 	// Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
