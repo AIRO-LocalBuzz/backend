@@ -38,10 +38,4 @@ public class CityCodeAdapter implements CityRepository {
         List<CityCodeEntity> cityCodeEntities = cityCodeRepository.findAll();
         return cityCodeEntities.stream().map(CityCodeEntity::toDomain).toList();
     }
-
-    @Override
-    public CityCode findByCtprvnCode(Long ctprvnCode) {
-        CityCodeEntity cityCodeEntity = cityCodeRepository.findByCtprvnCd(ctprvnCode);
-        return CityCodeEntity.toDomain(cityCodeEntity);
-    }
 }

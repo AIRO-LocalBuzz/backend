@@ -38,10 +38,4 @@ public class MegaCodeAdapter implements MegaRepository {
         List<MegaCodeEntity> megaCodeEntities = megaCodeJpaRepository.findAll();
         return megaCodeEntities.stream().map(MegaCodeEntity::toDomain).toList();
     }
-
-    @Override
-    public MegaCode findByCtprvnCode(Long ctprvnCode) {
-        MegaCodeEntity megaCodeEntity = megaCodeJpaRepository.findByCtprvnCd(ctprvnCode);
-        return MegaCodeEntity.toDomain(megaCodeEntity);
-    }
 }
