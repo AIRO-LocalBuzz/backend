@@ -1,5 +1,7 @@
 package backend.airo.batch.cure_fatvl;
 
+import backend.airo.cache.AreaCodeCache;
+import backend.airo.cache.AreaName;
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.infra.open_api.clure_fatvl.client.OpenApiClureFatvlFeignClient;
 import backend.airo.infra.open_api.clure_fatvl.dto.OpenApiClureFatvlResponse;
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
 public class AsyncClutrFatvlDataCollector {
 
     private final OpenApiClureFatvlFeignClient openApiClureFatvlFeignClient;
+    private final AreaCodeCache areaCodeCache;
+
     private static final DateTimeFormatter DASHED = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final int PAGE_SIZE = 1000;
 
@@ -30,8 +34,16 @@ public class AsyncClutrFatvlDataCollector {
     public CompletableFuture<List<ClutrFatvl>> fetchAllByStartDateAsync(LocalDate startDate) {
         try {
             List<ClutrFatvlInfo> infos = fetchAllByStartDate(startDate);
+
             List<ClutrFatvl> entities = infos.stream()
-                    .map(ClutrFatvlEntity::toDomain)
+                    .map(info -> {
+                        AreaName region = areaNameParsing(info.rdnmadr(), info.lnmadr());
+
+                        String megaCode = areaCodeCache.getMegaCode(region.mega());
+                        String cityCode = areaCodeCache.getCityCode(region.mega(),region.city());
+
+                        return ClutrFatvlEntity.toDomain(info, megaCode, cityCode);
+                    })
                     .collect(Collectors.toList());
 
             return CompletableFuture.completedFuture(entities);
@@ -75,5 +87,29 @@ public class AsyncClutrFatvlDataCollector {
         }
 
         return acc;
+    }
+
+    private AreaName areaNameParsing(String roadAddr, String lotAddr) {
+        String fullAddress = roadAddr;
+        if (fullAddress == null || fullAddress.isBlank()) {
+            fullAddress = lotAddr;
+        }
+
+        if (fullAddress == null || fullAddress.isBlank()) {
+            return new AreaName("UNKNOWN", "UNKNOWN");
+        }
+
+        String[] tokens = fullAddress.trim().split(" ");
+        String mega = tokens.length > 0 ? tokens[0] : "UNKNOWN";
+
+        StringBuilder cityBuilder = new StringBuilder();
+        for (int i = 1; i < Math.min(tokens.length, 4); i++) {
+            if (tokens[i].endsWith("시") || tokens[i].endsWith("군") || tokens[i].endsWith("구")) {
+                cityBuilder.append(tokens[i]).append(" ");
+            }
+        }
+
+        String city = cityBuilder.toString().trim();
+        return new AreaName(mega, city);
     }
 }
