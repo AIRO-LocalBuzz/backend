@@ -4,8 +4,12 @@ import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.domain.clure_fatvl.repository.ClutrFatvlRepository;
 import backend.airo.persistence.clutrfatvl.entity.ClutrFatvlEntity;
 import backend.airo.persistence.clutrfatvl.repository.ClutrFatvlJpaRepository;
+import backend.airo.persistence.shop.entity.ShopEntity;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -19,12 +23,12 @@ public class ClutrFatvlAdapter implements ClutrFatvlRepository {
     private final ClutrFatvlJpaRepository clutrFatvlJpaRepository;
 
     @Override
-    public List<ClutrFatvl> findAll() {
-        List<ClutrFatvlEntity> clutrFatvlEntities = clutrFatvlJpaRepository.findAll();
+    public Page<ClutrFatvl> findAll(String megaCode, String cityCode, Pageable pageable) {
+        Page<ClutrFatvlEntity> clutrFatvlEntities = clutrFatvlJpaRepository.findByAddress_MegaCodeIdAndAddress_CtprvnCodeId(megaCode, cityCode, pageable);
         if (clutrFatvlEntities.isEmpty()) {
-            return List.of();
+            return new PageImpl<>(List.of(), pageable, 0);
         }
-        return clutrFatvlEntities.stream().map(ClutrFatvlEntity::toDomain).toList();
+        return clutrFatvlEntities.map(ClutrFatvlEntity::toDomain);
     }
 
     @Override

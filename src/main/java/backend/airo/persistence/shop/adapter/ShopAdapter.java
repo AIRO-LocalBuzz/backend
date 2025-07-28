@@ -7,6 +7,7 @@ import backend.airo.persistence.shop.repository.ShopJpaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,9 @@ public class ShopAdapter implements ShopRepository {
     @Override
     public Page<Shop> findAll(String megaName, String cityName, Pageable pageable) {
         Page<ShopEntity> shopEntities = shopJpaRepository.findByRegion_CtprvnCdAndRegion_SignguCd(megaName, cityName, pageable);
+        if (shopEntities.isEmpty()) {
+            return new PageImpl<>(List.of(), pageable, 0);
+        }
         return shopEntities.map(ShopEntity::toDomain);
     }
 

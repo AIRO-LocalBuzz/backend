@@ -2,7 +2,6 @@ package backend.airo.batch.cure_fatvl;
 
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.domain.clure_fatvl.command.CreateAllClutrFatvlCommand;
-import backend.airo.domain.clure_fatvl.repository.ClutrFatvlRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -51,4 +49,5 @@ public class ClutrFatvlService {
             log.info("문화 축제 데이터 수집이 정상적으로 이루어 졌습니다. {}", size);
         }
     }
+
 }

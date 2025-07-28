@@ -8,7 +8,9 @@ public record Address(
         @Column(name = "road_addr", length = 512)
         String road,
         @Column(name = "lot_addr",  length = 512)
-        String lot
+        String lot,
+        String megaCodeId,
+        String ctprvnCodeId
 ) {
     public String checkAddress() {
         if (road.isEmpty() && lot.isEmpty()) {

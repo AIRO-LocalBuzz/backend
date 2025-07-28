@@ -2,6 +2,7 @@ package backend.airo.api.global.swagger;
 
 import backend.airo.api.clutr_fatvl.dto.ClutrFatvInfoResponse;
 import backend.airo.api.clutr_fatvl.dto.ClutrFatvListResponse;
+import backend.airo.api.global.dto.PageResponse;
 import backend.airo.api.global.dto.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,8 +34,10 @@ public interface ClutrFatvlControllerSwagger {
 
     @Operation(summary = "전국 문화 축제 조회", description = "전국 문화 축제 조회 API")
     @Parameters({
-            @Parameter(name = "start", description = "시작 날짜", example = "2025-07-24"),
-            @Parameter(name = "end  ", description = "종료 날짜"),
+            @Parameter(name = "megaCode", description = "도시 코드", example = "11"),
+            @Parameter(name = "cityCode", description = "도시 지역구 코드", example = "11"),
+            @Parameter(name = "page", description = "시작 페이지 번호", example = "0"),
+            @Parameter(name = "size", description = "페이지에 표시할 갯수", example = "20")
     })
     @ApiResponse(
             responseCode = "200",
@@ -42,9 +45,11 @@ public interface ClutrFatvlControllerSwagger {
             content = @Content(schema = @Schema(implementation = ClutrFatvListResponse.class))
     )
     @GetMapping("/clutr/fatvl")
-    public Response<List<ClutrFatvListResponse>> getClureFatvlList(
-            @RequestParam() @NotBlank(message = "시작 날짜는 필수 입니다.") String start,
-            @RequestParam(defaultValue = "") String end
+    Response<PageResponse<ClutrFatvListResponse>> getClureFatvlList(
+            @RequestParam() String megaCode,
+            @RequestParam() String cityCode,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
     );
 
 }

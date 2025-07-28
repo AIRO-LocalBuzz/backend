@@ -88,7 +88,7 @@ public class ClutrFatvlEntity extends BaseEntity {
                 .fstvlCo(dto.getFstvlCo())
                 .period(new FestivalPeriod(dto.getPeriod().start(), dto.getPeriod().end()))
                 .location(new GeoPoint(dto.getLocation().lat(), dto.getLocation().lon()))
-                .address(new Address(dto.getAddress().road(), dto.getAddress().lot()))
+                .address(new Address(dto.getAddress().road(), dto.getAddress().lot(), dto.getAddress().megaCodeId(), dto.getAddress().ctprvnCodeId()))
                 .mnnstNm(dto.getMnnstNm())
                 .auspcInsttNm(dto.getAuspcInsttNm())
                 .suprtInsttNm(dto.getSuprtInsttNm())
@@ -101,14 +101,14 @@ public class ClutrFatvlEntity extends BaseEntity {
                 .build();
     }
 
-    public static ClutrFatvl toDomain(ClutrFatvlInfo dto) {
+    public static ClutrFatvl toDomain(ClutrFatvlInfo dto, String megaCodeId, String ctprvnCodeId) {
         return ClutrFatvl.builder()
                 .fstvlNm(dto.fstvlNm())
                 .opar(dto.opar())
                 .fstvlCo(dto.fstvlCo())
                 .period(new FestivalPeriod(dto.fstvlStartDate(), dto.fstvlEndDate()))
                 .location(new GeoPoint(dto.latitude(), dto.longitude()))
-                .address(new Address(dto.rdnmadr(), dto.lnmadr()))
+                .address(new Address(dto.rdnmadr(), dto.lnmadr(), megaCodeId, ctprvnCodeId))
                 .mnnstNm(dto.mnnstNm())
                 .auspcInsttNm(dto.auspcInsttNm())
                 .suprtInsttNm(dto.suprtInsttNm())
@@ -128,7 +128,7 @@ public class ClutrFatvlEntity extends BaseEntity {
                 .fstvlCo(clutrFatvlEntity.getFstvlCo())
                 .period(new FestivalPeriod(clutrFatvlEntity.getPeriod().start(), clutrFatvlEntity.getPeriod().end()))
                 .location(new GeoPoint(clutrFatvlEntity.getLocation().lat(), clutrFatvlEntity.getLocation().lon()))
-                .address(new Address(clutrFatvlEntity.getAddress().road(), clutrFatvlEntity.getAddress().lot()))
+                .address(new Address(clutrFatvlEntity.getAddress().road(), clutrFatvlEntity.getAddress().lot(), clutrFatvlEntity.getAddress().megaCodeId(), clutrFatvlEntity.getAddress().ctprvnCodeId()))
                 .mnnstNm(clutrFatvlEntity.getMnnstNm())
                 .auspcInsttNm(clutrFatvlEntity.getAuspcInsttNm())
                 .suprtInsttNm(clutrFatvlEntity.getSuprtInsttNm())
