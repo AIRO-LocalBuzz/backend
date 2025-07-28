@@ -98,4 +98,7 @@ jwt:
   refresh-token:
     expiration: 604800 #days
 
+open:
+  api:
+    key: ${OPEN_API_KET}
 
