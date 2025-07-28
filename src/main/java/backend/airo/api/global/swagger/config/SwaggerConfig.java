@@ -1,4 +1,4 @@
-package backend.airo.api.global.config;
+package backend.airo.api.global.swagger.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
