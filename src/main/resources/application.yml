@@ -77,6 +77,12 @@ springdoc:
       packages-to-scan: backend.airo.api.review
     - group: 'Content API'
       packages-to-scan: backend.airo.api.content
+    - group: 'Shop API'
+      packages-to-scan: backend.airo.api.shop
+    - group: 'ClutrFatvl API'
+      packages-to-scan: backend.airo.api.clutr_fatvl
+    - group: 'AreaCode API'
+      packages-to-scan: backend.airo.api.area_code
 
 
 server:
