@@ -40,14 +40,8 @@ public class ShopController implements ShopControllerSwagger {
         Page<Shop> shopList = shopUseCase.getShopList(megaCode, cityCode, pageable);
 
         List<ShopListResponse> content = shopList.getContent().stream()
-                .map(shop -> new ShopListResponse(
-                        shop.getId(),
-                        shop.getShopName(),
-                        shop.getAddress().lot(),
-                        shop.getAddress().road(),
-                        shop.getShopType().getTypeName()
-                ))
-                .toList();
+                .map(ShopListResponse::create).toList();
+
         return Response.success(
                 new PageResponse<>(
                         content,
