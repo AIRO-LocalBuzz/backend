@@ -18,7 +18,7 @@ spring:
           kakao:
             client-id: ${KAKAO_CLIENT_ID}
             client-secret: ${KAKAO_CLIENT_SECRET}
-            scope: profile_nickname, account_email
+            scope: profile_nickname
             client-name: Kakao
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
@@ -49,10 +49,6 @@ spring:
       hibernate:
         format_sql: true
     generate-ddl: true
-
-openapi:
-  service:
-    key: ${SERVICE_KEY}
 
 springdoc:
   swagger-ui:
@@ -110,7 +106,7 @@ jwt:
   refresh-token:
     expiration: 604800 #days
 
-open:
-  api:
+openapi:
+  service:
     key: ${OPEN_API_KET}
 
