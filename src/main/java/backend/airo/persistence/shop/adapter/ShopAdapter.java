@@ -20,8 +20,13 @@ public class ShopAdapter implements ShopRepository {
 
     @Override
     public List<Shop> findAll(String megaName, String cityName) {
-        List<ShopEntity> shopEntities = shopJpaRepository.findByShopList(megaName, cityName);
+        List<ShopEntity> shopEntities = shopJpaRepository.findByRegion_CtprvnCdAndRegion_SignguCd(megaName, cityName);
         return shopEntities.stream().map(ShopEntity::toDomain).toList();
+    }
+
+    @Override
+    public void deleteAll() {
+        shopJpaRepository.deleteAll();
     }
 
     @Override

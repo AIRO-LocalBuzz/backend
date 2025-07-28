@@ -15,14 +15,11 @@ import lombok.NoArgsConstructor;
 public class MegaCodeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String ctprvnCd;
+    private Long ctprvnCd;
 
     private String ctprvnNm;
 
-    public MegaCodeEntity(String ctprvnCd, String ctprvnNm) {
+    public MegaCodeEntity(Long ctprvnCd, String ctprvnNm) {
         this.ctprvnCd = ctprvnCd;
         this.ctprvnNm = ctprvnNm;
     }
@@ -32,7 +29,7 @@ public class MegaCodeEntity {
     }
 
     public static MegaCode toDomain(MegaCodeEntity megaCodeEntity) {
-        return new MegaCode(megaCodeEntity.id, megaCodeEntity.ctprvnCd, megaCodeEntity.ctprvnNm);
+        return new MegaCode(megaCodeEntity.ctprvnCd, megaCodeEntity.ctprvnNm);
     }
 
 }

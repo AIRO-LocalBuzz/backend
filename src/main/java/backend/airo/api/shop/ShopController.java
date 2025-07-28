@@ -5,10 +5,8 @@ import backend.airo.api.global.swagger.ShopControllerSwagger;
 import backend.airo.api.shop.dto.ShopInfoResponse;
 import backend.airo.api.shop.dto.ShopListResponse;
 import backend.airo.application.shop.usecase.ShopUseCase;
-import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.domain.shop.Shop;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,15 +27,15 @@ public class ShopController implements ShopControllerSwagger {
     @Override
     @GetMapping("/shop")
     public Response<List<ShopListResponse>> getShoplList(
-            @RequestParam() String megaNmae,
-            @RequestParam() String cityName
+            @RequestParam() String megaCode,
+            @RequestParam() String cityCode
     ) {
-        List<Shop> shopList = shopUseCase.getShopList(megaNmae, cityName);
+        List<Shop> shopList = shopUseCase.getShopList(megaCode, cityCode);
+
         return Response.success(shopList.stream().map(list ->
                 new ShopListResponse(
                         list.getId(),
                         list.getShopName(),
-                        "dd",
                         list.getAddress().lot(),
                         list.getAddress().road(),
                         list.getShopType().getTypeName()

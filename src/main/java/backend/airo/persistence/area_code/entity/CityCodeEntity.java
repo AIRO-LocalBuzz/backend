@@ -15,16 +15,13 @@ import lombok.NoArgsConstructor;
 public class CityCodeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String ctprvnCd;
+    private Long ctprvnCd;
 
     private String ctprvnNm;
 
     private Long megaCodeId;
 
-    public CityCodeEntity(String ctprvnCd, String ctprvnNm, Long megaCodeId) {
+    public CityCodeEntity(Long ctprvnCd, String ctprvnNm, Long megaCodeId) {
         this.ctprvnCd = ctprvnCd;
         this.ctprvnNm = ctprvnNm;
         this.megaCodeId = megaCodeId;
@@ -35,6 +32,6 @@ public class CityCodeEntity {
     }
 
     public static CityCode toDomain(CityCodeEntity cityCodeEntity) {
-        return new CityCode(cityCodeEntity.id, cityCodeEntity.ctprvnCd, cityCodeEntity.ctprvnNm, cityCodeEntity.megaCodeId);
+        return new CityCode(cityCodeEntity.ctprvnCd, cityCodeEntity.ctprvnNm, cityCodeEntity.megaCodeId);
     }
 }
