@@ -1,8 +1,6 @@
 package backend.airo.batch.shop;
 
 import backend.airo.domain.area_code.MegaCode;
-import backend.airo.domain.area_code.query.GetCityCodeQuery;
-import backend.airo.domain.area_code.query.GetMegaCodeQuery;
 import backend.airo.domain.shop.command.CreateAllShopCommand;
 import backend.airo.domain.shop.dto.ShopPage;
 import backend.airo.domain.shop.port.OpenApiShopPort;
@@ -16,8 +14,6 @@ public class ShopDataCollector {
 
     private final OpenApiShopPort openApiShopPort;
     private final CreateAllShopCommand createAllShopCommand;
-    private final GetMegaCodeQuery getMegaCodeQuery;
-    private final GetCityCodeQuery getCityCodeQuery;
 
     @Async("apiTaskExecutor")
     public void processRegion(MegaCode megaCode) {

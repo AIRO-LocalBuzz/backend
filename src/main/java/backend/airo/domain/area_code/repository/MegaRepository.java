@@ -10,5 +10,4 @@ public interface MegaRepository extends AggregateSupport<MegaCode, Long> {
 
     List<MegaCode> findAll();
 
-    MegaCode findByCtprvnCode(Long ctprvnCode);
 }

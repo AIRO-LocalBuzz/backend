@@ -2,10 +2,8 @@ package backend.airo.infra.open_api.area_find.client;
 
 import backend.airo.infra.open_api.area_find.config.OpenApiFeignAreaClientConfiguration;
 import backend.airo.infra.open_api.area_find.dto.OpenApiAreaCodeResponse;
-import backend.airo.infra.open_api.area_find.vo.OpenApiAdmiCode;
 import backend.airo.infra.open_api.area_find.vo.OpenApiCtyCode;
 import backend.airo.infra.open_api.area_find.vo.OpenApiMegaCode;
-import backend.airo.infra.open_api.area_find.vo.OpenApiZoneCode;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,7 +31,7 @@ public interface OpenApiAreaFeignClient {
             @RequestParam(value = "ctprvnCd", required = false) String ctprvnCd
     );
 
-    //행정동 조회 [ param -> 시군구 코드 ]
+/*    //행정동 조회 [ param -> 시군구 코드 ]
     @GetMapping("B553077/api/open/sdsc2/baroApi")
     OpenApiAreaCodeResponse<OpenApiAdmiCode> getListAdmDongsBySigungu(
             @RequestParam(value = "catId", defaultValue = "admi", required = false) String catId,
@@ -45,6 +43,6 @@ public interface OpenApiAreaFeignClient {
     OpenApiAreaCodeResponse<OpenApiZoneCode> getListLegalDongsBySigungu(
             @RequestParam(value = "catId", defaultValue = "zone", required = false) String catId,
             @RequestParam(value = "signguCd", required = false) String signguCd
-    );
+    );*/
 
 }
