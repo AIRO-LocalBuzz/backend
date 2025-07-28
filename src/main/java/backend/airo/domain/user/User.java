@@ -18,6 +18,9 @@ public class User {
     private LocalDate birthDate;
     private final ProviderType providerType;
     private final String providerId;
+    private String bio;
+    private String profileImageUrl;
+    private Long viewCount = 0L;
     private LocalDateTime lastLoginAt;
     private LocalDateTime createdAt;
 
@@ -30,6 +33,15 @@ public class User {
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;
+        this.providerType = providerType;
+        this.providerId = providerId;
+    }
+
+    public User(String email, String name, String nickname, ProviderType providerType, String providerId) {
+        this.id = null;
+        this.email = email;
+        this.name = name;
+        this.nickname = nickname;
         this.providerType = providerType;
         this.providerId = providerId;
     }
