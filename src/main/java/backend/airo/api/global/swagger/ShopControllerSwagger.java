@@ -1,5 +1,6 @@
 package backend.airo.api.global.swagger;
 
+import backend.airo.api.global.dto.PageResponse;
 import backend.airo.api.global.dto.Response;
 import backend.airo.api.shop.dto.ShopInfoResponse;
 import backend.airo.api.shop.dto.ShopListResponse;
@@ -18,23 +19,26 @@ public interface ShopControllerSwagger {
 
     @Operation(summary = "각 지역별 소상공인 상점 조회", description = "각 지역별 소상공인 상점 조회 API")
     @Parameters({
-            @Parameter(name = "megaNmae", description = "각 도시 이름", example = "서울특별시"),
-            @Parameter(name = "cityName", description = "각 도시 지역구 이름", example = "마포구")
+            @Parameter(name = "megaCode", description = "도시 코드", example = "11"),
+            @Parameter(name = "cityCode", description = "도시 지역구 코드", example = "11"),
+            @Parameter(name = "page", description = "시작 페이지 번호", example = "0"),
+            @Parameter(name = "size", description = "페이지에 표시할 갯수", example = "20")
     })
-
     @ApiResponse(
             responseCode = "200",
             description = "소상공인 상점 조회 성공",
             content = @Content(schema = @Schema(implementation = ShopListResponse.class))
     )
-    Response<List<ShopListResponse>> getShoplList(
-            @RequestParam() String megaNmae,
-            @RequestParam() String cityName
+    Response<PageResponse<ShopListResponse>>  getShoplList(
+            @RequestParam() String megaCode,
+            @RequestParam() String cityCode,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
     );
 
     @Operation(summary = "소상공인 상점 정보 상세 조회", description = "소상공인 상점 정보 조회 API")
     @Parameters({
-            @Parameter(name = "clutrFatvlId", description = "상점 ID", example = "1")
+            @Parameter(name = "shopId", description = "상점 ID", example = "1")
     })
     @ApiResponse(
             responseCode = "200",

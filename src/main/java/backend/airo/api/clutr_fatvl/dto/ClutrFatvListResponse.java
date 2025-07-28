@@ -1,4 +1,4 @@
-package backend.airo.api.clutrFatvl.dto;
+package backend.airo.api.clutr_fatvl.dto;
 
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import lombok.Builder;

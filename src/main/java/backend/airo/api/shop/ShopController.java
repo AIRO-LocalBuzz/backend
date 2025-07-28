@@ -1,5 +1,6 @@
 package backend.airo.api.shop;
 
+import backend.airo.api.global.dto.PageResponse;
 import backend.airo.api.global.dto.Response;
 import backend.airo.api.global.swagger.ShopControllerSwagger;
 import backend.airo.api.shop.dto.ShopInfoResponse;
@@ -8,6 +9,9 @@ import backend.airo.application.shop.usecase.ShopUseCase;
 import backend.airo.domain.shop.Shop;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,21 +30,33 @@ public class ShopController implements ShopControllerSwagger {
 
     @Override
     @GetMapping("/shop")
-    public Response<List<ShopListResponse>> getShoplList(
+    public Response<PageResponse<ShopListResponse>> getShoplList(
             @RequestParam() String megaCode,
-            @RequestParam() String cityCode
+            @RequestParam() String cityCode,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
     ) {
-        List<Shop> shopList = shopUseCase.getShopList(megaCode, cityCode);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Shop> shopList = shopUseCase.getShopList(megaCode, cityCode, pageable);
 
-        return Response.success(shopList.stream().map(list ->
-                new ShopListResponse(
-                        list.getId(),
-                        list.getShopName(),
-                        list.getAddress().lot(),
-                        list.getAddress().road(),
-                        list.getShopType().getTypeName()
+        List<ShopListResponse> content = shopList.getContent().stream()
+                .map(shop -> new ShopListResponse(
+                        shop.getId(),
+                        shop.getShopName(),
+                        shop.getAddress().lot(),
+                        shop.getAddress().road(),
+                        shop.getShopType().getTypeName()
+                ))
+                .toList();
+        return Response.success(
+                new PageResponse<>(
+                        content,
+                        shopList.getNumber(),
+                        shopList.getSize(),
+                        shopList.getTotalElements(),
+                        shopList.getTotalPages()
                 )
-        ).toList());
+        );
     }
 
     @Override

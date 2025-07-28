@@ -1,7 +1,7 @@
-package backend.airo.api.clutrFatvl;
+package backend.airo.api.clutr_fatvl;
 
-import backend.airo.api.clutrFatvl.dto.ClutrFatvInfoResponse;
-import backend.airo.api.clutrFatvl.dto.ClutrFatvListResponse;
+import backend.airo.api.clutr_fatvl.dto.ClutrFatvInfoResponse;
+import backend.airo.api.clutr_fatvl.dto.ClutrFatvListResponse;
 import backend.airo.api.global.swagger.ClutrFatvlControllerSwagger;
 import backend.airo.api.global.dto.Response;
 import backend.airo.application.clure_fatvl.usecase.ClutrFatvlUseCase;
