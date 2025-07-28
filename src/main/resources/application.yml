@@ -64,9 +64,13 @@ springdoc:
   show-actuator: false
   group-configs:
     - group: 'All API'
-      packages-to-scan: backend.airo.api
-    - group: 'Auth API'
-      packages-to-scan: backend.airo.api.auth
+      packages-to-scan:
+        - backend.airo.api.user
+        - backend.airo.api.review
+        - backend.airo.api.content
+        - backend.airo.api.shop
+        - backend.airo.api.clutr_fatvl
+        - backend.airo.api.area_code
     - group: 'Example API'
       packages-to-scan: backend.airo.api.example
     - group: 'User API'
@@ -75,6 +79,12 @@ springdoc:
       packages-to-scan: backend.airo.api.review
     - group: 'Content API'
       packages-to-scan: backend.airo.api.content
+    - group: 'Shop API'
+      packages-to-scan: backend.airo.api.shop
+    - group: 'ClutrFatvl API'
+      packages-to-scan: backend.airo.api.clutr_fatvl
+    - group: 'AreaCode API'
+      packages-to-scan: backend.airo.api.area_code
 
 
 server:
@@ -96,4 +106,7 @@ jwt:
   refresh-token:
     expiration: 604800 #days
 
+openapi:
+  service:
+    key: ${OPEN_API_KET}
 
