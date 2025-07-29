@@ -30,7 +30,7 @@ public class ClutrFatvlService {
 
         // 각 날짜별로 비동기 작업 생성 (다른 클래스의 @Async 메서드 호출)
         List<CompletableFuture<List<ClutrFatvl>>> futures = new ArrayList<>();
-        log.info("지역 문화 축제 데이터 수집 시작");
+        log.info("지역 문화 축제 데이터 수집 시작!");
         for (LocalDate day = start; !day.isAfter(end); day = day.plusDays(1)) {
             CompletableFuture<List<ClutrFatvl>> future =
                     asyncClutrFatvlDataCollector.fetchAllByStartDateAsync(day);
