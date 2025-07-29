@@ -107,6 +107,10 @@ jwt:
   refresh-token:
     expiration: 604800 #days
 
+logging:
+  level:
+    backend.airo.infra.open_api: DEBUG
+
 openapi:
   service:
     key: ${OPEN_API_KET}
