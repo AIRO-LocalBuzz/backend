@@ -28,7 +28,7 @@ public class SwaggerConfig {
                                 .scheme("bearer")
                                 .bearerFormat("JWT")
                                 .description("JWT 토큰을 입력하세요 (Bearer 접두사 제외)")))
-                .addSecurityItem(new SecurityRequirement().addList("Bearer Auth"));
+                .addSecurityItem(new SecurityRequirement().addList("Bearer Auth")); // 전역 적용
     }
 
 

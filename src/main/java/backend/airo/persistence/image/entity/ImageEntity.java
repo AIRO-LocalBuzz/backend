@@ -91,6 +91,7 @@ public class ImageEntity {
         return new Image(
                 image.getId(),
                 image.getUserId(),
+                image.getPost().getId(),
                 image.getOriginalFilename(),
                 image.getStoredFilename(),
                 image.getImageUrl(),

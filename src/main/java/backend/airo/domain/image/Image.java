@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class Image {
     private final Long id;
     private final Long userId;
+    private final Long postId;
     private String originalFilename;
     private String storedFilename;
     private String imageUrl;
@@ -28,9 +29,10 @@ public class Image {
     private Post post;
 
 
-    public Image(Long id, Long userId, String originalFilename, String storedFilename, String imageUrl, String altText, String caption, Long fileSize, String mimeType, Integer width, Integer height, Integer sortOrder, Boolean isCover, LocalDateTime createdAt, Post post) {
+    public Image(Long id, Long userId, Long postId, String originalFilename, String storedFilename, String imageUrl, String altText, String caption, Long fileSize, String mimeType, Integer width, Integer height, Integer sortOrder, Boolean isCover, LocalDateTime createdAt, Post post) {
         this.id = id;
         this.userId = userId;
+        this.postId = postId;
         this.originalFilename = originalFilename;
         this.storedFilename = storedFilename;
         this.imageUrl = imageUrl;

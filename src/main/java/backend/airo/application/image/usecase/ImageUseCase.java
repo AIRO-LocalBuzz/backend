@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -168,8 +169,9 @@ public class ImageUseCase {
      * @param imageIds 재정렬할 이미지 ID 목록
      * @return 재정렬된 이미지 목록
      */
-    public Collection<Image> reorderImages(List<Long> imageIds) {
-        return updateImageCommand.reorderImages(imageIds);
+    public List<Image> reorderImages(List<Long> imageIds) {
+        Collection<Image> result = updateImageCommand.reorderImages(imageIds);
+        return result instanceof List ? (List<Image>) result : new ArrayList<>(result);
     }
 
 

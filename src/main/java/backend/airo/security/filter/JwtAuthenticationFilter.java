@@ -32,16 +32,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        String requestURI = request.getRequestURI();
+        log.info("=== JWT Filter 실행 시작 - URI: {} ===", requestURI);
+
         // Authorization 헤더에서 토큰 추출
         String token = extractTokenFromRequest(request);
+        log.info("토큰 추출 결과: {}", token != null ? "성공 (길이: " + token.length() + ")" : "실패");
 
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            try {
-                // 토큰에서 사용자 ID 추출
-                Long userId = jwtTokenProvider.getUserIdFromToken(token);
+        if (token != null) {
+            boolean isValid = jwtTokenProvider.validateToken(token);
+            log.info("토큰 검증 결과: {}", isValid ? "유효" : "무효");
 
-                // 사용자 정보 조회
-                User user = findOAuth2UserQuery.findById(userId);
+            if (isValid) {
+                try {
+                    // 토큰에서 사용자 ID 추출
+                    Long userId = jwtTokenProvider.getUserIdFromToken(token);
+                    log.info("JWT 토큰에서 사용자 ID 추출 성공 - User ID: {}", userId);
+
+                    // 사용자 정보 조회
+                    User user = findOAuth2UserQuery.findById(userId);
+                    log.info("사용자 정보 조회 성공 - User: {}", user.getEmail());
 
                     // Spring Security 인증 객체 생성
                     JwtAuthenticationToken authentication = new JwtAuthenticationToken(
@@ -52,15 +62,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     // SecurityContext에 인증 정보 설정
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                    log.info("SecurityContext에 인증 정보 설정 완료 - User ID: {}", userId);
 
-                    log.debug("JWT 인증 성공 - User ID: {}", userId);
-
-            } catch (Exception e) {
-                log.error("JWT 인증 처리 중 오류 발생", e);
-                SecurityContextHolder.clearContext();
+                } catch (Exception e) {
+                    log.error("JWT 인증 처리 중 오류 발생", e);
+                    SecurityContextHolder.clearContext();
+                }
             }
+        } else {
+            log.warn("Authorization 헤더에서 토큰을 찾을 수 없음");
         }
 
+        log.info("=== JWT Filter 실행 완료 - URI: {} ===", requestURI);
         filterChain.doFilter(request, response);
     }
 
@@ -75,8 +88,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.startsWith("/auth/") ||
+        boolean shouldSkip = path.startsWith("/auth/") ||
                 path.startsWith("/swagger-ui/") ||
                 path.startsWith("/v3/api-docs/");
+
+        log.info("필터 실행 여부 체크 - URI: {}, 스킵: {}", path, shouldSkip);
+        return shouldSkip;
     }
 }
