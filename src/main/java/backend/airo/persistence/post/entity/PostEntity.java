@@ -26,6 +26,9 @@ public class PostEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
     @Column(nullable = false, length = 200)
     private String title;
 
@@ -85,12 +88,13 @@ public class PostEntity extends BaseEntity {
     private List<CommentEntity> comments = new ArrayList<>();
 
 
-    public PostEntity(String title, String content, String summary, PostStatus status, LocalDateTime travelDate, Integer viewCount, Integer likeCount, Integer commentCount, Boolean isFeatured, LocalDateTime publishedAt) {
+    public PostEntity(Long userId ,String title, String content, String summary, PostStatus status, LocalDateTime travelDate, Integer viewCount, Integer likeCount, Integer commentCount, Boolean isFeatured, LocalDateTime publishedAt) {
         super();
     }
 
     public static PostEntity toEntity(Post post) {
         return new PostEntity(
+                post.getUserId(),
                 post.getTitle(),
                 post.getContent(),
                 post.getSummary(),
@@ -107,6 +111,9 @@ public class PostEntity extends BaseEntity {
     public static Post toDomain(PostEntity post) {
         return new Post(
                 post.getId(),
+                post.getUserId(),
+                post.getCategory() != null ? post.getCategory().getId() : null,
+                post.getLocation() != null ? post.getLocation().getId() : null,
                 post.getTitle(),
                 post.getContent(),
                 post.getSummary(),

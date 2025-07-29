@@ -24,7 +24,7 @@ public record CreatePostCommand(
         PostStatus status,
 
         @Positive(message = "카테고리 ID는 양수여야 합니다")
-        Integer categoryId,
+        Long categoryId,
 
         @Positive(message = "위치 ID는 양수여야 합니다")
         Long locationId,
@@ -71,7 +71,7 @@ public record CreatePostCommand(
      * 발행 커맨드 생성
      */
     public static CreatePostCommand forPublish(String title, String content, Long userId,
-                                               Integer categoryId, Long locationId) {
+                                               Long categoryId, Long locationId) {
         return new CreatePostCommand(
                 title, content, userId, PostStatus.PUBLISHED,
                 categoryId, locationId, null, List.of(), List.of(), false

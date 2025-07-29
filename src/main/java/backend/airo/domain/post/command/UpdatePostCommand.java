@@ -26,7 +26,7 @@ public record UpdatePostCommand(
         PostStatus status,
 
         @Positive(message = "카테고리 ID는 양수여야 합니다")
-        Integer categoryId,
+        Long categoryId,
 
         @Positive(message = "위치 ID는 양수여야 합니다")
         Long locationId,
@@ -68,9 +68,9 @@ public record UpdatePostCommand(
     /**
      * 상태만 변경
      */
-    public static UpdatePostCommand changeStatus(Long postId, Long requesterId, PostStatus status, String reason) {
+    public static UpdatePostCommand changeStatus(Long postId, Long requesterId, Long categoryId, Long locationId,PostStatus status, String reason) {
         return new UpdatePostCommand(
-                postId, requesterId, null, null, status, null, null, null,
+                postId, requesterId, null, null, status, categoryId, locationId, null,
                 null, null, null, reason
         );
     }
@@ -78,22 +78,22 @@ public record UpdatePostCommand(
     /**
      * 발행으로 상태 변경
      */
-    public static UpdatePostCommand publish(Long postId, Long requesterId) {
-        return changeStatus(postId, requesterId, PostStatus.PUBLISHED, "게시물 발행");
+    public static UpdatePostCommand publish(Long postId, Long requesterId , Long categoryId, Long locationId) {
+        return changeStatus(postId, requesterId, categoryId, locationId, PostStatus.PUBLISHED, "게시물 발행");
     }
 
     /**
      * 임시저장으로 상태 변경
      */
-    public static UpdatePostCommand toDraft(Long postId, Long requesterId) {
-        return changeStatus(postId, requesterId, PostStatus.DRAFT, "임시저장으로 변경");
+    public static UpdatePostCommand toDraft(Long postId, Long requesterId, Long categoryId, Long locationId) {
+        return changeStatus(postId, requesterId, categoryId, locationId, PostStatus.DRAFT, "임시저장으로 변경");
     }
 
     /**
      * 보관으로 상태 변경
      */
-    public static UpdatePostCommand archive(Long postId, Long requesterId) {
-        return changeStatus(postId, requesterId, PostStatus.ARCHIVED, "게시물 보관");
+    public static UpdatePostCommand archive(Long postId, Long requesterId, Long categoryId, Long locationId) {
+        return changeStatus(postId, requesterId, categoryId, locationId, PostStatus.ARCHIVED, "게시물 보관");
     }
 
     /**

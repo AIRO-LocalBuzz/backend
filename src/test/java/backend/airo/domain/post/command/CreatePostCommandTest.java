@@ -21,7 +21,7 @@ class CreatePostCommandTest {
         // given
         CreatePostCommand command = new CreatePostCommand(
                 "여행 후기", "정말 좋은 여행이었습니다", 1L, PostStatus.DRAFT,
-                1, 1L, null, List.of(), List.of(), false
+                1L, 1L, null, List.of(), List.of(), false
         );
 
         // when
@@ -55,7 +55,7 @@ class CreatePostCommandTest {
     void canPublishValidation() {
         // given
         CreatePostCommand publishCommand = CreatePostCommand.forPublish(
-                "제목", "내용", 1L, 1, 1L
+                "제목", "내용", 1L, 1L, 1L
         );
         CreatePostCommand draftCommand = CreatePostCommand.forDraft(
                 "제목", "내용", 1L
