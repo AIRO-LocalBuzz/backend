@@ -7,6 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import backend.airo.domain.user.User;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
@@ -83,6 +84,12 @@ public class UserEntity extends BaseEntity {
         if (name != null && !name.trim().isEmpty()) {
             this.name = name.trim();
         }
+    }
+    public void updateUserInfo(String name, String nickname, String phoneNumber, LocalDate birDate) {
+        this.name = name.trim();
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birDate;
     }
 
 
