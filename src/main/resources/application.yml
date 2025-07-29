@@ -71,8 +71,7 @@ springdoc:
         - backend.airo.api.shop
         - backend.airo.api.clutr_fatvl
         - backend.airo.api.area_code
-    - group: 'Example API'
-      packages-to-scan: backend.airo.api.example
+        - backend.airo.api.auth
     - group: 'User API'
       packages-to-scan: backend.airo.api.user
     - group: 'Review API'
@@ -115,3 +114,7 @@ openapi:
   service:
     key: ${OPEN_API_KET}
 
+discord:
+  bot:
+    token: ${DISCORD_BOT_TOKEN}
+    channel_id: ${DISCORD_BOT_CHANNEL_ID}

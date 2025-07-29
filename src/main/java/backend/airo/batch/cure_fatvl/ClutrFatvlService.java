@@ -2,10 +2,12 @@ package backend.airo.batch.cure_fatvl;
 
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.domain.clure_fatvl.command.CreateAllClutrFatvlCommand;
+import backend.airo.support.ServerStartupNotifier;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -20,8 +22,9 @@ public class ClutrFatvlService {
 
     private final CreateAllClutrFatvlCommand createAllClutrFatvlCommand;
     private final AsyncClutrFatvlDataCollector asyncClutrFatvlDataCollector;
+    private final ServerStartupNotifier serverStartupNotifier;
 
-    public void collectFestivalOf(YearMonth ym) {
+    public void collectFestivalOf(YearMonth ym){
         LocalDate start = LocalDate.now();  // 오늘
         LocalDate sixMonthsLater = LocalDate.now().plusMonths(6);
         YearMonth endMonth = YearMonth.of(sixMonthsLater.getYear(), sixMonthsLater.getMonth());
@@ -46,7 +49,9 @@ public class ClutrFatvlService {
 
         if (!allEntities.isEmpty()) {
             int size = createAllClutrFatvlCommand.handle(allEntities);
-            log.info("문화 축제 데이터 수집이 정상적으로 이루어 졌습니다. {}", size);
+            serverStartupNotifier.collectClutrFatvlDataSuccessWithNotification(size, start, end);
+        } else {
+            serverStartupNotifier.collectClutrFatvlDataFailWithNotification();
         }
     }
 
