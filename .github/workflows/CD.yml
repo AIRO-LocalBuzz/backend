@@ -23,6 +23,7 @@ jobs:
       JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
       FIRE_BASE_ADMIN_KEY_PATH: ${{ secrets.FIRE_BASE_ADMIN_KEY_PATH }}
       FIRE_BASE_ADMIN_RASS_KEY_PATH: ${{ secrets.FIRE_BASE_ADMIN_RASS_KEY_PATH }}
+      OPEN_API_KET: ${{OPEN_API_KET}}
 
     steps:
       - name: 현재 저장소 코드 Clone
@@ -45,6 +46,7 @@ jobs:
           JWT_EXPIRATION=$JWT_EXPIRATION
           FIRE_BASE_ADMIN_KEY_PATH=$FIRE_BASE_ADMIN_KEY_PATH
           FIRE_BASE_ADMIN_RASS_KEY_PATH=$FIRE_BASE_ADMIN_RASS_KEY_PATH
+          OPEN_API_KET=$OPEN_API_KET
           EOF
 
       - name: 현재 코드 및 파일들을 서버로 전송
