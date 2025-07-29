@@ -21,8 +21,10 @@ public class RuralExService {
 
 
     public void collectRuralExOf() {
+        timeCatch.start();
         List<RuralEx> ruralExInfo = ruralDataPort.getRuralExInfo();
         createAllRuralExCommand.handle(ruralExInfo);
+        timeCatch.end();
     }
 
 

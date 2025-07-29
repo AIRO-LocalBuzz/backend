@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class AreaCodeAdapter implements AreaCodePort {
+public class OpenApiAreaCodeAdapter implements AreaCodePort {
 
     private final OpenApiAreaFeignClient openApiAreaFeignClient;
 

@@ -23,6 +23,7 @@ public class RuralExEntity {
 
     private String exprnSe;
 
+    @Column(columnDefinition = "TEXT")
     private String exprnCn;
 
     private String holdFclty;

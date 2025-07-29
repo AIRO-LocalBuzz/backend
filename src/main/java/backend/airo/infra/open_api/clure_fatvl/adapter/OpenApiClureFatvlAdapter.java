@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ClureFatvlAdapter implements ClureFatvlPort {
+public class OpenApiClureFatvlAdapter implements ClureFatvlPort {
 
 
 
