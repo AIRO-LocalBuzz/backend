@@ -1,6 +1,6 @@
 package backend.airo.infra.discord.message.convertor;
 
-import backend.airo.infra.discord.message.DiscordEmbeddable;
+import backend.airo.infra.discord.message.dto.DiscordEmbeddable;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 

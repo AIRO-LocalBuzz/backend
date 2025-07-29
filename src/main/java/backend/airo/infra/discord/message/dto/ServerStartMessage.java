@@ -1,6 +1,5 @@
 package backend.airo.infra.discord.message.dto;
 
-import backend.airo.infra.discord.message.DiscordEmbeddable;
 import lombok.RequiredArgsConstructor;
 
 import java.util.LinkedHashMap;

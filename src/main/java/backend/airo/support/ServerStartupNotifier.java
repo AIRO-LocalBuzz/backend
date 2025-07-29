@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.LocalDate;
+import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
@@ -22,12 +24,25 @@ public class ServerStartupNotifier {
 
     @EventListener(ApplicationReadyEvent.class)
     public void serverStartUp() throws UnknownHostException {
-//        String[] activeProfiles = environment.getActiveProfiles();
-//        boolean isLocal = Arrays.asList(activeProfiles).contains("local");
-//        if (isLocal) return;
-
+//        if (checkProfile(environment)) return;
         String hostname = InetAddress.getLocalHost().getHostName();
         discordAdapter.sendMessageToChannelServerStart(hostname, "production", System.getProperty("java.version"), String.valueOf(context.getWebServer().getPort()));
+    }
+
+    public void collectClutrFatvlDataSuccessWithNotification (int size, LocalDate start, LocalDate end){
+//        if (checkProfile(environment)) return;
+
+        discordAdapter.sendMessageToChannelCollectClutrFatvlDataSuccess(size, start, end);
+    }
+
+    public void collectClutrFatvlDataFailWithNotification(){
+//        if (checkProfile(environment)) return;
+        discordAdapter.sendMessageToChannelCollectClutrFatvlDataFail();
+    }
+
+    private static boolean checkProfile(Environment environment) {
+        String[] activeProfiles = environment.getActiveProfiles();
+        return Arrays.asList(activeProfiles).contains("local");
     }
 
 }

@@ -32,8 +32,8 @@ public class BatchProcessJob {
     }
 
 
-    // 매일 새벽 2시 30분에 배치 작업 시작 [ 각 지역별 문화, 축제 데이터 수집 ]
-    @Scheduled(cron = "0 30 2 * * *", zone = "Asia/Seoul")
+    // 매일 아침 8시 30분에 배치 작업 시작 [ 각 지역별 문화, 축제 데이터 수집 ]
+    @Scheduled(cron = "0 30 8 * * *", zone = "Asia/Seoul")
     public void syncDailyFestival() {
         YearMonth target = YearMonth.now();
         clutrFatvlService.collectFestivalOf(target);

@@ -1,4 +1,4 @@
-package backend.airo.infra.discord.message;
+package backend.airo.infra.discord.message.dto;
 
 import java.util.Map;
 
