@@ -64,6 +64,7 @@ public class ClutrFatvlEntity extends BaseEntity {
             String phoneNumber, String homepageUrl, String relateInfo,
             LocalDate referenceDate, String insttCode, String insttNm) {
 
+
         this.fstvlNm = fstvlNm;
         this.opar = opar;
         this.fstvlCo = fstvlCo;
