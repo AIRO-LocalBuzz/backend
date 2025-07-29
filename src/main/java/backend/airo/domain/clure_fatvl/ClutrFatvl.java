@@ -50,12 +50,12 @@ public class ClutrFatvl {
 
     @Builder
     public ClutrFatvl(
-            String fstvlNm, String opar, String fstvlCo,
+            Long id, String fstvlNm, String opar, String fstvlCo,
             FestivalPeriod period, GeoPoint location, Address address,
             String mnnstNm, String auspcInsttNm, String suprtInsttNm,
             String phoneNumber, String homepageUrl, String relateInfo,
             LocalDate referenceDate, String insttCode, String insttNm) {
-
+        this.id = id;
         this.fstvlNm = fstvlNm;
         this.opar = opar;
         this.fstvlCo = fstvlCo;

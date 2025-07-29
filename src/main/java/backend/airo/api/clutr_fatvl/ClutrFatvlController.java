@@ -7,6 +7,7 @@ import backend.airo.api.global.swagger.ClutrFatvlControllerSwagger;
 import backend.airo.api.global.dto.Response;
 import backend.airo.api.shop.dto.ShopListResponse;
 import backend.airo.application.clure_fatvl.usecase.ClutrFatvlUseCase;
+import backend.airo.cache.AreaCodeCache;
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
@@ -30,6 +31,9 @@ public class ClutrFatvlController implements ClutrFatvlControllerSwagger {
 
     private final ClutrFatvlUseCase clutrFatvlUseCase;
 
+    //TODO 임시 캐시 -> Redis로 변경할 에정 [ 2차 개발 때 ]
+    private final AreaCodeCache areaCodeCache;
+
     @Override
     @GetMapping("/clutr/fatvl")
     public Response<PageResponse<ClutrFatvListResponse>> getClureFatvlList(
@@ -41,7 +45,9 @@ public class ClutrFatvlController implements ClutrFatvlControllerSwagger {
         Pageable pageable = PageRequest.of(page, size);
         Page<ClutrFatvl> clutrFatvls = clutrFatvlUseCase.getClutrFatvlList(megaCode, cityCode, pageable);
 
-        List<ClutrFatvListResponse> content = ClutrFatvListResponse.create(clutrFatvls.getContent());
+        List<ClutrFatvListResponse> content = clutrFatvls.getContent().stream().map(list ->
+                ClutrFatvListResponse.create(list, areaCodeCache.getMegaName(list.getAddress().megaCodeId()), areaCodeCache.getCityName(list.getAddress().ctprvnCodeId()))
+        ).toList();
         return Response.success(
                 new PageResponse<>(
                         content,

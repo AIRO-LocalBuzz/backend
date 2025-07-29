@@ -19,24 +19,25 @@ public record ClutrFatvListResponse(
         boolean progressCheck,
         boolean periodCheck,
         boolean ended
-//        String thumbnailUrl
 
 ) {
 
-    public static List<ClutrFatvListResponse> create(List<ClutrFatvl> clutrFatvlLis) {
-        return clutrFatvlLis.stream().map(list ->
-                ClutrFatvListResponse.builder()
-                        .name(list.getFstvlNm())
-                        .startDate(list.getPeriod().start())
-                        .endDate(list.getPeriod().end())
-                        .region(null)
-                        .place(list.getOpar())
-                        .progressCheck(list.getPeriod().progressCheck())
-                        .periodCheck(list.getPeriod().periodCheck())
-                        .ended(list.getPeriod().ended())
-                        .build()
-        ).toList();
+    public static ClutrFatvListResponse create(ClutrFatvl clutrFatvl, String megaName, String cityName) {
+        return ClutrFatvListResponse.builder()
+                .id(clutrFatvl.getId())
+                .name(clutrFatvl.getFstvlNm())
+                .startDate(clutrFatvl.getPeriod().start())
+                .endDate(clutrFatvl.getPeriod().end())
+                .region(addMegaNameCityName(megaName, cityName))
+                .place(clutrFatvl.getOpar())
+                .progressCheck(clutrFatvl.getPeriod().progressCheck())
+                .periodCheck(clutrFatvl.getPeriod().periodCheck())
+                .ended(clutrFatvl.getPeriod().ended())
+                .build();
     }
 
+    private static String addMegaNameCityName(String megaName, String cityName) {
+        return megaName + " " + cityName;
+    }
 
 }
