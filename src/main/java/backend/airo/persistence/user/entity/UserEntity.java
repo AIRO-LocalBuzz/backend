@@ -100,7 +100,6 @@ public class UserEntity extends BaseEntity {
     }
 
     public static User toDomain(UserEntity user) {
-
         return new User(
                 user.getId(),
                 user.getEmail(),
@@ -111,7 +110,5 @@ public class UserEntity extends BaseEntity {
                 user.getProviderType(),
                 user.getProviderId()
         );
-
-
     }
 }
