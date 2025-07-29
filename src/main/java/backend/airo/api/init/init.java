@@ -4,12 +4,14 @@ import backend.airo.batch.area_code.AreaCodeService;
 import backend.airo.batch.cure_fatvl.ClutrFatvlService;
 import backend.airo.batch.shop.ShopService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.YearMonth;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/init/")
 @RequiredArgsConstructor
@@ -30,6 +32,7 @@ public class init {
 
     @GetMapping("clutrFatvl/data")
     public void initControl2() {
+        log.info("지역 문화 축제 데이터 수집 요청");
         YearMonth target = YearMonth.now();
         clutrFatvlService.collectFestivalOf(target);
     }

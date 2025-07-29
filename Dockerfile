@@ -1,7 +1,13 @@
 FROM gradle:8.7.0-jdk21 AS build
 WORKDIR /app
+
+COPY --chown=gradle:gradle build.gradle settings.gradle ./
+
+RUN gradle dependencies
+
 COPY --chown=gradle:gradle . .
-RUN gradle clean build -x test
+
+RUN gradle build -x test
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
