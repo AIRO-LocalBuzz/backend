@@ -22,27 +22,27 @@ public class ClutrFatvlService {
     private final AsyncClutrFatvlDataCollector asyncClutrFatvlDataCollector;
 
     public void collectFestivalOf(YearMonth ym) {
-//        LocalDate start = ym.atDay(1);
-//        LocalDate end = ym.atEndOfMonth();
-        int year = ym.getYear();
-        LocalDate start = LocalDate.of(year, 6, 1);        // 6월 1일
-        LocalDate end   = LocalDate.of(year, 12, 31);      // 12월 31일
+        LocalDate start = LocalDate.now();  // 오늘
+        LocalDate sixMonthsLater = LocalDate.now().plusMonths(6);
+        YearMonth endMonth = YearMonth.of(sixMonthsLater.getYear(), sixMonthsLater.getMonth());
+        LocalDate end = endMonth.atEndOfMonth();  // 6개월 뒤의 말일
 
         // 각 날짜별로 비동기 작업 생성 (다른 클래스의 @Async 메서드 호출)
         List<CompletableFuture<List<ClutrFatvl>>> futures = new ArrayList<>();
-
+        log.info("지역 문화 축제 데이터 수집 시작 : 연도 | " + start);
         for (LocalDate day = start; !day.isAfter(end); day = day.plusDays(1)) {
             CompletableFuture<List<ClutrFatvl>> future =
                     asyncClutrFatvlDataCollector.fetchAllByStartDateAsync(day);
             futures.add(future);
         }
-
+        log.info("지역 문화 축제 데이터 수집 완료");
         // 모든 비동기 작업 완료 대기 및 결과 수집
         List<ClutrFatvl> allEntities = futures.stream()
                 .map(CompletableFuture::join)
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
+        log.info("allEntities.size() :: " + allEntities.size());
 
         if (!allEntities.isEmpty()) {
             int size = createAllClutrFatvlCommand.handle(allEntities);

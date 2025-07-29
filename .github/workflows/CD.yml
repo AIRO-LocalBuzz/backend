@@ -7,6 +7,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     env:
       SERVER_PORT: ${{ secrets.SERVER_PORT }}
       DB_URL: ${{ secrets.DB_URL }}
@@ -22,6 +23,7 @@ jobs:
       JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
       FIRE_BASE_ADMIN_KEY_PATH: ${{ secrets.FIRE_BASE_ADMIN_KEY_PATH }}
       FIRE_BASE_ADMIN_RASS_KEY_PATH: ${{ secrets.FIRE_BASE_ADMIN_RASS_KEY_PATH }}
+      OPEN_API_KET: ${{ secrets.OPEN_API_KET }}
 
     steps:
       - name: 현재 저장소 코드 Clone
@@ -44,6 +46,7 @@ jobs:
           JWT_EXPIRATION=$JWT_EXPIRATION
           FIRE_BASE_ADMIN_KEY_PATH=$FIRE_BASE_ADMIN_KEY_PATH
           FIRE_BASE_ADMIN_RASS_KEY_PATH=$FIRE_BASE_ADMIN_RASS_KEY_PATH
+          OPEN_API_KET=$OPEN_API_KET
           EOF
 
       - name: 현재 코드 및 파일들을 서버로 전송
@@ -63,7 +66,9 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
+          command_timeout: '60m'
           script: |
             cd ~/airo
-            docker compose down
+            docker compose down --volumes --remove-orphans
+            docker image prune -af --filter "until=24h"
             docker compose up --build -d
