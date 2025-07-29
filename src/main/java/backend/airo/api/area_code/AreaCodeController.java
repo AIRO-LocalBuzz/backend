@@ -39,7 +39,7 @@ public class AreaCodeController implements AreaCodeControllerSwagger {
     public Response<List<CityCodeResponse>> getCityCodes() {
         List<CityCode> cityCodes = areaCodeUseCase.getCityCodeList();
         return Response.success(cityCodes.stream().map(list ->
-                new CityCodeResponse(list.getCtprvnCd(), list.getCtprvnNm())
+                new CityCodeResponse(list.getCtprvnCd(), list.getCtprvnNm(), list.getMegaCodeId())
                 ).toList());
     }
 }
