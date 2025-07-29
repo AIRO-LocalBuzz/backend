@@ -1,5 +1,6 @@
 package backend.airo.batch.cure_fatvl;
 
+import backend.airo.domain.area_code.command.DeleteAllClutrFatvlByDateCommand;
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.domain.clure_fatvl.command.CreateAllClutrFatvlCommand;
 import backend.airo.support.ServerStartupNotifier;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class ClutrFatvlService {
 
     private final CreateAllClutrFatvlCommand createAllClutrFatvlCommand;
+    private final DeleteAllClutrFatvlByDateCommand deleteAllClutrFatvlByDateCommand;
     private final AsyncClutrFatvlDataCollector asyncClutrFatvlDataCollector;
     private final ServerStartupNotifier serverStartupNotifier;
 
@@ -48,6 +50,7 @@ public class ClutrFatvlService {
         log.info("allEntities.size() :: " + allEntities.size());
 
         if (!allEntities.isEmpty()) {
+            deleteAllClutrFatvlByDateCommand.handle(start, end);
             int size = createAllClutrFatvlCommand.handle(allEntities);
             serverStartupNotifier.collectClutrFatvlDataSuccessWithNotification(size, start, end);
         } else {
