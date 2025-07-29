@@ -1,7 +1,7 @@
 FROM gradle:8.7.0-jdk21 AS build
 WORKDIR /app
 
-COPY --chown=gradle:gradle build.gradle.kts settings.gradle.kts ./
+COPY --chown=gradle:gradle build.gradle settings.gradle ./
 
 RUN gradle dependencies
 
