@@ -66,5 +66,6 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ~/airo
-            docker compose down
+            docker compose down --volumes --remove-orphans
+            docker image prune -af --filter "until=24h"
             docker compose up --build -d
