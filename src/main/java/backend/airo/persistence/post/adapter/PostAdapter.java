@@ -10,6 +10,8 @@ import backend.airo.domain.post.exception.PostNotFoundException;
 import backend.airo.persistence.image.entity.ImageEntity;
 import backend.airo.persistence.post.entity.PostEntity;
 import backend.airo.persistence.post.repository.PostJpaRepository;
+import backend.airo.persistence.user.entity.UserEntity;
+import backend.airo.persistence.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -34,21 +36,41 @@ import java.util.Optional;
 public class PostAdapter implements PostRepository {
 
     private final PostJpaRepository postJpaRepository;
+    private final UserJpaRepository userJpaRepository;
 
     // ===== CRUD 메서드 =====
 
     @Override
     @Transactional
     public Post save(Post post) {
-        log.debug("게시물 저장 시작: {}", post.getTitle());
+        log.debug("게시물 저장 시작: title={}, userId={}, id={}",
+                post.getTitle(), post.getUserId(), post.getId());
 
-        PostEntity entity = (post.getId() == null)
-                ? PostEntity.toEntity(post)
-                : updateExistingEntity(post);
+        PostEntity entity;
+        if (post.getId() == null) {
+            log.debug("신규 게시물 생성: title={}", post.getTitle());
+            entity = PostEntity.toEntity(post);
 
+            // UserEntity 설정
+            if (post.getUserId() != null) {
+                UserEntity userEntity = userJpaRepository.getReferenceById(post.getUserId());
+                entity.setUser(userEntity);
+            }
+
+            log.debug("Entity 변환 완료: userId={}, title={}",
+                    entity.getUser() != null ? entity.getUser().getId() : null, entity.getTitle());
+        } else {
+            log.debug("기존 게시물 업데이트: id={}", post.getId());
+            entity = updateExistingEntity(post);
+        }
+
+        log.debug("JPA Repository 저장 시작: entityId={}", entity.getId());
         PostEntity savedEntity = postJpaRepository.save(entity);
 
-        log.debug("게시물 저장 완료: ID={}", savedEntity.getId());
+        log.debug("JPA Repository 저장 완료: savedId={}, userId={}",
+                savedEntity.getId(),
+                savedEntity.getUser() != null ? savedEntity.getUser().getId() : null);
+
         return PostEntity.toDomain(savedEntity);
     }
 

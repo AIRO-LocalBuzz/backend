@@ -57,6 +57,9 @@ public class PostController {
     public ResponseEntity<PostResponse> createPost(
             @Valid @RequestBody PostCreateRequest request,
             HttpServletRequest httpRequest) {
+        log.info("게시물 생성 요청 원본: {}", request);
+        log.info("세부 정보 - title: {}, userId: {}, categoryId: {}, locationId: {}",
+                request.title(), request.userId(), request.categoryId(), request.locationId());
 
         log.info("게시물 생성 요청: title={}, userId={}", request.title(), request.userId());
 

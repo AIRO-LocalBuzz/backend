@@ -30,21 +30,6 @@ public class Post {
     private String authorProfileImageUrl;
 
 
-//    public Post(Long id, Long userId, String title, String content, String summary, PostStatus status, LocalDateTime travelDate, Integer viewCount, Integer likeCount, Integer commentCount ,Boolean isFeatured, LocalDateTime publishedAt ) {
-//        this.id = id;
-//        this.userId = userId;
-//        this.title = title;
-//        this.content = content;
-//        this.summary = summary;
-//        this.status = status;
-//        this.travelDate = travelDate;
-//        this.viewCount = viewCount;
-//        this.likeCount = likeCount;
-//        this.commentCount = commentCount;
-//        this.isFeatured = isFeatured;
-//        this.publishedAt = publishedAt;
-//    }
-
     public Post(Long id, Long userId, Long categoryId, Long locationId, String title, String content, String summary, PostStatus status, LocalDateTime travelDate, Integer viewCount, Integer likeCount, Integer commentCount ,Boolean isFeatured, LocalDateTime publishedAt ) {
         this.id = id;
         this.userId = userId;

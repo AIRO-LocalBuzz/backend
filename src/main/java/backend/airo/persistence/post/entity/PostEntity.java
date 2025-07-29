@@ -11,12 +11,14 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "posts")
@@ -85,13 +87,25 @@ public class PostEntity extends BaseEntity {
     private List<CommentEntity> comments = new ArrayList<>();
 
 
-    public PostEntity(Long userId ,String title, String content, String summary, PostStatus status, LocalDateTime travelDate, Integer viewCount, Integer likeCount, Integer commentCount, Boolean isFeatured, LocalDateTime publishedAt) {
+    // PostEntity.java 수정
+    public PostEntity(String title, String content, String summary, PostStatus status,
+                      LocalDateTime travelDate, Integer viewCount, Integer likeCount,
+                      Integer commentCount, Boolean isFeatured, LocalDateTime publishedAt) {
         super();
+        this.title = title;
+        this.content = content;
+        this.summary = summary;
+        this.status = status;
+        this.travelDate = travelDate;
+        this.viewCount = viewCount != null ? viewCount : 0;
+        this.likeCount = likeCount != null ? likeCount : 0;
+        this.commentCount = commentCount != null ? commentCount : 0;
+        this.isFeatured = isFeatured != null ? isFeatured : false;
+        this.publishedAt = publishedAt;
     }
 
     public static PostEntity toEntity(Post post) {
-        return new PostEntity(
-                post.getUserId(),
+        PostEntity entity = new PostEntity(
                 post.getTitle(),
                 post.getContent(),
                 post.getSummary(),
@@ -103,24 +117,27 @@ public class PostEntity extends BaseEntity {
                 post.getIsFeatured(),
                 post.getPublishedAt()
         );
+
+        // 연관관계는 별도 설정 (PostAdapter에서 처리)
+        return entity;
     }
 
-    public static Post toDomain(PostEntity post) {
+    public static Post toDomain(PostEntity entity) {
         return new Post(
-                post.getId(),
-                post.getUser().getId(),
-                post.getCategory() != null ? post.getCategory().getId() : null,
-                post.getLocation() != null ? post.getLocation().getId() : null,
-                post.getTitle(),
-                post.getContent(),
-                post.getSummary(),
-                post.getStatus(),
-                post.getTravelDate(),
-                post.getViewCount(),
-                post.getLikeCount(),
-                post.getCommentCount(),
-                post.getIsFeatured(),
-                post.getPublishedAt()
+                entity.getId(),
+                entity.getUser() != null ? entity.getUser().getId() : null,
+                entity.getCategory() != null ? entity.getCategory().getId() : null,
+                entity.getLocation() != null ? entity.getLocation().getId() : null,
+                entity.getTitle(),
+                entity.getContent(),
+                entity.getSummary(),
+                entity.getStatus(),
+                entity.getTravelDate(),
+                entity.getViewCount(),
+                entity.getLikeCount(),
+                entity.getCommentCount(),
+                entity.getIsFeatured(),
+                entity.getPublishedAt()
         );
     }
 
