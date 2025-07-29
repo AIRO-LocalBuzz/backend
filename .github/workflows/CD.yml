@@ -64,6 +64,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
+          script_timeout: 3600
           script: |
             cd ~/airo
             docker compose down --volumes --remove-orphans
