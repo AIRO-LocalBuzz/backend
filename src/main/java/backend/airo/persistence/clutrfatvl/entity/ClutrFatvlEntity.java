@@ -64,6 +64,7 @@ public class ClutrFatvlEntity extends BaseEntity {
             String phoneNumber, String homepageUrl, String relateInfo,
             LocalDate referenceDate, String insttCode, String insttNm) {
 
+
         this.fstvlNm = fstvlNm;
         this.opar = opar;
         this.fstvlCo = fstvlCo;
@@ -122,22 +123,26 @@ public class ClutrFatvlEntity extends BaseEntity {
     }
 
     public static ClutrFatvl toDomain(ClutrFatvlEntity clutrFatvlEntity) {
+        FestivalPeriod period = clutrFatvlEntity.period;
+        GeoPoint location = clutrFatvlEntity.location;
+        Address address = clutrFatvlEntity.address;
         return ClutrFatvl.builder()
-                .fstvlNm(clutrFatvlEntity.getFstvlNm())
-                .opar(clutrFatvlEntity.getOpar())
-                .fstvlCo(clutrFatvlEntity.getFstvlCo())
-                .period(new FestivalPeriod(clutrFatvlEntity.getPeriod().start(), clutrFatvlEntity.getPeriod().end()))
-                .location(new GeoPoint(clutrFatvlEntity.getLocation().lat(), clutrFatvlEntity.getLocation().lon()))
-                .address(new Address(clutrFatvlEntity.getAddress().road(), clutrFatvlEntity.getAddress().lot(), clutrFatvlEntity.getAddress().megaCodeId(), clutrFatvlEntity.getAddress().ctprvnCodeId()))
-                .mnnstNm(clutrFatvlEntity.getMnnstNm())
-                .auspcInsttNm(clutrFatvlEntity.getAuspcInsttNm())
-                .suprtInsttNm(clutrFatvlEntity.getSuprtInsttNm())
-                .phoneNumber(clutrFatvlEntity.getPhoneNumber())
-                .homepageUrl(clutrFatvlEntity.getHomepageUrl())
-                .relateInfo(clutrFatvlEntity.getRelateInfo())
-                .referenceDate(clutrFatvlEntity.getReferenceDate())
-                .insttCode(clutrFatvlEntity.getInsttCode())
-                .insttNm(clutrFatvlEntity.getInsttNm())
+                .id(clutrFatvlEntity.id)
+                .fstvlNm(clutrFatvlEntity.fstvlNm)
+                .opar(clutrFatvlEntity.opar)
+                .fstvlCo(clutrFatvlEntity.fstvlCo)
+                .period(new FestivalPeriod(period.start(), period.end()))
+                .location(new GeoPoint(location.lat(), location.lon()))
+                .address(new Address(address.road(), address.lot(), address.megaCodeId(), address.ctprvnCodeId()))
+                .mnnstNm(clutrFatvlEntity.mnnstNm)
+                .auspcInsttNm(clutrFatvlEntity.auspcInsttNm)
+                .suprtInsttNm(clutrFatvlEntity.suprtInsttNm)
+                .phoneNumber(clutrFatvlEntity.phoneNumber)
+                .homepageUrl(clutrFatvlEntity.homepageUrl)
+                .relateInfo(clutrFatvlEntity.relateInfo)
+                .referenceDate(clutrFatvlEntity.referenceDate)
+                .insttCode(clutrFatvlEntity.insttCode)
+                .insttNm(clutrFatvlEntity.insttNm)
                 .build();
     }
 

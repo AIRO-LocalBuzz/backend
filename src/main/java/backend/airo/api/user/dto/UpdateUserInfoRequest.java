@@ -1,13 +1,20 @@
 package backend.airo.api.user.dto;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateUserInfoRequest {
-    private final String nickname;
-    private final String email;
+    private String name;
+    private String nickname;
+    private String phoneNumber;
+    private LocalDate birthDate;
+
 
 }

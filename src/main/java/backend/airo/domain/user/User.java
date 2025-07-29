@@ -38,7 +38,7 @@ public class User {
     }
 
     public User(String email, String name, String nickname, ProviderType providerType, String providerId) {
-        this.id = null;
+        this.id = 0L;
         this.email = email;
         this.name = name;
         this.nickname = nickname;
@@ -64,9 +64,11 @@ public class User {
         );
     }
 
-    public void updateUserInfo(String email, String nickname) {
-            this.email = email;
+    public User updateUserInfo(String name, String nickname, String phoneNumber, LocalDate birthDate) {
+            this.name = name;
             this.nickname = nickname;
-
+            this.phoneNumber = phoneNumber;
+            this.birthDate = birthDate;
+            return this;
     }
 }
