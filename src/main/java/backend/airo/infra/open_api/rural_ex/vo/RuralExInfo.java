@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.*;
 import java.time.LocalDate;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record ExprnVillageInfo(
+public record RuralExInfo(
 
         @JsonProperty("exprnVilageNm")
         @JsonSetter(nulls = Nulls.AS_EMPTY)

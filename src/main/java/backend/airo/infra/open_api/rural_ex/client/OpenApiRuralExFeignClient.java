@@ -2,7 +2,7 @@ package backend.airo.infra.open_api.rural_ex.client;
 
 import backend.airo.infra.open_api.config.OpenApiFeignClientConfiguration;
 import backend.airo.infra.open_api.rural_ex.dto.OpenApiRuralExResponse;
-import backend.airo.infra.open_api.rural_ex.vo.ExprnVillageInfo;
+import backend.airo.infra.open_api.rural_ex.vo.RuralExInfo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface OpenApiRuralExFeignClient {
 
     @GetMapping("/tn_pubr_public_frhl_exprn_vilage_api")
-    OpenApiRuralExResponse<ExprnVillageInfo> getClutrFatvlInfo(
+    OpenApiRuralExResponse<RuralExInfo> getClutrFatvlInfo(
             @RequestParam(value = "pageNo", defaultValue = "1", required = false) String pageNo,
             @RequestParam(value = "numOfRows", defaultValue = "10000", required = false) String numOfRows
             );

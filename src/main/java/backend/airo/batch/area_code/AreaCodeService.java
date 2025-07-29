@@ -4,8 +4,8 @@ import backend.airo.domain.area_code.CityCode;
 import backend.airo.domain.area_code.MegaCode;
 import backend.airo.domain.area_code.command.CreateAllCityCodeCommand;
 import backend.airo.domain.area_code.command.CreateAllMegaCodeCommand;
-import backend.airo.infra.open_api.area_find.vo.OpenApiCtyCode;
-import backend.airo.infra.open_api.area_find.vo.OpenApiMegaCode;
+import backend.airo.domain.area_code.port.AreaCodePort;
+
 import backend.airo.support.TimeCatch;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AreaCodeService {
 
-    private final AsyncAreaCodeDataCollector asyncAreaCodeDataCollector;
+    private final AreaCodePort areaCodePort;
     private final CreateAllMegaCodeCommand createAllMegaCodeCommand;
     private final CreateAllCityCodeCommand createAllCityCodeCommand;
     private final TimeCatch timeCatch = new TimeCatch("AreaCode Time Check");
@@ -29,10 +29,8 @@ public class AreaCodeService {
 
     public void collectCodeOf() {
         timeCatch.start();
-        List<OpenApiMegaCode> openApiMegaCode = asyncAreaCodeDataCollector.getMegaCode();
-        List<MegaCode> megaCodes = openApiMegaCode.stream()
-                .map(list -> new MegaCode(Long.valueOf(list.ctprvnCd()), list.ctprvnNm()))
-                .toList();
+        //1. 지역 코드 수집
+        List<MegaCode> megaCodes = areaCodePort.getMegaCode();
         List<MegaCode> handle = createAllMegaCodeCommand.handle(megaCodes);
 
         // 2. 이름 기준으로 MegaCode ID 매핑
@@ -40,13 +38,8 @@ public class AreaCodeService {
                 .collect(Collectors.toMap(MegaCode::getCtprvnNm, MegaCode::getCtprvnCd));
 
         // 3. 시군구 코드 수집 및 MegaCode ID 할당
-        List<OpenApiCtyCode> openApiCtyCodes = asyncAreaCodeDataCollector.getCityCode(openApiMegaCode);
-        List<CityCode> codeCodes = openApiCtyCodes.stream()
-                .map(list -> {
-                    Long megaCodeId = megaCodeIdMap.get(list.ctprvnNm());
-                    return new CityCode(Long.valueOf(list.signguCd()),list.signguNm(), megaCodeId);
-                })
-                .toList();
+        List<CityCode> codeCodes = areaCodePort.getCityCode(megaCodes,megaCodeIdMap);
+
         createAllCityCodeCommand.handle(codeCodes);
 //        List<AdmiCode> admiCode = asyncAreaCodeDataCollector.getAdmiCode(cityCode);
 //        List<ZoneCode> zoneCode = asyncAreaCodeDataCollector.getZoneCode(cityCode);
