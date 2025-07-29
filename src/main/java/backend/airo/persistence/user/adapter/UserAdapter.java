@@ -23,9 +23,13 @@ public class UserAdapter implements UserRepository {
 
     @Override
     public User save(User aggregate) {
-        UserEntity entity = UserEntity.toEntity(aggregate);
-        UserEntity savedEntity = userJpaRepository.save(entity);
-        return UserEntity.toDomain(savedEntity);
+        UserEntity productEntity = userJpaRepository.findById(aggregate.getId())
+                .map(getProductEntity -> {
+                    getProductEntity.updateUserInfo(aggregate.getName(), aggregate.getNickname(), aggregate.getPhoneNumber(), aggregate.getBirthDate());
+                    return getProductEntity;
+                }).orElseGet(() -> UserEntity.toEntity(aggregate));
+        UserEntity saveProductEntity = userJpaRepository.save(productEntity);
+        return UserEntity.toDomain(saveProductEntity);
     }
 
     @Override
