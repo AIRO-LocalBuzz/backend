@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,6 +30,11 @@ public class ClutrFatvlAdapter implements ClutrFatvlRepository {
             return new PageImpl<>(List.of(), pageable, 0);
         }
         return clutrFatvlEntities.map(ClutrFatvlEntity::toDomain);
+    }
+
+    @Override
+    public void deleteAllByDate(LocalDate start, LocalDate end) {
+        clutrFatvlJpaRepository.deleteAllByFstvlStartDateBetween(start, end);
     }
 
     @Override

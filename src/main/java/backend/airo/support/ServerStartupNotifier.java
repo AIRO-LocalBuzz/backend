@@ -24,19 +24,19 @@ public class ServerStartupNotifier {
 
     @EventListener(ApplicationReadyEvent.class)
     public void serverStartUp() throws UnknownHostException {
-        if (checkProfile(environment)) return;
+//        if (checkProfile(environment)) return;
         String hostname = InetAddress.getLocalHost().getHostName();
         discordAdapter.sendMessageToChannelServerStart(hostname, "production", System.getProperty("java.version"), String.valueOf(context.getWebServer().getPort()));
     }
 
     public void collectClutrFatvlDataSuccessWithNotification (int size, LocalDate start, LocalDate end){
-        if (checkProfile(environment)) return;
+//        if (checkProfile(environment)) return;
 
         discordAdapter.sendMessageToChannelCollectClutrFatvlDataSuccess(size, start, end);
     }
 
     public void collectClutrFatvlDataFailWithNotification(){
-        if (checkProfile(environment)) return;
+//        if (checkProfile(environment)) return;
         discordAdapter.sendMessageToChannelCollectClutrFatvlDataFail();
     }
 
