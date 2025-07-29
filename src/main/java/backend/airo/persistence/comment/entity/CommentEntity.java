@@ -12,10 +12,10 @@ import java.util.List;
 @Entity
 @Table(name = "comments")
 public class CommentEntity extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
-    private Long commentId;
+    private Long id;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;

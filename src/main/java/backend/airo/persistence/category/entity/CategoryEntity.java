@@ -3,19 +3,20 @@ package backend.airo.persistence.category.entity;
 import backend.airo.domain.post.Post;
 import backend.airo.persistence.post.entity.PostEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @Entity
 @Table(name = "category")
 public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
-    private Integer categoryId;
+    private Long id;
 
     @Column(unique = true, nullable = false, length = 100)
     private String name;

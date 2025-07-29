@@ -16,8 +16,10 @@ public class ImageEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "image_id")
-    private Long imageId;
+    private Long id;
+
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
 
     @Column(name = "original_filename", nullable = false)
     private String originalFilename;
@@ -28,9 +30,6 @@ public class ImageEntity {
     @Column(name = "image_url", columnDefinition = "TEXT", nullable = false)
     private String imageUrl;
 
-    @Column(name = "thumbnail_url", columnDefinition = "TEXT")
-    private String thumbnailUrl;
-
     @Column(name = "alt_text")
     private String altText;
 
@@ -38,7 +37,7 @@ public class ImageEntity {
     private String caption;
 
     @Column(name = "file_size")
-    private Integer fileSize;
+    private Long fileSize;
 
     @Column(name = "mime_type", length = 100)
     private String mimeType;
@@ -65,16 +64,16 @@ public class ImageEntity {
     public ImageEntity() {
     }
 
-    public ImageEntity(String originalFilename, String storedFilename, String imageUrl, String thumbnailUrl, String altText, String caption, Integer fileSize, String mimeType, Integer width, Integer height, Integer sortOrder, Boolean isCover, LocalDateTime createdAt) {
+    public ImageEntity(Long userId, String originalFilename, String storedFilename, String imageUrl, String altText, String caption, Long fileSize, String mimeType, Integer width, Integer height, Integer sortOrder, Boolean isCover, LocalDateTime createdAt, Post post) {
         super();
     }
 
     public static ImageEntity toEntity(Image image) {
         return new ImageEntity(
+                image.getUserId(),
                 image.getOriginalFilename(),
                 image.getStoredFilename(),
                 image.getImageUrl(),
-                image.getThumbnailUrl(),
                 image.getAltText(),
                 image.getCaption(),
                 image.getFileSize(),
@@ -83,17 +82,18 @@ public class ImageEntity {
                 image.getHeight(),
                 image.getSortOrder(),
                 image.getIsCover(),
-                image.getCreatedAt()
+                image.getCreatedAt(),
+                image.getPost()
         );
     }
 
     public static Image toDomain(ImageEntity image) {
         return new Image(
-                image.getImageId(),
+                image.getId(),
+                image.getUserId(),
                 image.getOriginalFilename(),
                 image.getStoredFilename(),
                 image.getImageUrl(),
-                image.getThumbnailUrl(),
                 image.getAltText(),
                 image.getCaption(),
                 image.getFileSize(),
@@ -102,8 +102,8 @@ public class ImageEntity {
                 image.getHeight(),
                 image.getSortOrder(),
                 image.getIsCover(),
-                image.getCreatedAt()
-
+                image.getCreatedAt(),
+                PostEntity.toDomain(image.getPost())
         );
     }
 

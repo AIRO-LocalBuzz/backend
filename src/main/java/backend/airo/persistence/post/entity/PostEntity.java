@@ -24,8 +24,7 @@ public class PostEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long Id;
+    private Long id;
 
     @Column(nullable = false, length = 200)
     private String title;

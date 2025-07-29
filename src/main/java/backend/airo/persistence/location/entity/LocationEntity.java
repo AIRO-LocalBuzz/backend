@@ -3,6 +3,8 @@ package backend.airo.persistence.location.entity;
 import backend.airo.domain.post.Post;
 import backend.airo.persistence.post.entity.PostEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
@@ -11,13 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "location")
 public class LocationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "location_id")
-    private Long locationId;
+    private Long id;
 
     @Column(length = 100)
     private String country;

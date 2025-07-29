@@ -15,8 +15,7 @@ public class TagEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tag_id")
-    private Integer tagId;
+    private Integer id;
 
     @Column(unique = true, nullable = false, length = 100)
     private String name;

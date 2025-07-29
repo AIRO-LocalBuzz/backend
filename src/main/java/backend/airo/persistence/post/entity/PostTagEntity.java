@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "post_tags")
 public class PostTagEntity {
+
     @EmbeddedId
+    @Column(name = "id")
     private PostTagId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
