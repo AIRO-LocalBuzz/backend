@@ -7,7 +7,7 @@ import backend.airo.domain.post.dto.PostSearchCriteria;
 import backend.airo.domain.post.query.GetPostQuery;
 import backend.airo.domain.post.query.GetPostListQuery;
 import backend.airo.domain.post.Post;
-import backend.airo.domain.post.PostRepository;
+import backend.airo.domain.post.repository.PostRepository;
 import backend.airo.domain.post.enums.PostStatus;
 import backend.airo.domain.post.events.PostPublishedEvent;
 import backend.airo.domain.post.events.PostStatusChangedEvent;

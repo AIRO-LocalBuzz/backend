@@ -37,7 +37,7 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
      * 카테고리별 게시물 조회
      */
     @Query("SELECT p FROM PostEntity p WHERE p.category.id = :categoryId")
-    Page<PostEntity> findByCategoryId(@Param("categoryId") Integer categoryId, Pageable pageable);
+    Page<PostEntity> findByCategoryId(@Param("categoryId") Long categoryId, Pageable pageable);
 
     /**
      * 위치별 게시물 조회
@@ -197,7 +197,7 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
             "AND (:endDate IS NULL OR p.createdAt <= :endDate)")
     Page<PostEntity> findByCriteria(@Param("keyword") String keyword,
                                     @Param("userId") Long userId,
-                                    @Param("categoryId") Integer categoryId,
+                                    @Param("categoryId") Long categoryId,
                                     @Param("locationId") Long locationId,
                                     @Param("status") PostStatus status,
                                     @Param("isFeatured") Boolean isFeatured,
@@ -221,7 +221,7 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
      * 카테고리별 게시물 수
      */
     @Query("SELECT COUNT(p) FROM PostEntity p WHERE p.category.id = :categoryId")
-    long countByCategoryId(@Param("categoryId") Integer categoryId);
+    long countByCategoryId(@Param("categoryId") Long categoryId);
 
     /**
      * 발행된 게시물 수

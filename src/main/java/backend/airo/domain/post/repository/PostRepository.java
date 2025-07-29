@@ -1,6 +1,7 @@
-package backend.airo.domain.post;
+package backend.airo.domain.post.repository;
 
 import backend.airo.domain.AggregateSupport;
+import backend.airo.domain.post.Post;
 import backend.airo.domain.post.dto.PostSearchCriteria;
 import backend.airo.domain.post.enums.PostStatus;
 import org.springframework.data.domain.Page;
@@ -78,7 +79,7 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
      * @param pageable 페이징 정보
      * @return 게시물 페이지
      */
-    Page<Post> findByCategoryId(Integer categoryId, Pageable pageable);
+    Page<Post> findByCategoryId(Long categoryId, Pageable pageable);
 
     /**
      * 위치별 게시물 조회
@@ -177,7 +178,7 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
      * @param categoryId 카테고리 ID
      * @return 게시물 수
      */
-    long countByCategoryId(Integer categoryId);
+    long countByCategoryId(Long categoryId);
 
     /**
      * 전체 발행된 게시물 수 조회

@@ -24,6 +24,7 @@ public class Post {
     private Boolean isFeatured = false;
     private LocalDateTime travelDate;
     private LocalDateTime publishedAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
     private String authorName;
     private String authorNickname;
     private String authorProfileImageUrl;

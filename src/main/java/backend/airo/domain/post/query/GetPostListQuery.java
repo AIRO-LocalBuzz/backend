@@ -32,7 +32,7 @@ public record GetPostListQuery(
         Long userId,
 
         @Positive(message = "카테고리 ID는 양수여야 합니다")
-        Integer categoryId,
+        Long categoryId,
 
         @Positive(message = "위치 ID는 양수여야 합니다")
         Long locationId,
@@ -112,7 +112,7 @@ public record GetPostListQuery(
     /**
      * 카테고리별 게시물 조회
      */
-    public static GetPostListQuery byCategory(Integer categoryId) {
+    public static GetPostListQuery byCategory(Long categoryId) {
         return new GetPostListQuery(
                 null, null, null, null, List.of(PostStatus.PUBLISHED), null, categoryId, null, null, null,
                 null, null, null, null, null, null, null, null

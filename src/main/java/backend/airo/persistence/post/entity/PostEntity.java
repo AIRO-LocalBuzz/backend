@@ -26,9 +26,6 @@ public class PostEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
-
     @Column(nullable = false, length = 200)
     private String title;
 
@@ -111,7 +108,7 @@ public class PostEntity extends BaseEntity {
     public static Post toDomain(PostEntity post) {
         return new Post(
                 post.getId(),
-                post.getUserId(),
+                post.getUser().getId(),
                 post.getCategory() != null ? post.getCategory().getId() : null,
                 post.getLocation() != null ? post.getLocation().getId() : null,
                 post.getTitle(),

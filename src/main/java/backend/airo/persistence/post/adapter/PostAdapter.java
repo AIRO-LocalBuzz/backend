@@ -3,7 +3,7 @@ package backend.airo.persistence.post.adapter;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.image.exception.ImageNotFoundException;
 import backend.airo.domain.post.Post;
-import backend.airo.domain.post.PostRepository;
+import backend.airo.domain.post.repository.PostRepository;
 import backend.airo.domain.post.dto.PostSearchCriteria;
 import backend.airo.domain.post.enums.PostStatus;
 import backend.airo.domain.post.exception.PostNotFoundException;
@@ -115,7 +115,7 @@ public class PostAdapter implements PostRepository {
     }
 
     @Override
-    public Page<Post> findByCategoryId(Integer categoryId, Pageable pageable) {
+    public Page<Post> findByCategoryId(Long categoryId, Pageable pageable) {
         return postJpaRepository.findByCategoryId(categoryId, pageable)
                 .map(PostEntity::toDomain);
     }
@@ -201,7 +201,7 @@ public class PostAdapter implements PostRepository {
     }
 
     @Override
-    public long countByCategoryId(Integer categoryId) {
+    public long countByCategoryId(Long categoryId) {
         return postJpaRepository.countByCategoryId(categoryId);
     }
 

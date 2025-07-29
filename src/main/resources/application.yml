@@ -43,7 +43,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
@@ -73,8 +73,11 @@ springdoc:
         - backend.airo.api.area_code
         - backend.airo.api.auth
         - backend.airo.api.image
+        - backend.airo.api.post
     - group: 'User API'
       packages-to-scan: backend.airo.api.user
+    - group: 'Post API'
+      packages-to-scan: backend.airo.api.post
     - group: 'Review API'
       packages-to-scan: backend.airo.api.review
     - group: 'Content API'
@@ -117,7 +120,7 @@ openapi:
   service:
     key: ${OPEN_API_KET}
 
-discord:
-  bot:
-    token: ${DISCORD_BOT_TOKEN}
-    channel_id: ${DISCORD_BOT_CHANNEL_ID}
+#discord:
+#  bot:
+#    token: ${DISCORD_BOT_TOKEN}
+#    channel_id: ${DISCORD_BOT_CHANNEL_ID}

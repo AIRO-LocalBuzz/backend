@@ -12,7 +12,7 @@ public record PostSearchCriteria(
         String searchScope, // title, content, all
         List<PostStatus> statuses,
         Long userId,
-        Integer categoryId,
+        Long categoryId,
         Long locationId,
         List<String> tags,
         Boolean isFeatured,
@@ -59,7 +59,7 @@ public record PostSearchCriteria(
      * 고급 검색 조건 생성
      */
     public static PostSearchCriteria advanced(String keyword, List<PostStatus> statuses,
-                                              Integer categoryId, List<String> tags) {
+                                              Long categoryId, List<String> tags) {
         return new PostSearchCriteria(
                 keyword, "all", statuses, null, categoryId, null,
                 tags, null, null, null, null, null, null, null, null
