@@ -19,13 +19,11 @@ public class RuralExService {
     private final CreateAllRuralExCommand createAllRuralExCommand;
     private final TimeCatch timeCatch = new TimeCatch("RuralService Time Check");
 
-
     public void collectRuralExOf() {
         timeCatch.start();
         List<RuralEx> ruralExInfo = ruralDataPort.getRuralExInfo();
         createAllRuralExCommand.handle(ruralExInfo);
         timeCatch.end();
     }
-
 
 }
