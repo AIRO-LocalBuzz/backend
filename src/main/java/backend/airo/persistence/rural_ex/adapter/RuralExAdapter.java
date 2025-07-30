@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -37,8 +38,11 @@ public class RuralExAdapter implements RuralExRepository {
     }
 
     @Override
-    public RuralEx findById(Long aLong) {
-        return null;
+    public RuralEx findById(Long ruralExId) {
+        RuralExEntity ruralExEntity = ruralExJpaRepository.findById(ruralExId).orElseThrow(() ->
+                new IllegalArgumentException("RuralEx Not Found with id - " + ruralExId)
+        );
+        return RuralExEntity.toDomain(ruralExEntity);
     }
 
     @Override
