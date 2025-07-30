@@ -41,20 +41,20 @@ public class SecurityConfig {
                 .formLogin(FormLoginConfigurer::disable)
                 .authorizeHttpRequests(authRequests -> authRequests
                         .requestMatchers(
+                            //TODO 임시 적으로 모두 오픈
+                                "/v1/**",
+                                "/v1/init/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**",
-                                "/v1/auth/**",
-                                "/v1/posts/**",
                                 "/api/auth/**",
                                 "/api/oauth2/**",
                                 "/api/login/oauth2/**",
                                 "/api/v1/test/**",
-                                "/api/v1/auth/**",
-                                "/api/v1/posts/**",
-                                "/api/actuator/health"
+                                "/api/actuator/health",
+                                "/v1/auth/sign-up"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
