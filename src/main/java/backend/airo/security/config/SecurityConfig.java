@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .formLogin(FormLoginConfigurer::disable)
                 .authorizeHttpRequests(authRequests -> authRequests
                         .requestMatchers(
-                            //TODO 임시 적으로 모두 오픈
+                            //TODO 임시 적으로 모두 오픈 !
                                 "/v1/**",
                                 "/v1/init/**",
                                 "/swagger-ui/**",
