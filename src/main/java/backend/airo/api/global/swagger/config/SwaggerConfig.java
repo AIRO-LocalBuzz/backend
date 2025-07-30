@@ -75,7 +75,7 @@ public class SwaggerConfig {
                         .description("로컬 개발 서버"),
                 new Server()
                         .url("http://221.139.119.140:9001/api")
-                        .description("로컬 개발 서버"),
+                        .description("개발 서버"),
                 new Server()
                         .url("https://localbuzz/api")
                         .description("운영 서버")

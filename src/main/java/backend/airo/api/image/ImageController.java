@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +32,7 @@ public class ImageController implements ImageControllerSwagger {
 
     @Override
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ImageResponse> uploadSingleImage(
             @UserPrincipal User user,
             @RequestBody ImageCreateRequest request) {
@@ -44,8 +46,9 @@ public class ImageController implements ImageControllerSwagger {
     }
 
 
-    @PostMapping("/bulk")
     @Override
+    @PostMapping("/bulk")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<ImageResponse>> uploadMultipleImages(
             @UserPrincipal User user,
             @RequestBody List<ImageCreateRequest> requests
@@ -103,8 +106,9 @@ public class ImageController implements ImageControllerSwagger {
 
 
 
-    @PutMapping("/reorder")
     @Override
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/reorder")
     public ResponseEntity<List<ImageResponse>> reorderImages(
             @UserPrincipal User user,
             @RequestBody ImageReorderRequest request
@@ -132,8 +136,9 @@ public class ImageController implements ImageControllerSwagger {
 
 
 
-    @DeleteMapping("/{imageId}")
     @Override
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/{imageId}")
     public ResponseEntity<Void> deleteImage(
             @UserPrincipal User user,
             @PathVariable Long imageId) {
@@ -143,8 +148,9 @@ public class ImageController implements ImageControllerSwagger {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping
     @Override
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping
     public ResponseEntity<Void> deleteMultipleImages(
             @UserPrincipal User user,
             @RequestParam List<Long> imageIds
@@ -183,6 +189,7 @@ public class ImageController implements ImageControllerSwagger {
         return ResponseEntity.ok(response);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/my")
     public ResponseEntity<Page<ImageResponse>> getMyImages(
             @UserPrincipal User user,
@@ -198,6 +205,7 @@ public class ImageController implements ImageControllerSwagger {
         return ResponseEntity.ok(responses);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/my/posts/{postId}")
     public ResponseEntity<List<ImageResponse>> getMyImagesByPost(
             @UserPrincipal User user,
