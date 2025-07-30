@@ -1,8 +1,10 @@
 package backend.airo.api.global.swagger;
 
 
+import backend.airo.api.annotation.UserPrincipal;
 import backend.airo.api.image.dto.*;
 import backend.airo.common.jwt.JwtAuthenticationToken;
+import backend.airo.domain.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,7 +33,10 @@ public interface ImageControllerSwagger {
             @ApiResponse(responseCode = "413", description = "파일 크기 초과")
     })
     @PostMapping
-    ResponseEntity<ImageResponse> uploadSingleImage(@RequestBody ImageCreateRequest request);
+    ResponseEntity<ImageResponse> uploadSingleImage(
+            @UserPrincipal User user,
+            @RequestBody ImageCreateRequest request
+    );
 
 
     @Operation(summary = "다중 이미지 업로드", description = "여러 이미지를 한 번에 업로드합니다")
@@ -42,8 +47,9 @@ public interface ImageControllerSwagger {
     })
     @PostMapping("/bulk")
     ResponseEntity<List<ImageResponse>> uploadMultipleImages(
-            @RequestBody List<ImageCreateRequest> requests,
-            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationToken authentication);
+            @UserPrincipal User user,
+            @RequestBody List<ImageCreateRequest> requests
+            );
 
 
 
@@ -80,8 +86,9 @@ public interface ImageControllerSwagger {
     })
     @PutMapping("/reorder")
     ResponseEntity<List<ImageResponse>> reorderImages(
-            @RequestBody ImageReorderRequest request,
-            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationToken authentication);
+            @UserPrincipal User user,
+            @RequestBody ImageReorderRequest request
+            );
 
 
     @Operation(summary = "이미지 삭제", description = "이미지를 삭제합니다")
@@ -92,8 +99,9 @@ public interface ImageControllerSwagger {
     })
     @DeleteMapping("/{imageId}")
     ResponseEntity<Void> deleteImage(
-            @PathVariable Long imageId,
-            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationToken authentication);
+            @UserPrincipal User user,
+            @PathVariable Long imageId
+            );
 
 
     @Operation(summary = "다중 이미지 삭제", description = "여러 이미지를 한 번에 삭제합니다")
@@ -104,6 +112,7 @@ public interface ImageControllerSwagger {
     })
     @DeleteMapping
     ResponseEntity<Void> deleteMultipleImages(
-            @RequestParam List<Long> imageIds,
-            @Parameter(hidden = true) @AuthenticationPrincipal JwtAuthenticationToken authentication);
+            @UserPrincipal User user,
+            @RequestParam List<Long> imageIds
+    );
 }

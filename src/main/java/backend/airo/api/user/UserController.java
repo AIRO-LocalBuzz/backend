@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class UserController implements UserControllerSwagger {
 
-    private final JwtTokenProvider jwtTokenProvider;
     private final UserUseCase userUseCase;
 
     @GetMapping()

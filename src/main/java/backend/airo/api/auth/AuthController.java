@@ -1,5 +1,6 @@
 package backend.airo.api.auth;
 
+import backend.airo.api.annotation.UserPrincipal;
 import backend.airo.api.auth.dto.AuthResponse;
 import backend.airo.api.auth.dto.AuthTokenRequest;
 import backend.airo.api.auth.dto.SignInRequest;
@@ -11,6 +12,7 @@ import backend.airo.application.auth.usecase.SocialLoginUseCase;
 import backend.airo.common.jwt.JwtTokenProvider;
 import backend.airo.domain.auth.command.LogoutCommand;
 import backend.airo.domain.auth.query.ValidateTokenQuery;
+import backend.airo.domain.user.User;
 import com.google.api.client.auth.oauth2.RefreshTokenRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +65,9 @@ public class AuthController {
      * 로그아웃
      */
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(@RequestHeader(value = "Authorization", required = true) String bearerToken) {
+    public ResponseEntity<Void> logout(
+            @UserPrincipal User user,
+            @RequestHeader(value = "Authorization", required = true) String bearerToken) {
         if (!bearerToken.startsWith("Bearer ")) {
             throw new IllegalArgumentException("Invalid Authorization header format");
         }
@@ -73,8 +77,7 @@ public class AuthController {
             throw new IllegalArgumentException("Access token is empty");
         }
 
-        Long userId = jwtTokenProvider.getUserIdFromToken(accessToken);
-        logoutCommand.execute(accessToken, userId);
+        logoutCommand.execute(accessToken, user.getId());
 
         return ResponseEntity.ok().build();
     }
@@ -83,8 +86,10 @@ public class AuthController {
      * 토큰 갱신
      */
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
-        AuthResponse response = refreshTokenUseCase.execute(request.getRefreshToken());
+    public ResponseEntity<AuthResponse> refreshToken(
+            @UserPrincipal User user,
+            @RequestBody RefreshTokenRequest request) {
+        AuthResponse response = refreshTokenUseCase.execute(user.getId(), request.getRefreshToken());
         return ResponseEntity.ok(response);
     }
 
