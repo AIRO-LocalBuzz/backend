@@ -26,7 +26,7 @@ public class ClutrFatvlService {
     private final AsyncClutrFatvlDataCollector asyncClutrFatvlDataCollector;
     private final ServerStartupNotifier serverStartupNotifier;
 
-    public void collectFestivalOf(YearMonth ym){
+    public void collectFestivalOf(){
         LocalDate start = LocalDate.now();  // 오늘
         LocalDate sixMonthsLater = LocalDate.now().plusMonths(6);
         YearMonth endMonth = YearMonth.of(sixMonthsLater.getYear(), sixMonthsLater.getMonth());

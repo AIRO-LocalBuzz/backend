@@ -9,8 +9,8 @@ public record ShopListResponse(
 
         Long id,
         String name,
-        String lot,
-        String road,
+        String lotAddr,
+        String roadAddr,
         String indeScleName
 ) {
 
