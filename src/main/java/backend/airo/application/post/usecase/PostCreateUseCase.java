@@ -1,6 +1,7 @@
 package backend.airo.application.post.usecase;
 
-import backend.airo.domain.post.command.CreatePostCommand;
+import backend.airo.api.post.dto.PostCreateRequest;
+import backend.airo.domain.post.command.CreatePostCommandService;
 import backend.airo.domain.post.command.DeletePostCommand;
 import backend.airo.domain.post.command.UpdatePostCommand;
 import backend.airo.domain.post.dto.PostSearchCriteria;
@@ -39,6 +40,7 @@ public class PostUseCase {
 
     private final PostRepository postRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final CreatePostCommandService createPostCommandService;
 
     // ===== 게시물 생성 =====
 
@@ -46,35 +48,23 @@ public class PostUseCase {
      * 게시물 생성
      */
     @Transactional
-    public Post createPost(CreatePostCommand command) {
-        log.info("게시물 생성 시작: title={}, userId={}, status={}",
-                command.title(), command.userId(), command.status());
+    public Post createPost(PostCreateRequest request) {
 
         // 발행 조건 검증
-        if (command.status() == PostStatus.PUBLISHED && !command.canPublish()) {
+        if (request.status() == PostStatus.PUBLISHED && !request.canPublish()) {
             throw new PostPublishException(null, "발행에 필요한 필수 정보가 누락되었습니다 (카테고리, 위치)");
         }
 
-        // 도메인 객체 생성
-        Post post = createPostFromCommand(command);
-
-        // 게시물 저장
-        Post savedPost = postRepository.save(post);
-        log.info("게시물 저장 완료: id={}, title={}", savedPost.getId(), savedPost.getTitle());
+        Post savedPost = createPostCommandService.handle(request);
 
         // 이미지 연결 처리
-        if (command.hasImages()) {
-            processPostImages(savedPost.getId(), command.imageIds());
+        if (request.hasImages()) {
+            processPostImages(savedPost.getId(), request.imageIds());
         }
 
         // 태그 연결 처리
-        if (command.hasTags()) {
-            processPostTags(savedPost.getId(), command.tags());
-        }
-
-        // 발행 이벤트 발행
-        if (savedPost.getStatus() == PostStatus.PUBLISHED) {
-            publishPostPublishedEvent(savedPost, command.userId());
+        if (request.hasTags()) {
+            processPostTags(savedPost.getId(), request.tags());
         }
 
         return savedPost;
@@ -298,24 +288,24 @@ public class PostUseCase {
     /**
      * Command로부터 Post 도메인 객체 생성
      */
-    private Post createPostFromCommand(CreatePostCommand command) {
+    private Post createPostFromCommand(PostCreateRequest request) {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime publishedAt = (command.status() == PostStatus.PUBLISHED) ? now : null;
+        LocalDateTime publishedAt = (request.status() == PostStatus.PUBLISHED) ? now : null;
 
         return new Post(
                 null, // ID는 저장 시 생성
-                command.userId(),
-                command.categoryId(),
-                command.locationId(),
-                command.title(),
-                command.content(),
+                request.userId(),
+                request.categoryId(),
+                request.locationId(),
+                request.title(),
+                request.content(),
                 null, // summary는 나중에 AI로 생성
-                command.status(),
-                command.travelDate(),
+                request.status(),
+                request.travelDate(),
                 0, // 초기 조회수
                 0, // 초기 좋아요 수
                 0, // 초기 댓글 수
-                command.isFeatured(),
+                request.isFeatured(),
                 publishedAt
         );
     }
