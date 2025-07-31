@@ -4,7 +4,6 @@ import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.domain.clure_fatvl.repository.ClutrFatvlRepository;
 import backend.airo.persistence.clutrfatvl.entity.ClutrFatvlEntity;
 import backend.airo.persistence.clutrfatvl.repository.ClutrFatvlJpaRepository;
-import backend.airo.persistence.shop.entity.ShopEntity;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

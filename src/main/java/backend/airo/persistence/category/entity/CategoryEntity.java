@@ -1,10 +1,10 @@
 package backend.airo.persistence.category.entity;
 
-import backend.airo.domain.post.Post;
 import backend.airo.persistence.post.entity.PostEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

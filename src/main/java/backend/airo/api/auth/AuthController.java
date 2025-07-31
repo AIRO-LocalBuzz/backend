@@ -10,7 +10,6 @@ import backend.airo.application.auth.usecase.AuthTokenUseCase;
 import backend.airo.application.auth.usecase.RefreshTokenUseCase;
 import backend.airo.application.auth.usecase.SignInUseCase;
 import backend.airo.application.auth.usecase.SocialLoginUseCase;
-import backend.airo.common.jwt.JwtTokenProvider;
 import backend.airo.domain.auth.command.LogoutCommand;
 import backend.airo.domain.auth.query.ValidateTokenQuery;
 import backend.airo.domain.user.User;

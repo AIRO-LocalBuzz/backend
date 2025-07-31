@@ -1,8 +1,8 @@
 package backend.airo.persistence.image.adapter;
 
 import backend.airo.domain.image.Image;
-import backend.airo.domain.image.repository.ImageRepository;
 import backend.airo.domain.image.exception.ImageNotFoundException;
+import backend.airo.domain.image.repository.ImageRepository;
 import backend.airo.persistence.image.entity.ImageEntity;
 import backend.airo.persistence.image.repository.ImageJpaRepository;
 import jakarta.transaction.Transactional;

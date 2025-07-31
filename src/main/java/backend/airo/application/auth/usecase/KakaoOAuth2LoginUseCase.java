@@ -1,8 +1,8 @@
 package backend.airo.application.auth.usecase;
 
 import backend.airo.api.auth.dto.AuthResponse;
-import backend.airo.domain.auth.command.GenerateJwtTokenCommand;
 import backend.airo.application.auth.oauth2.usecase.OAuth2UserProcessingUseCase;
+import backend.airo.domain.auth.command.GenerateJwtTokenCommand;
 import backend.airo.domain.auth.query.GetKakaoUserInfoQuery;
 import backend.airo.domain.user.User;
 import backend.airo.domain.user.enums.ProviderType;

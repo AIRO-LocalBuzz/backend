@@ -1,8 +1,5 @@
 package backend.airo.persistence.post.repository;
 
-import backend.airo.domain.post.Post;
-import backend.airo.domain.post.repository.PostRepository;
-import backend.airo.domain.tag.Tag;
 import backend.airo.persistence.post.entity.PostEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,7 +1,6 @@
 package backend.airo.api.shop.dto;
 
 import backend.airo.domain.shop.Shop;
-import backend.airo.domain.shop.vo.ShopType;
 import lombok.Builder;
 
 @Builder

@@ -2,13 +2,12 @@ package backend.airo.api.global.swagger;
 
 
 import backend.airo.api.annotation.UserPrincipal;
-import backend.airo.api.image.dto.*;
-import backend.airo.common.jwt.JwtAuthenticationToken;
+import backend.airo.api.image.dto.ImageCreateRequest;
+import backend.airo.api.image.dto.ImageReorderRequest;
+import backend.airo.api.image.dto.ImageResponse;
 import backend.airo.domain.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -16,7 +15,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

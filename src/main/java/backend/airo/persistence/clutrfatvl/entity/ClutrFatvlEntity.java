@@ -1,10 +1,10 @@
 package backend.airo.persistence.clutrfatvl.entity;
 
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
-import backend.airo.infra.open_api.clure_fatvl.vo.ClutrFatvlInfo;
 import backend.airo.domain.clure_fatvl.vo.Address;
 import backend.airo.domain.clure_fatvl.vo.FestivalPeriod;
 import backend.airo.domain.clure_fatvl.vo.GeoPoint;
+import backend.airo.infra.open_api.clure_fatvl.vo.ClutrFatvlInfo;
 import backend.airo.persistence.abstracts.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

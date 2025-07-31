@@ -1,6 +1,5 @@
 package backend.airo.application.rural_ex.usecase;
 
-import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.domain.rural_ex.RuralEx;
 import backend.airo.domain.rural_ex.query.GetRuralExQuery;
 import backend.airo.domain.rural_ex.query.GetRuralListQuery;

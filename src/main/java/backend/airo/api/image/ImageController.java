@@ -1,11 +1,14 @@
 package backend.airo.api.image;
 
 import backend.airo.api.annotation.UserPrincipal;
-import backend.airo.application.image.usecase.ImageUseCase;
-import backend.airo.common.jwt.JwtAuthenticationToken;
-import backend.airo.domain.image.Image;
-import backend.airo.api.image.dto.*;
 import backend.airo.api.global.swagger.ImageControllerSwagger;
+import backend.airo.api.image.dto.ImageCreateRequest;
+import backend.airo.api.image.dto.ImageReorderRequest;
+import backend.airo.api.image.dto.ImageResponse;
+import backend.airo.api.image.dto.ImageStatsResponse;
+import backend.airo.application.image.usecase.ImageUseCase;
+import backend.airo.domain.image.Image;
+import backend.airo.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -13,14 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
-import backend.airo.domain.user.User;
 
 @Slf4j
 @RestController

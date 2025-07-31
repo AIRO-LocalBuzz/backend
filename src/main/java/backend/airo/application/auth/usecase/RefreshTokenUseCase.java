@@ -1,8 +1,8 @@
 package backend.airo.application.auth.usecase;
 
 import backend.airo.api.auth.dto.AuthResponse;
-import backend.airo.domain.auth.query.ValidateTokenQuery;
 import backend.airo.common.jwt.JwtTokenProvider;
+import backend.airo.domain.auth.query.ValidateTokenQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

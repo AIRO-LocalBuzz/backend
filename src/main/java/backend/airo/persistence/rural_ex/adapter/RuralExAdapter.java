@@ -2,7 +2,6 @@ package backend.airo.persistence.rural_ex.adapter;
 
 import backend.airo.domain.rural_ex.RuralEx;
 import backend.airo.domain.rural_ex.repository.RuralExRepository;
-import backend.airo.persistence.clutrfatvl.entity.ClutrFatvlEntity;
 import backend.airo.persistence.rural_ex.entity.RuralExEntity;
 import backend.airo.persistence.rural_ex.repository.RuralExJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor

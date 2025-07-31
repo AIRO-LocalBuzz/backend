@@ -1,9 +1,7 @@
 package backend.airo.domain.area_code.query;
 
 import backend.airo.domain.area_code.CityCode;
-import backend.airo.domain.area_code.MegaCode;
 import backend.airo.domain.area_code.repository.CityRepository;
-import backend.airo.domain.area_code.repository.MegaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

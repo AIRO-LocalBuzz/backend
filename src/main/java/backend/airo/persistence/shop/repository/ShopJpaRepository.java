@@ -5,8 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
 public interface ShopJpaRepository extends JpaRepository<ShopEntity, Long> {
 
     Page<ShopEntity> findByRegion_CtprvnCdAndRegion_SignguCd(String regionCtprvnCd, String regionSignguCd, Pageable pageable);
