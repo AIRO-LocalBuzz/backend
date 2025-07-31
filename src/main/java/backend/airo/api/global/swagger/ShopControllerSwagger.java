@@ -13,8 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
 public interface ShopControllerSwagger {
 
     @Operation(summary = "각 지역별 소상공인 상점 조회", description = "각 지역별 소상공인 상점 조회 API")

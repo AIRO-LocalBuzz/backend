@@ -2,15 +2,14 @@ package backend.airo.security.config;
 
 import backend.airo.application.auth.oauth2.CustomOAuth2UserService;
 import backend.airo.security.filter.JwtAuthenticationFilter;
+import backend.airo.security.filter.SwaggerBypassAuthenticationFilter;
 import backend.airo.security.handler.OAuth2AuthenticationSuccessHandler;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
@@ -20,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import java.util.List;
 
 @Slf4j
@@ -31,10 +31,12 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final SwaggerBypassAuthenticationFilter swaggerBypassAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .addFilterBefore(swaggerBypassAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(CsrfConfigurer::disable)
@@ -42,9 +44,6 @@ public class SecurityConfig {
                 .formLogin(FormLoginConfigurer::disable)
                 .authorizeHttpRequests(authRequests -> authRequests
                         .requestMatchers(
-                            //TODO 임시 적으로 모두 오픈 !
-                                "/v1/**",
-                                "/v1/init/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/api-docs/**",
@@ -55,7 +54,8 @@ public class SecurityConfig {
                                 "/api/login/oauth2/**",
                                 "/api/v1/test/**",
                                 "/api/actuator/health",
-                                "/v1/auth/sign-up"
+                                "/v1/auth/sign-up",
+                                "/v1/auth/social-login"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

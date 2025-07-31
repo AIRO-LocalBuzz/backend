@@ -1,7 +1,5 @@
 package backend.airo.api.rural_ex;
 
-import backend.airo.api.clutr_fatvl.dto.ClutrFatvInfoResponse;
-import backend.airo.api.clutr_fatvl.dto.ClutrFatvListResponse;
 import backend.airo.api.global.dto.PageResponse;
 import backend.airo.api.global.dto.Response;
 import backend.airo.api.global.swagger.RuralExControllerSwagger;
@@ -9,7 +7,6 @@ import backend.airo.api.rural_ex.dto.RuralExInfoResponse;
 import backend.airo.api.rural_ex.dto.RuralExListResponse;
 import backend.airo.application.rural_ex.usecase.RuralExUseCase;
 import backend.airo.cache.AreaCodeCache;
-import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.domain.rural_ex.RuralEx;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

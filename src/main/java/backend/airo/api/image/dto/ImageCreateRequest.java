@@ -1,7 +1,7 @@
 package backend.airo.api.image.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import backend.airo.domain.image.Image;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public record ImageCreateRequest(
     @Schema(description = "게시물 ID", example = "1")

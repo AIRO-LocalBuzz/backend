@@ -3,9 +3,9 @@ package backend.airo.domain.image.command;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.image.exception.UnsupportedFormatException;
 import backend.airo.domain.image.repository.ImageRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;

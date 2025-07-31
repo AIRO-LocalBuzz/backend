@@ -1,8 +1,8 @@
 package backend.airo.persistence.user.adapter;
 
 import backend.airo.domain.user.User;
-import backend.airo.domain.user.repository.UserRepository;
 import backend.airo.domain.user.enums.ProviderType;
+import backend.airo.domain.user.repository.UserRepository;
 import backend.airo.persistence.user.entity.UserEntity;
 import backend.airo.persistence.user.repository.UserJpaRepository;
 import jakarta.transaction.Transactional;

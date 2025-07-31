@@ -1,6 +1,5 @@
 package backend.airo.persistence.post.entity;
 
-import backend.airo.domain.post.Post;
 import backend.airo.persistence.post.entity.key.PostLikeId;
 import backend.airo.persistence.user.entity.UserEntity;
 import jakarta.persistence.*;

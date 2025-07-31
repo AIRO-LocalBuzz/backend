@@ -1,7 +1,6 @@
 package backend.airo.domain.auth.oauth2;
 
 import backend.airo.domain.user.User;
-import backend.airo.persistence.user.entity.UserEntity;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;

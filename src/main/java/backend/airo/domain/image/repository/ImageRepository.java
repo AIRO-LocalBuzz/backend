@@ -2,7 +2,6 @@ package backend.airo.domain.image.repository;
 
 import backend.airo.domain.AggregateSupport;
 import backend.airo.domain.image.Image;
-import org.aspectj.apache.bcel.Repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

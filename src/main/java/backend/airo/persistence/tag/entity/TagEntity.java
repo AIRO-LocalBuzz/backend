@@ -1,6 +1,5 @@
 package backend.airo.persistence.tag.entity;
 
-import backend.airo.domain.post.PostTag;
 import backend.airo.persistence.post.entity.PostTagEntity;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;

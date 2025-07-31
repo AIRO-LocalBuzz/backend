@@ -1,13 +1,12 @@
 package backend.airo.persistence.user.entity;
 
-import backend.airo.persistence.abstracts.BaseEntity;
+import backend.airo.domain.user.User;
 import backend.airo.domain.user.enums.ProviderType;
+import backend.airo.persistence.abstracts.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import backend.airo.domain.user.User;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 

@@ -5,7 +5,6 @@ import backend.airo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import backend.airo.api.user.dto.UpdateUserInfoRequest;
 
 import java.time.LocalDate;
 

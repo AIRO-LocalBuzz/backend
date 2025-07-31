@@ -19,18 +19,28 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI openAPI() {
-        return new OpenAPI()
-                .info(getApiInfo())
-                .servers(getServers())
-                .components(new Components()
-                        .addSecuritySchemes("Bearer Auth", new SecurityScheme()
+        Components components = new Components()
+                .addSecuritySchemes("BearerAuth",
+                        new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)
                                 .scheme("bearer")
                                 .bearerFormat("JWT")
-                                .description("JWT 토큰을 입력하세요 (Bearer 접두사 제외)")))
-                .addSecurityItem(new SecurityRequirement().addList("Bearer Auth")); // 전역 적용
-    }
+                                .description("JWT 토큰을 입력하세요 (Bearer 접두사 제외)"))
 
+                .addSecuritySchemes("SwaggerBypass",
+                        new SecurityScheme()
+                                .type(SecurityScheme.Type.APIKEY)
+                                .in(SecurityScheme.In.HEADER)
+                                .name("X-SWAGGER-REQUEST")
+                                .description("Swagger UI에서만 사용하는 우회 플래그 헤더"));
+
+        return new OpenAPI()
+                .info(getApiInfo())
+                .servers(getServers())
+                .components(components)
+                .addSecurityItem(new SecurityRequirement().addList("BearerAuth"))
+                .addSecurityItem(new SecurityRequirement().addList("SwaggerBypass"));
+    }
 
 
     /**
@@ -75,7 +85,7 @@ public class SwaggerConfig {
                         .description("로컬 개발 서버"),
                 new Server()
                         .url("http://221.139.119.140:9001/api")
-                        .description("로컬 개발 서버"),
+                        .description("개발 서버"),
                 new Server()
                         .url("https://localbuzz/api")
                         .description("운영 서버")

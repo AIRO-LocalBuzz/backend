@@ -1,6 +1,5 @@
 package backend.airo.persistence.comment.entity;
 
-import backend.airo.domain.post.Post;
 import backend.airo.persistence.abstracts.BaseEntity;
 import backend.airo.persistence.post.entity.PostEntity;
 import backend.airo.persistence.user.entity.UserEntity;

@@ -1,8 +1,8 @@
 package backend.airo.domain.auth.oauth2.query;
 
 import backend.airo.domain.user.User;
-import backend.airo.domain.user.repository.UserRepository;
 import backend.airo.domain.user.enums.ProviderType;
+import backend.airo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

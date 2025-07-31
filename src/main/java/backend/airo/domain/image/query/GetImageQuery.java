@@ -1,13 +1,12 @@
 package backend.airo.domain.image.query;
 
 import backend.airo.domain.image.Image;
-import backend.airo.domain.image.exception.ImageNotFoundException;
 import backend.airo.domain.image.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import org.springframework.data.domain.Pageable;
 import java.util.Collection;
 import java.util.List;
 

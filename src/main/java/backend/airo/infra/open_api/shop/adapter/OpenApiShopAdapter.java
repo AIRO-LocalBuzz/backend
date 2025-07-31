@@ -1,7 +1,7 @@
 package backend.airo.infra.open_api.shop.adapter;
 
-import backend.airo.domain.shop.dto.ShopPage;
 import backend.airo.domain.shop.Shop;
+import backend.airo.domain.shop.dto.ShopPage;
 import backend.airo.domain.shop.port.OpenApiShopPort;
 import backend.airo.domain.shop.vo.*;
 import backend.airo.infra.open_api.shop.client.OpenApiShopFeignClient;

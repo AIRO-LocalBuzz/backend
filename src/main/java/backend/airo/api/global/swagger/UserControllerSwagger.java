@@ -1,8 +1,10 @@
 package backend.airo.api.global.swagger;
 
+import backend.airo.api.annotation.UserPrincipal;
 import backend.airo.api.global.dto.Response;
 import backend.airo.api.user.dto.UpdateUserInfoRequest;
 import backend.airo.api.user.dto.UserResponse;
+import backend.airo.domain.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -10,9 +12,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-
-import java.time.LocalDate;
 
 public interface UserControllerSwagger {
 
@@ -22,7 +21,7 @@ public interface UserControllerSwagger {
             description = "사용자 마이페이지 조회 성공",
             content = @Content(schema = @Schema(implementation = UserResponse.class))
     )
-    Response<UserResponse> getMyPage(@RequestHeader(value = "Authorization", required = true) String bearerToken);
+    Response<UserResponse> getMyPage(@UserPrincipal User user);
 
 
     @Operation(summary = "사용자 정보 수정", description = "사용자 정보 수정 API")
@@ -38,7 +37,7 @@ public interface UserControllerSwagger {
             content = @Content(schema = @Schema(implementation = UserResponse.class))
     )
     Response<UserResponse> updateMyPage(
-            @RequestHeader(value = "Authorization", required = true) String bearerToken,
+            @UserPrincipal User user,
             @RequestBody UpdateUserInfoRequest updateUserInfoRequest
     );
 }

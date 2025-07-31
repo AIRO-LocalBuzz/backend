@@ -1,6 +1,5 @@
 package backend.airo.persistence.image.repository;
 
-import backend.airo.domain.image.Image;
 import backend.airo.persistence.image.entity.ImageEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
