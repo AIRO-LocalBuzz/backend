@@ -1,6 +1,7 @@
 package backend.airo.common.config;
 
-import backend.airo.api.resovler.UserPrincipalArgumentResolver;
+import backend.airo.api.resolver.JwtTokenParsingArgumentResolver;
+import backend.airo.api.resolver.UserPrincipalArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import java.util.List;
 public class WebClientConfig implements WebMvcConfigurer {
 
     private final UserPrincipalArgumentResolver userPrincipalArgumentResolver;
+    private final JwtTokenParsingArgumentResolver jwtTokenParsingArgumentResolver;
 
     @Bean
     public WebClient.Builder webClientBuilder() {
@@ -24,5 +26,6 @@ public class WebClientConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(userPrincipalArgumentResolver);
+        resolvers.add(jwtTokenParsingArgumentResolver);
     }
 }

@@ -1,4 +1,4 @@
-package backend.airo.api.resovler;
+package backend.airo.api.resolver;
 
 import backend.airo.api.annotation.UserPrincipal;
 import backend.airo.domain.image.exception.UnauthorizedException;

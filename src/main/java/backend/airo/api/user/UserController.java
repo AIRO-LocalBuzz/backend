@@ -6,7 +6,6 @@ import backend.airo.api.global.swagger.UserControllerSwagger;
 import backend.airo.api.user.dto.UpdateUserInfoRequest;
 import backend.airo.api.user.dto.UserResponse;
 import backend.airo.application.user.usecase.UserUseCase;
-import backend.airo.common.jwt.JwtTokenProvider;
 import backend.airo.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,5 +41,4 @@ public class UserController implements UserControllerSwagger {
         );
         return Response.success(UserResponse.create(updateUser));
     }
-
 }
