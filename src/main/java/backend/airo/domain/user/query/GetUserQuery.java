@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class GetUserCommand {
+public class GetUserQuery {
 
     private final UserRepository userRepository;
 

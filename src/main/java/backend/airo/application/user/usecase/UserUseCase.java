@@ -2,7 +2,7 @@ package backend.airo.application.user.usecase;
 
 import backend.airo.domain.user.User;
 import backend.airo.domain.user.command.UpdateExistingUserCommand;
-import backend.airo.domain.user.query.GetUserCommand;
+import backend.airo.domain.user.query.GetUserQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class UserUseCase {
 
-    private final GetUserCommand getUserCommand;
+    private final GetUserQuery getUserCommand;
     private final UpdateExistingUserCommand updateExistingUserCommand;
 
     public User getUserById(Long userId) {

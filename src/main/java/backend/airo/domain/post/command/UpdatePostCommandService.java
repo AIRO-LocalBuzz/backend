@@ -1,122 +1,113 @@
 package backend.airo.domain.post.command;
 
+import backend.airo.api.post.dto.PostUpdateRequest;
+import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.PostStatus;
-import jakarta.validation.constraints.*;
+import backend.airo.domain.post.exception.PostPublishException;
+import backend.airo.domain.post.exception.PostStatusChangeException;
+import backend.airo.domain.post.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * 게시물 수정 커맨드
- */
-public record UpdatePostCommand(
-        @NotNull(message = "게시물 ID는 필수입니다")
-        @Positive(message = "게시물 ID는 양수여야 합니다")
-        Long postId,
+import static backend.airo.domain.post.exception.PostErrorCode.POST_CANNOT_CHANGE_STATUS;
+import static backend.airo.domain.post.exception.PostErrorCode.POST_PUBLISH_INVALID_CONDITION;
 
-        @NotNull(message = "요청자 ID는 필수입니다")
-        @Positive(message = "요청자 ID는 양수여야 합니다")
-        Long requesterId,
+@Slf4j
+@RequiredArgsConstructor
+@Component
+public class UpdatePostCommandService{
 
-        @Size(max = 200, message = "제목은 200자를 초과할 수 없습니다")
-        String title,
+    private final PostRepository postRepository;
 
-        @Size(max = 5000, message = "내용은 5000자를 초과할 수 없습니다")
-        String content,
+    public Post handle(PostUpdateRequest request, Post existingPost){
 
-        PostStatus status,
+        // 수정 사항이 없으면 기존 게시물 반환
+        if (!request.hasChanges()) {
+            return existingPost;
+        }
 
-        @Positive(message = "카테고리 ID는 양수여야 합니다")
-        Long categoryId,
+        // 상태 변경 검증을 업데이트 전에 수행
+        if (request.isStatusChange()) {
+            validateStatusChange(existingPost, request.status());
+        }
 
-        @Positive(message = "위치 ID는 양수여야 합니다")
-        Long locationId,
+        // 게시물 업데이트
+        Post updatedPost = updatePostFromCommand(existingPost, request);
 
-        @PastOrPresent(message = "여행 날짜는 현재 또는 과거여야 합니다")
-        LocalDateTime travelDate,
+        // 저장
+        Post savedPost = postRepository.save(updatedPost);
 
-        @Size(max = 10, message = "이미지는 최대 10개까지 업로드 가능합니다")
-        List<@NotNull Long> imageIds,
 
-        @Size(max = 20, message = "태그는 최대 20개까지 추가 가능합니다")
-        List<@NotBlank @Size(max = 50) String> tags,
+        log.info("게시물 수정 완료: id={}", savedPost.getId());
+        return savedPost;
+    }
 
-        Boolean isFeatured,
 
-        String changeReason
-) {
+    private void validateStatusChange(Post post, PostStatus newStatus) {
+        if (!isValidStatusTransition(post.getStatus(), newStatus)) {
+            throw new PostStatusChangeException(post.getId(), post.getStatus(), newStatus, POST_CANNOT_CHANGE_STATUS);
+        }
+
+        // 발행 조건 검증
+        if (newStatus == PostStatus.PUBLISHED && !canPublishPost(post)) {
+            throw new PostPublishException(post.getId(), "발행 조건을 만족하지 않습니다", POST_PUBLISH_INVALID_CONDITION);
+        }
+    }
+
+
+    private boolean isValidStatusTransition(PostStatus currentStatus, PostStatus newStatus) {
+        return switch (currentStatus) {
+            case DRAFT -> newStatus == PostStatus.PUBLISHED;
+            case PUBLISHED -> newStatus == PostStatus.ARCHIVED || newStatus == PostStatus.DRAFT;
+            case ARCHIVED -> newStatus == PostStatus.PUBLISHED || newStatus == PostStatus.DRAFT;
+        };
+    }
 
     /**
-     * 제목만 수정
+     * 게시물 발행 가능 여부 확인
      */
-    public static UpdatePostCommand updateTitle(Long postId, Long requesterId, String title) {
-        return new UpdatePostCommand(
-                postId, requesterId, title, null, null, null, null, null,
-                null, null, null, "제목 수정"
+    private boolean canPublishPost(Post post) {
+        // 필수 필드 검증
+        if (post.getTitle() == null || post.getTitle().trim().isEmpty()) {
+            return false;
+        }
+        if (post.getContent() == null || post.getContent().trim().isEmpty()) {
+            return false;
+        }
+
+        // TODO: Post 도메인에 categoryId, locationId 필드 추가 후 활성화
+        if (post.getCategoryId() == null) {
+            return false;
+        }
+        if (post.getLocationId() == null) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    private Post updatePostFromCommand(Post existingPost, PostUpdateRequest request) {
+        return new Post(
+                existingPost.getId(),
+                existingPost.getUserId(),
+                request.categoryId() != null ? request.categoryId() : existingPost.getCategoryId(),
+                request.locationId() != null ? request.locationId() : existingPost.getLocationId(),
+                request.title() != null ? request.title() : existingPost.getTitle(),
+                request.content() != null ? request.content() : existingPost.getContent(),
+                existingPost.getSummary(),
+                request.status() != null ? request.status() : existingPost.getStatus(),
+                request.travelDate() != null ? request.travelDate() : existingPost.getTravelDate(),
+                existingPost.getViewCount(),
+                existingPost.getLikeCount(),
+                existingPost.getCommentCount(),
+                request.isFeatured() != null ? request.isFeatured() : existingPost.getIsFeatured(),
+                request.status() == PostStatus.PUBLISHED && existingPost.getPublishedAt() == null
+                        ? LocalDateTime.now() : existingPost.getPublishedAt()
         );
-    }
-
-    /**
-     * 내용만 수정
-     */
-    public static UpdatePostCommand updateContent(Long postId, Long requesterId, String content) {
-        return new UpdatePostCommand(
-                postId, requesterId, null, content, null, null, null, null,
-                null, null, null, "내용 수정"
-        );
-    }
-
-    /**
-     * 상태만 변경
-     */
-    public static UpdatePostCommand changeStatus(Long postId, Long requesterId, Long categoryId, Long locationId,PostStatus status, String reason) {
-        return new UpdatePostCommand(
-                postId, requesterId, null, null, status, categoryId, locationId, null,
-                null, null, null, reason
-        );
-    }
-
-    /**
-     * 발행으로 상태 변경
-     */
-    public static UpdatePostCommand publish(Long postId, Long requesterId , Long categoryId, Long locationId) {
-        return changeStatus(postId, requesterId, categoryId, locationId, PostStatus.PUBLISHED, "게시물 발행");
-    }
-
-    /**
-     * 임시저장으로 상태 변경
-     */
-    public static UpdatePostCommand toDraft(Long postId, Long requesterId, Long categoryId, Long locationId) {
-        return changeStatus(postId, requesterId, categoryId, locationId, PostStatus.DRAFT, "임시저장으로 변경");
-    }
-
-    /**
-     * 보관으로 상태 변경
-     */
-    public static UpdatePostCommand archive(Long postId, Long requesterId, Long categoryId, Long locationId) {
-        return changeStatus(postId, requesterId, categoryId, locationId, PostStatus.ARCHIVED, "게시물 보관");
-    }
-
-    /**
-     * 수정 사항이 있는지 확인
-     */
-    public boolean hasChanges() {
-        return title != null || content != null || status != null ||
-                categoryId != null || locationId != null || travelDate != null ||
-                imageIds != null || tags != null || isFeatured != null;
-    }
-
-    /**
-     * 상태 변경 요청인지 확인
-     */
-    public boolean isStatusChange() {
-        return status != null;
-    }
-
-    /**
-     * 메타데이터만 수정하는지 확인 (제목, 내용 외)
-     */
-    public boolean isMetadataOnly() {
-        return title == null && content == null &&
-                (categoryId != null || locationId != null || isFeatured != null);
     }
 }

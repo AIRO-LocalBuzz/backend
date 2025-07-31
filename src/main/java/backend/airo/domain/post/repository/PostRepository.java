@@ -17,22 +17,6 @@ import java.util.Optional;
  */
 public interface PostRepository extends AggregateSupport<Post, Long> {
 
-    // ===== CRUD 메서드 =====
-
-    /**
-     * 게시물 저장
-     * @param post 저장할 게시물 도메인 객체
-     * @return 저장된 게시물 도메인 객체
-     */
-    Post save(Post post);
-
-    /**
-     * ID로 게시물 조회
-     *
-     * @param id 게시물 ID
-     * @return 게시물 도메인 객체 (Optional)
-     */
-    Post findById(Long id);
 
     /**
      * 게시물 존재 여부 확인
@@ -47,13 +31,11 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
      */
     void deleteById(Long id);
 
-    /**
-     * 여러 게시물 일괄 저장
-     * @param posts 저장할 게시물 목록
-     * @return 저장된 게시물 목록
-     */
-    Collection<Post> saveAll(Collection<Post> posts);
 
+    Page<Post> findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(
+            PostStatus status,
+            Pageable pageable
+    );
     // ===== 비즈니스 조회 메서드 =====
 
     /**
@@ -269,14 +251,6 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
     Optional<Post> findByIdWithLocation(Long id);
 
     // ===== 업데이트 메서드 =====
-
-    /**
-     * 조회수 증가
-     * @param id 게시물 ID
-     * @param incrementBy 증가할 수
-     * @return 업데이트 성공 여부
-     */
-    boolean incrementViewCount(Long id, int incrementBy);
 
     /**
      * 좋아요 수 업데이트

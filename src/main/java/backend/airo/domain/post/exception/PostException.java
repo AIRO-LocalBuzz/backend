@@ -1,28 +1,45 @@
 package backend.airo.domain.post.exception;
 
+import backend.airo.common.exception.AiroException;
+import backend.airo.common.exception.BaseErrorCode;
+
 /**
  * 게시물 관련 비즈니스 예외의 기본 클래스
  */
-public abstract class PostException extends RuntimeException {
+public class PostException extends AiroException {
 
-    private final String errorCode;
-
-    protected PostException(String message, String errorCode) {
-        super(message);
-        this.errorCode = errorCode;
+    // 기본 생성자
+    public PostException(BaseErrorCode errorCode, String sourceLayer) {
+        super(errorCode, sourceLayer);
     }
 
-    protected PostException(String message, String errorCode, Throwable cause) {
-        super(message, cause);
-        this.errorCode = errorCode;
+    // sourceLayer 없는 생성자
+    public PostException(BaseErrorCode errorCode) {
+        super(errorCode, null);
     }
 
-    public String getErrorCode() {
-        return errorCode;
+    // 정적 팩토리 메서드들
+    public static PostException notFound(BaseErrorCode errorCode, String sourceLayer) {
+        return new PostException(errorCode, sourceLayer);
     }
 
-    /**
-     * 사용자 친화적 메시지 반환 (하위 클래스에서 구현)
-     */
-    public abstract String getUserMessage();
+    public static PostException notFound(BaseErrorCode errorCode) {
+        return new PostException(errorCode, "DOMAIN");
+    }
+
+    public static PostException accessDenied(BaseErrorCode errorCode, String sourceLayer) {
+        return new PostException(errorCode, sourceLayer);
+    }
+
+    public static PostException accessDenied(BaseErrorCode errorCode) {
+        return new PostException(errorCode, "DOMAIN");
+    }
+
+    public static PostException invalidStatus(BaseErrorCode errorCode, String sourceLayer) {
+        return new PostException(errorCode, sourceLayer);
+    }
+
+    public static PostException invalidStatus(BaseErrorCode errorCode) {
+        return new PostException(errorCode, "DOMAIN");
+    }
 }

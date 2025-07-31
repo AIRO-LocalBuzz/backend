@@ -1,6 +1,7 @@
 package backend.airo.domain.post;
 
 import backend.airo.domain.post.enums.PostStatus;
+import com.nimbusds.openid.connect.sdk.claims.PersonClaims;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -46,6 +47,11 @@ public class Post {
         this.isFeatured = isFeatured;
         this.publishedAt = publishedAt;
     }
+
+    public void incrementViewCount() {
+        this.viewCount++;
+    }
+
 
 }
 

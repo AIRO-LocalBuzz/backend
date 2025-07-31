@@ -1,5 +1,6 @@
 package backend.airo.domain.post.command;
 
+import backend.airo.api.post.dto.PostCreateRequest;
 import backend.airo.domain.post.enums.PostStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,13 +20,13 @@ class CreatePostCommandTest {
     @DisplayName("유효한 게시물 생성 커맨드 테스트")
     void validCreatePostCommand() {
         // given
-        CreatePostCommand command = new CreatePostCommand(
+        PostCreateRequest command = new PostCreateRequest(
                 "여행 후기", "정말 좋은 여행이었습니다", 1L, PostStatus.DRAFT,
                 1L, 1L, null, List.of(), List.of(), false
         );
 
         // when
-        Set<ConstraintViolation<CreatePostCommand>> violations = validator.validate(command);
+        Set<ConstraintViolation<PostCreateRequest>> violations = validator.validate(command);
 
         // then
         assertThat(violations).isEmpty();
@@ -37,13 +38,13 @@ class CreatePostCommandTest {
     @DisplayName("제목 누락 시 검증 실패")
     void invalidCreatePostCommandWithoutTitle() {
         // given
-        CreatePostCommand command = new CreatePostCommand(
+        PostCreateRequest command = new PostCreateRequest(
                 "", "내용", 1L, PostStatus.DRAFT,
                 null, null, null, List.of(), List.of(), false
         );
 
         // when
-        Set<ConstraintViolation<CreatePostCommand>> violations = validator.validate(command);
+        Set<ConstraintViolation<PostCreateRequest>> violations = validator.validate(command);
 
         // then
         assertThat(violations).hasSize(1);
@@ -54,10 +55,10 @@ class CreatePostCommandTest {
     @DisplayName("발행 가능 여부 검증")
     void canPublishValidation() {
         // given
-        CreatePostCommand publishCommand = CreatePostCommand.forPublish(
+        PostCreateRequest publishCommand = PostCreateRequest.forPublish(
                 "제목", "내용", 1L, 1L, 1L
         );
-        CreatePostCommand draftCommand = CreatePostCommand.forDraft(
+        PostCreateRequest draftCommand = PostCreateRequest.forDraft(
                 "제목", "내용", 1L
         );
 

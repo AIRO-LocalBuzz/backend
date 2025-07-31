@@ -1,25 +1,21 @@
 package backend.airo.domain.post.exception;
 
+import backend.airo.common.exception.BaseErrorCode;
+
 /**
  * 게시물을 찾을 수 없을 때 발생하는 예외
- * Domain Layer의 비즈니스 예외
  */
-public class PostNotFoundException extends RuntimeException {
+public class PostNotFoundException extends PostException {
 
     private final Long postId;
 
-    public PostNotFoundException(Long postId) {
-        super(String.format("게시물을 찾을 수 없습니다. ID: %d", postId));
+    public PostNotFoundException(Long postId, BaseErrorCode errorCode) {
+        super(errorCode, "DOMAIN");
         this.postId = postId;
     }
 
-    public PostNotFoundException(Long postId, String message) {
-        super(message);
-        this.postId = postId;
-    }
-
-    public PostNotFoundException(Long postId, String message, Throwable cause) {
-        super(message, cause);
+    public PostNotFoundException(Long postId, BaseErrorCode errorCode, String sourceLayer) {
+        super(errorCode, sourceLayer);
         this.postId = postId;
     }
 
@@ -27,17 +23,8 @@ public class PostNotFoundException extends RuntimeException {
         return postId;
     }
 
-    /**
-     * 에러 코드 반환
-     */
-    public String getErrorCode() {
-        return "POST_NOT_FOUND";
-    }
-
-    /**
-     * 사용자 친화적 메시지 반환
-     */
-    public String getUserMessage() {
-        return "요청하신 게시물을 찾을 수 없습니다.";
+    @Override
+    public String getMessage() {
+        return String.format("%s - 게시물을 찾을 수 없습니다. PostID: %d", sourceLayer, postId);
     }
 }

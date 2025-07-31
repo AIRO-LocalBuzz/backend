@@ -1,7 +1,6 @@
 package backend.airo.domain.image.query;
 
 import backend.airo.domain.image.Image;
-import backend.airo.domain.image.exception.ImageNotFoundException;
 import backend.airo.domain.image.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,7 +12,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Component
-public class GetImageQuery {
+public class GetImageQueryService {
     private final ImageRepository imageRepository;
 
     //ToDo : id가 null인 경우 Aspect

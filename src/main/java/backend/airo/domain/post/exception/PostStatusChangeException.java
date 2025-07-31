@@ -1,9 +1,10 @@
 package backend.airo.domain.post.exception;
 
+import backend.airo.common.exception.BaseErrorCode;
 import backend.airo.domain.post.enums.PostStatus;
 
 /**
- * 게시물 상태 변경이 불가능할 때 발생하는 예외
+ * 게시물 상태 관련 예외
  */
 public class PostStatusChangeException extends PostException {
 
@@ -11,10 +12,16 @@ public class PostStatusChangeException extends PostException {
     private final PostStatus currentStatus;
     private final PostStatus targetStatus;
 
-    public PostStatusChangeException(Long postId, PostStatus currentStatus, PostStatus targetStatus) {
-        super(String.format("게시물 상태 변경이 불가능합니다. PostID: %d, 현재상태: %s, 변경하려는상태: %s",
-                        postId, currentStatus, targetStatus),
-                "POST_STATUS_CHANGE_INVALID");
+    public PostStatusChangeException(Long postId, PostStatus currentStatus, PostStatus targetStatus, BaseErrorCode errorCode) {
+        super(errorCode, "DOMAIN");
+        this.postId = postId;
+        this.currentStatus = currentStatus;
+        this.targetStatus = targetStatus;
+    }
+
+    public PostStatusChangeException(Long postId, PostStatus currentStatus, PostStatus targetStatus,
+                               BaseErrorCode errorCode, String sourceLayer) {
+        super(errorCode, sourceLayer);
         this.postId = postId;
         this.currentStatus = currentStatus;
         this.targetStatus = targetStatus;
@@ -33,15 +40,8 @@ public class PostStatusChangeException extends PostException {
     }
 
     @Override
-    public String getUserMessage() {
-        return String.format("게시물을 %s 상태로 변경할 수 없습니다.", getStatusDisplayName(targetStatus));
-    }
-
-    private String getStatusDisplayName(PostStatus status) {
-        return switch (status) {
-            case DRAFT -> "임시저장";
-            case PUBLISHED -> "발행";
-            case ARCHIVED -> "보관";
-        };
+    public String getMessage() {
+        return String.format("%s - 잘못된 게시물 상태 변경입니다. PostID: %d, 현재상태: %s, 변경시도상태: %s",
+                sourceLayer, postId, currentStatus, targetStatus);
     }
 }

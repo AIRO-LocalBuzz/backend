@@ -25,6 +25,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import static backend.airo.domain.post.exception.PostErrorCode.POST_NOT_FOUND;
+
 /**
  * PostRepository 구현체
  * Infrastructure Layer에서 Domain Layer의 Repository 인터페이스를 구현
@@ -79,7 +81,7 @@ public class PostAdapter implements PostRepository {
     public Post findById(Long id) {
         log.debug("게시물 조회: ID={}", id);
         PostEntity postEntity = postJpaRepository.findById(id)
-                .orElseThrow(() -> new PostNotFoundException(id));
+                .orElseThrow(() -> new PostNotFoundException(id, POST_NOT_FOUND));
 
         return PostEntity.toDomain(postEntity);
     }
@@ -101,6 +103,12 @@ public class PostAdapter implements PostRepository {
 //    public Collection<Post> saveAll(List<Post> posts) {
 //        return List.of();
 //    }
+    @Override
+    public Page<Post> findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(
+        PostStatus status,
+        Pageable pageable) {
+    return postJpaRepository.findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(status, pageable);
+    }
 
     @Override
     @Transactional
@@ -326,13 +334,6 @@ public class PostAdapter implements PostRepository {
 
     // ===== 업데이트 메서드 =====
 
-    @Override
-    @Transactional
-    public boolean incrementViewCount(Long id, int incrementBy) {
-        int updatedRows = postJpaRepository.incrementViewCount(id, incrementBy);
-        log.debug("조회수 증가: ID={}, 증가량={}, 업데이트 건수={}", id, incrementBy, updatedRows);
-        return updatedRows > 0;
-    }
 
     @Override
     @Transactional

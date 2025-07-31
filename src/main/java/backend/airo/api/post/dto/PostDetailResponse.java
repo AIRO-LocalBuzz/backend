@@ -1,8 +1,12 @@
 package backend.airo.api.post.dto;
+import backend.airo.api.image.dto.ImageResponse;
+import backend.airo.domain.image.Image;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.PostStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import backend.airo.domain.post.vo.AuthorInfo;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,8 +15,16 @@ import java.util.List;
  */
 @Schema(description = "게시물 상세 응답")
 public record PostDetailResponse(
+        @NotNull(message = "게시물 ID는 필수입니다")
+        @Positive(message = "게시물 ID는 양수여야 합니다")
         @Schema(description = "게시물 ID", example = "1")
         Long id,
+
+        @Schema(description = "카테고리 ID", example = "1")
+        Long categoryId,
+
+        @Schema(description = "위치 ID", example = "1")
+        Long locationId,
 
         @Schema(description = "게시물 제목", example = "부산 여행 후기")
         String title,
@@ -51,17 +63,21 @@ public record PostDetailResponse(
         AuthorInfo author,
 
         @Schema(description = "이미지 목록")
-        List<ImageInfo> images,
+        List<Image> images
 
-        @Schema(description = "태그 목록")
-        List<TagInfo> tags,
-
-        @Schema(description = "댓글 목록")
-        List<CommentInfo> comments
+//        @Schema(description = "태그 목록")
+//        List<TagInfo> tags,
+//
+//        @Schema(description = "댓글 목록")
+//        List<CommentInfo> comments
 ) {
-    public static PostDetailResponse fromDomain(Post post) {
+    public static PostDetailResponse fromDomain(Post post,
+                                                AuthorInfo author,
+                                                List<Image> imageList) {
         return new PostDetailResponse(
                 post.getId(),
+                post.getCategoryId(),
+                post.getLocationId(),
                 post.getTitle(),
                 post.getContent(),
                 post.getSummary(),
@@ -73,40 +89,10 @@ public record PostDetailResponse(
                 post.getIsFeatured(),
                 post.getCreatedAt(),
                 post.getPublishedAt(),
-                // TODO: 실제 구현에서 연관 데이터 매핑
-                null, // author
-                List.of(), // images
-                List.of(), // tags
-                List.of()  // comments
+                author,
+                imageList
         );
     }
 
-    @Schema(description = "작성자 정보")
-    public record AuthorInfo(
-            Long id,
-            String username,
-            String profileImageUrl
-    ) {}
 
-    @Schema(description = "이미지 정보")
-    public record ImageInfo(
-            Long id,
-            String url,
-            String alt,
-            Integer sortOrder
-    ) {}
-
-    @Schema(description = "태그 정보")
-    public record TagInfo(
-            Integer id,
-            String name
-    ) {}
-
-    @Schema(description = "댓글 정보")
-    public record CommentInfo(
-            Long id,
-            String content,
-            String authorName,
-            LocalDateTime createdAt
-    ) {}
 }

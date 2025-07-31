@@ -1,5 +1,6 @@
 package backend.airo.persistence.post.repository;
 
+import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.PostStatus;
 import backend.airo.persistence.post.entity.PostEntity;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,11 @@ import java.util.Optional;
 public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
 
     // ===== 기본 조회 메서드 =====
+
+    Page<Post> findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(
+            PostStatus status,
+            Pageable pageable
+    );
 
     /**
      * 사용자별 게시물 조회
@@ -257,12 +263,6 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
 
     // ===== 업데이트 메서드 =====
 
-    /**
-     * 조회수 증가
-     */
-    @Modifying
-    @Query("UPDATE PostEntity p SET p.viewCount = p.viewCount + :increment WHERE p.id = :id")
-    int incrementViewCount(@Param("id") Long id, @Param("increment") int increment);
 
     /**
      * 좋아요 수 업데이트

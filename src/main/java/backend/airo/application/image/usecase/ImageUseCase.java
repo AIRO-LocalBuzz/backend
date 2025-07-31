@@ -3,7 +3,7 @@ import backend.airo.domain.image.Image;
 import backend.airo.domain.image.command.CreateImageCommand;
 import backend.airo.domain.image.command.DeleteImageCommand;
 import backend.airo.domain.image.command.UpdateImageCommand;
-import backend.airo.domain.image.query.GetImageQuery;
+import backend.airo.domain.image.query.GetImageQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +18,7 @@ import java.util.List;
 public class ImageUseCase {
 
     private final CreateImageCommand createImageCommand;
-    private final GetImageQuery getImageQuery;
+    private final GetImageQueryService getImageQueryService;
     private final UpdateImageCommand updateImageCommand;
     private final DeleteImageCommand deleteImageCommand;
 
@@ -79,7 +79,7 @@ public class ImageUseCase {
      * @return 이미지 정보
      */
     public Image getSingleImage(Long imageId) {
-        return getImageQuery.getSingleImage(imageId);
+        return getImageQueryService.getSingleImage(imageId);
     }
 
     /**
@@ -88,7 +88,7 @@ public class ImageUseCase {
      * @return 존재 여부
      */
     public boolean isImageExists(Long imageId) {
-        return getImageQuery.imageExists(imageId);
+        return getImageQueryService.imageExists(imageId);
     }
 
     /**
@@ -97,7 +97,7 @@ public class ImageUseCase {
      * @return 이미지 목록
      */
     public Collection<Image> getImagesByPost(Long postId) {
-        return getImageQuery.getImagesBelongsPost(postId);
+        return getImageQueryService.getImagesBelongsPost(postId);
     }
 
     /**
@@ -106,7 +106,7 @@ public class ImageUseCase {
      * @return 페이징된 이미지 목록
      */
     public Page<Image> getPagedImages(Pageable pageable) {
-        return getImageQuery.getPagedImages(pageable);
+        return getImageQueryService.getPagedImages(pageable);
     }
 
     /**
@@ -115,7 +115,7 @@ public class ImageUseCase {
      * @return 정렬된 이미지 목록
      */
     public List<Image> getSortedImagesByPost(Long postId) {
-        return getImageQuery.getSortedImagesByPost(postId);
+        return getImageQueryService.getSortedImagesByPost(postId);
     }
 
     /**
@@ -124,7 +124,7 @@ public class ImageUseCase {
      * @return 이미지 목록
      */
     public List<Image> getImagesByMimeType(String mimeType) {
-        return getImageQuery.getImagesByMimeType(mimeType);
+        return getImageQueryService.getImagesByMimeType(mimeType);
     }
 
 

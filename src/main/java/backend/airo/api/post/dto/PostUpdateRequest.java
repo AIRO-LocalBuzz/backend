@@ -49,4 +49,29 @@ public record PostUpdateRequest(
         @Schema(description = "변경 사유", example = "내용 보완")
         String changeReason
 ) {
+
+
+        /**
+         * 수정 사항이 있는지 확인
+         */
+        public boolean hasChanges() {
+                return title != null || content != null || status != null ||
+                        categoryId != null || locationId != null || travelDate != null ||
+                        imageIds != null || tags != null || isFeatured != null;
+        }
+
+        /**
+         * 상태 변경 요청인지 확인
+         */
+        public boolean isStatusChange() {
+                return status != null;
+        }
+
+        /**
+         * 메타데이터만 수정하는지 확인 (제목, 내용 외)
+         */
+        public boolean isMetadataOnly() {
+                return title == null && content == null &&
+                        (categoryId != null || locationId != null || isFeatured != null);
+        }
 }

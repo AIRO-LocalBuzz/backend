@@ -23,14 +23,9 @@ public class CreatePostCommandService{
 
     private final PostRepository postRepository;
 
-    public void handle(PostCreateRequest request){
+    public Post handle(PostCreateRequest request){
         log.info("게시물 생성 시작: title={}, userId={}, status={}",
                 request.title(), request.userId(), request.status());
-
-        // 발행 조건 검증
-        if (request.status() == PostStatus.PUBLISHED && !request.canPublish()) {
-            throw new PostPublishException(null, "발행에 필요한 필수 정보가 누락되었습니다 (카테고리, 위치)");
-        }
 
         // 도메인 객체 생성
         Post post = createPostFromCommand(request);
@@ -39,7 +34,7 @@ public class CreatePostCommandService{
         Post savedPost = postRepository.save(post);
         log.info("게시물 저장 완료: id={}, title={}", savedPost.getId(), savedPost.getTitle());
 
-
+        return savedPost;
 
     }
 

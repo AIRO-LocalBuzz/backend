@@ -4,7 +4,7 @@ import backend.airo.domain.image.Image;
 import backend.airo.domain.image.command.CreateImageCommand;
 import backend.airo.domain.image.command.DeleteImageCommand;
 import backend.airo.domain.image.command.UpdateImageCommand;
-import backend.airo.domain.image.query.GetImageQuery;
+import backend.airo.domain.image.query.GetImageQueryService;
 import backend.airo.domain.image.repository.ImageRepository;
 import backend.airo.domain.image.exception.ImageNotFoundException;
 import backend.airo.domain.image.exception.UnsupportedFormatException;
@@ -33,14 +33,14 @@ class ImageUseCaseTest {
     private ImageRepository imageRepository;
 
     private CreateImageCommand createImageCommand;
-    private GetImageQuery getImageQuery;
+    private GetImageQueryService getImageQueryService;
     private UpdateImageCommand updateImageCommand;
     private DeleteImageCommand deleteImageCommand;
 
     @BeforeEach
     void setUp() {
         createImageCommand = new CreateImageCommand(imageRepository);
-        getImageQuery = new GetImageQuery(imageRepository);
+        getImageQueryService = new GetImageQueryService(imageRepository);
         updateImageCommand = new UpdateImageCommand(imageRepository);
         deleteImageCommand = new DeleteImageCommand(imageRepository);
     }
@@ -127,7 +127,7 @@ class ImageUseCaseTest {
         when(imageRepository.findById(imageId)).thenReturn(image);
 
         // when
-        Image result = getImageQuery.getSingleImage(imageId);
+        Image result = getImageQueryService.getSingleImage(imageId);
 
         // then
         assertThat(result).isNotNull();
@@ -144,7 +144,7 @@ class ImageUseCaseTest {
                 .thenThrow(new ImageNotFoundException(imageId));
 
         // when & then
-        assertThatThrownBy(() -> getImageQuery.getSingleImage(imageId))
+        assertThatThrownBy(() -> getImageQueryService.getSingleImage(imageId))
                 .isInstanceOf(ImageNotFoundException.class)
                 .hasMessage("이미지를 찾을 수 없습니다: " + imageId);
 
@@ -163,7 +163,7 @@ class ImageUseCaseTest {
         when(imageRepository.findImagesAllByPostId(postId)).thenReturn(images);
 
         // when
-        List<Image> result = (List<Image>) getImageQuery.getImagesBelongsPost(postId);
+        List<Image> result = (List<Image>) getImageQueryService.getImagesBelongsPost(postId);
 
         // then
         assertThat(result).hasSize(2);
@@ -178,7 +178,7 @@ class ImageUseCaseTest {
         when(imageRepository.findImagesAllByPostId(postId)).thenReturn(Collections.emptyList());
 
         // when
-        List<Image> result = (List<Image>) getImageQuery.getImagesBelongsPost(postId);
+        List<Image> result = (List<Image>) getImageQueryService.getImagesBelongsPost(postId);
 
         // then
         assertThat(result).isEmpty();
@@ -196,7 +196,7 @@ class ImageUseCaseTest {
         when(imageRepository.findAll(pageable)).thenReturn(imagePage);
 
         // when
-        Page<Image> result = getImageQuery.getPagedImages(pageable);
+        Page<Image> result = getImageQueryService.getPagedImages(pageable);
 
         // then
         assertThat(result.getContent()).hasSize(2);
@@ -217,7 +217,7 @@ class ImageUseCaseTest {
         when(imageRepository.findByPostIdOrderBySortOrder(postId)).thenReturn(sortedImages);
 
         // when
-        List<Image> result = getImageQuery.getSortedImagesByPost(postId);
+        List<Image> result = getImageQueryService.getSortedImagesByPost(postId);
 
         // then
         assertThat(result).hasSize(3);
