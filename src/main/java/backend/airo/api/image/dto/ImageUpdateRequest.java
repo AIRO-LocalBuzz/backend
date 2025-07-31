@@ -2,8 +2,6 @@ package backend.airo.api.image.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-import java.util.List;
-
 @Schema(description = "이미지 수정 요청")
 public record ImageUpdateRequest(
         @Schema(description = "이미지 캡션", example = "수정된 캡션")

@@ -1,8 +1,10 @@
 package backend.airo.domain.image;
 
 import backend.airo.domain.post.Post;
-import backend.airo.persistence.post.entity.PostEntity;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 

@@ -1,7 +1,5 @@
 package backend.airo.api.global.swagger;
 
-import backend.airo.api.clutr_fatvl.dto.ClutrFatvInfoResponse;
-import backend.airo.api.clutr_fatvl.dto.ClutrFatvListResponse;
 import backend.airo.api.global.dto.PageResponse;
 import backend.airo.api.global.dto.Response;
 import backend.airo.api.rural_ex.dto.RuralExInfoResponse;

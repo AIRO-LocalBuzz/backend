@@ -1,10 +1,10 @@
 package backend.airo.domain.clure_fatvl;
 
-import backend.airo.infra.open_api.clure_fatvl.vo.ClutrFatvlInfo;
 import backend.airo.domain.clure_fatvl.vo.Address;
 import backend.airo.domain.clure_fatvl.vo.FestivalPeriod;
 import backend.airo.domain.clure_fatvl.vo.GeoPoint;
-import jakarta.persistence.*;
+import backend.airo.infra.open_api.clure_fatvl.vo.ClutrFatvlInfo;
+import jakarta.persistence.Embedded;
 import lombok.Builder;
 import lombok.Getter;
 

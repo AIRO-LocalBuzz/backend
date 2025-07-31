@@ -1,8 +1,8 @@
 package backend.airo.application.auth.usecase;
 
 import backend.airo.api.auth.dto.AuthResponse;
-import backend.airo.domain.auth.query.ValidateTokenQuery;
 import backend.airo.common.jwt.JwtTokenProvider;
+import backend.airo.domain.auth.query.ValidateTokenQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -15,15 +15,12 @@ public class RefreshTokenUseCase {
     private final JwtTokenProvider jwtTokenProvider;
     private final ValidateTokenQuery validateTokenQuery;
 
-    public AuthResponse execute(String refreshToken) {
+    public AuthResponse execute(Long userId, String refreshToken) {
         try {
             // 1. 토큰 유효성 검증
             if (!validateTokenQuery.execute(refreshToken)) {
                 throw new RuntimeException("유효하지 않은 리프레시 토큰입니다.");
             }
-
-            // 2. 사용자 ID 추출
-            Long userId = jwtTokenProvider.getUserIdFromToken(refreshToken);
 
             // 3. 새로운 토큰 생성
             String newAccessToken = jwtTokenProvider.generateAccessToken(userId);

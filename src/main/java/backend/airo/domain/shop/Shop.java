@@ -1,7 +1,9 @@
 package backend.airo.domain.shop;
 
 import backend.airo.domain.shop.vo.*;
-import jakarta.persistence.*;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Getter;
 
 @Getter

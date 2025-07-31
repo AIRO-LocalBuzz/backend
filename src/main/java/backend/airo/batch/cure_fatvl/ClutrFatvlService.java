@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;

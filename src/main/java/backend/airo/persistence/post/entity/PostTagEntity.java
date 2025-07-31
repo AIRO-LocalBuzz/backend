@@ -1,10 +1,10 @@
 package backend.airo.persistence.post.entity;
 
-import backend.airo.domain.post.Post;
 import backend.airo.persistence.post.entity.key.PostTagId;
 import backend.airo.persistence.tag.entity.TagEntity;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
+
 import java.time.LocalDateTime;
 
 @Entity

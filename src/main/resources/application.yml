@@ -127,3 +127,7 @@ discord:
   bot:
     token: ${DISCORD_BOT_TOKEN}
     channel_id: ${DISCORD_BOT_CHANNEL_ID}
+
+security:
+  swagger-bypass:
+    enabled: true

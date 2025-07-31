@@ -5,12 +5,9 @@ import backend.airo.api.area_code.dto.MegaCodeResponse;
 import backend.airo.api.global.dto.Response;
 import backend.airo.api.shop.dto.ShopInfoResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 

@@ -1,9 +1,7 @@
 package backend.airo.domain.auth.oauth2.query;
 
-import backend.airo.common.jwt.JwtTokenProvider;
 import backend.airo.domain.user.User;
 import backend.airo.domain.user.repository.UserRepository;
-import backend.airo.persistence.user.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
