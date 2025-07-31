@@ -53,11 +53,6 @@ public class PostAdapter implements PostRepository {
             log.debug("신규 게시물 생성: title={}", post.getTitle());
             entity = PostEntity.toEntity(post);
 
-            // UserEntity 설정
-            if (post.getUserId() != null) {
-                UserEntity userEntity = userJpaRepository.getReferenceById(post.getUserId());
-                entity.setUser(userEntity);
-            }
 
             log.debug("Entity 변환 완료: userId={}, title={}",
                     entity.getUser() != null ? entity.getUser().getId() : null, entity.getTitle());
@@ -99,10 +94,7 @@ public class PostAdapter implements PostRepository {
         postJpaRepository.deleteById(id);
     }
 
-//    @Override
-//    public Collection<Post> saveAll(List<Post> posts) {
-//        return List.of();
-//    }
+
     @Override
     public Page<Post> findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(
         PostStatus status,
