@@ -12,7 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Post {
     private final Long id;
-    private final Long userId;
+    private Long userId;
     private String title;
     private String content;
     private String summary;
@@ -53,6 +53,38 @@ public class Post {
         this.commentCount = commentCount;
         this.isFeatured = isFeatured;
         this.publishedAt = publishedAt;
+    }
+
+
+    public static Post createForTest(
+            Long id,
+            Long userId,
+            String title,
+            String content,
+            List<PostEmotionTag> emotionTags,
+            PostCategory category,
+            Location location
+    ) {
+        return new Post(
+                id,
+                userId,
+                title,
+                content,
+                null, // summary
+                PostStatus.PUBLISHED,
+                PostWithWhoTag.ALLONE,
+                PostForWhatTag.HEALING,
+                emotionTags,
+                category,
+                LocalDateTime.now(),
+                location,
+                "Test Address",
+                0, // viewCount
+                0, // likeCount
+                0, // commentCount
+                false, // isFeatured
+                LocalDateTime.now() // publishedAt
+        );
     }
 
     public void incrementViewCount() {
