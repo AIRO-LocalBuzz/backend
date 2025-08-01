@@ -18,7 +18,7 @@ public interface ImageRepository extends AggregateSupport<Image, Long> {
     List<Image> findByMimeType(String mimeType);
     List<Image> findByIsCover(boolean isCover);
     Collection<Image> findAllById(List<Long> ids);
-
+    List<String> findImageUrlsByPostId(Long postId);
 
     // Delete
     void deleteById(Long id);

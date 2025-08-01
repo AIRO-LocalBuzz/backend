@@ -97,18 +97,18 @@ springdoc:
     - group: 'Image API'
       packages-to-scan: backend.airo.api.image
 
-#  ai:
-#    openai:
-#      api-key: ${OPENAI_API_KEY:}
-#      chat:
-#        options:
-#          model: gpt-4
-#          temperature: 0.7
-#    ollama:
-#      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
-#      chat:
-#        options:
-#          model: llama2
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+      chat:
+        options:
+          model: gpt-4
+          temperature: 0.7
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+      chat:
+        options:
+          model: llama2
 
 
 server:
