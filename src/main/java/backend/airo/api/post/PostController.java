@@ -1,5 +1,6 @@
 package backend.airo.api.post;
 
+import backend.airo.api.annotation.UserPrincipal;
 import backend.airo.api.global.swagger.PostControllerSwagger;
 import backend.airo.application.post.usecase.PostCreateUseCase;
 import backend.airo.application.post.usecase.PostDeleteUseCase;
@@ -7,7 +8,9 @@ import backend.airo.application.post.usecase.PostReadUseCase;
 import backend.airo.application.post.usecase.PostUpdateUseCase;
 import backend.airo.domain.post.Post;
 import backend.airo.api.post.dto.*;
+import backend.airo.domain.user.User;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -16,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -32,13 +36,15 @@ public class PostController implements PostControllerSwagger {
 
     // ===== 게시물 생성 =====
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping
+    @SecurityRequirement(name = "BearerAuth")
     public ResponseEntity<PostResponse> createPost(
             @Valid @RequestBody PostCreateRequest request,
-            HttpServletRequest httpRequest) {
+            @UserPrincipal User user) {
         log.info("게시물 생성 요청 원본: {}", request);
         log.info("세부 정보 - title: {}, userId: {}, categoryId: {}, locationId: {}",
-                request.title(), request.userId(), request.categoryId(), request.locationId());
+                request.title(), request.userId(), request.category(), request.location());
 
         log.info("게시물 생성 요청: title={}, userId={}", request.title(), request.userId());
 

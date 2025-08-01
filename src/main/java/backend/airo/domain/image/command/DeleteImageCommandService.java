@@ -11,7 +11,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Component
-public class DeleteImageCommand {
+public class DeleteImageCommandService {
 
     private final ImageRepository imageRepository;
 

@@ -14,7 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @RequiredArgsConstructor
 @Component
-public class CreateImageCommand {
+public class CreateImageCommandService {
 
     private final ImageRepository imageRepository;
     private final ReentrantLock uploadLock = new ReentrantLock();

@@ -39,10 +39,8 @@ public record PostResponse(
         Boolean isFeatured,
 
         @Schema(description = "생성 시간", example = "2024-08-10T09:00:00")
-        LocalDateTime createdAt,
+        LocalDateTime createdAt
 
-        @Schema(description = "발행 시간", example = "2024-08-10T10:00:00")
-        LocalDateTime publishedAt
 ) {
     public static PostResponse fromDomain(Post post) {
         return new PostResponse(
@@ -55,7 +53,6 @@ public record PostResponse(
                 post.getLikeCount(),
                 post.getCommentCount(),
                 post.getIsFeatured(),
-                post.getCreatedAt(),
                 post.getPublishedAt()
         );
     }

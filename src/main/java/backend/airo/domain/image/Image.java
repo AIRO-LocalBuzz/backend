@@ -8,14 +8,14 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Builder
+
 @RequiredArgsConstructor
 @Getter
 @Setter
 public class Image {
     private final Long id;
-    private final Long userId;
-    private final Long postId;
+    private Long userId;
+    private Long postId;
     private String originalFilename;
     private String storedFilename;
     private String imageUrl;
@@ -27,11 +27,9 @@ public class Image {
     private Integer height;
     private Integer sortOrder;
     private Boolean isCover;
-    private LocalDateTime createdAt;
-    private Post post;
 
 
-    public Image(Long id, Long userId, Long postId, String originalFilename, String storedFilename, String imageUrl, String altText, String caption, Long fileSize, String mimeType, Integer width, Integer height, Integer sortOrder, Boolean isCover, LocalDateTime createdAt, Post post) {
+    public Image(Long id, Long userId, Long postId, String originalFilename, String storedFilename, String imageUrl, String altText, String caption, Long fileSize, String mimeType, Integer width, Integer height, Integer sortOrder, Boolean isCover) {
         this.id = id;
         this.userId = userId;
         this.postId = postId;
@@ -46,10 +44,24 @@ public class Image {
         this.height = height;
         this.sortOrder = sortOrder;
         this.isCover = isCover;
-        this.createdAt = createdAt;
-        this.post = post;
     }
 
+    public Image (Long userId, Long postId, String imageUrl, String mimeType, Integer sortOrder) {
+        this.id = null;
+        this.postId = postId;
+        this.userId = userId;
+        this.imageUrl = imageUrl;
+        this.mimeType = mimeType;
+        this.sortOrder = sortOrder;
+        this.isCover = false; // 기본값 설정
+    }
 
+    public Image (Long userId, String imageUrl, String mimeType) {
+        this.id = null;
+        this.userId = userId;
+        this.imageUrl = imageUrl;
+        this.mimeType = mimeType;
+        this.isCover = false; // 기본값 설정
+    }
 
 }

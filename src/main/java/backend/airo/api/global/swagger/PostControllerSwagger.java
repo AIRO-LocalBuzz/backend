@@ -1,7 +1,9 @@
 package backend.airo.api.global.swagger;
 
 
+import backend.airo.api.annotation.UserPrincipal;
 import backend.airo.api.post.dto.*;
+import backend.airo.domain.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,12 +15,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Tag(name = "Post", description = "게시물 관리 API")
-@SecurityRequirement(name = "bearerAuth")
+@SecurityRequirement(name = "BearerAuth")
 public interface PostControllerSwagger {
     @Operation(summary = "게시물 생성", description = "새로운 게시물을 생성합니다.")
     @ApiResponses(value = {
@@ -32,10 +35,11 @@ public interface PostControllerSwagger {
                     description = "발행 권한 없음",
                     content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
+    @PreAuthorize("isAuthenticated()")
     @PostMapping
    ResponseEntity<PostResponse> createPost(
             @Valid @RequestBody PostCreateRequest request,
-            HttpServletRequest httpRequest);
+            @UserPrincipal User user);
 
 
 

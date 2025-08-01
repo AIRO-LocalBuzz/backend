@@ -1,13 +1,14 @@
 package backend.airo.domain.post.enums;
 
-public enum PostStatus {
-    DRAFT("임시저장"),
-    PUBLISHED("발행됨"),
-    ARCHIVED("보관됨");
+public enum PostWithWhoTag {
+    ALLONE("혼자"),
+    FRIEND("친구"),
+    FAMILY("가족"),
+    PARTNER("연인");
 
     private final String description;
 
-    PostStatus(String description) {
+    PostWithWhoTag(String description) {
         this.description = description;
     }
 

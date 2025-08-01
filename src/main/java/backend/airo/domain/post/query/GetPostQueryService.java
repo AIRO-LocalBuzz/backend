@@ -2,8 +2,6 @@ package backend.airo.domain.post.query;
 
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.repository.PostRepository;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

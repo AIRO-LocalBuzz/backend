@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
-public class UpdateImageCommand {
+public class UpdateImageCommandService {
 
     private final ImageRepository imageRepository;
 

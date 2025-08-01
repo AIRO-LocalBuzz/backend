@@ -1,6 +1,10 @@
 package backend.airo.application.post.usecase;
 
+import backend.airo.api.image.dto.ImageCreateRequest;
 import backend.airo.api.post.dto.PostCreateRequest;
+import backend.airo.application.image.usecase.ImageUseCase;
+import backend.airo.domain.image.Image;
+import backend.airo.domain.image.command.CreateImageCommandService;
 import backend.airo.domain.post.command.CreatePostCommandService;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.repository.PostRepository;
@@ -26,6 +30,8 @@ import static backend.airo.domain.post.exception.PostErrorCode.POST_ALREADY_PUBL
 public class PostCreateUseCase {
 
     private final CreatePostCommandService createPostCommandService;
+    private final CreateImageCommandService createImageCommandService;
+    private final ImageUseCase imageUseCase;
 
     // ===== 게시물 생성 =====
 
@@ -39,15 +45,7 @@ public class PostCreateUseCase {
 
         Post savedPost = createPostCommandService.handle(request);
 
-        // 이미지 연결 처리
-        if (request.hasImages()) {
-            processPostImages(savedPost.getId(), request.imageIds());
-        }
 
-        // 태그 연결 처리
-        if (request.hasTags()) {
-            processPostTags(savedPost.getId(), request.tags());
-        }
 
         return savedPost;
     }
@@ -55,21 +53,6 @@ public class PostCreateUseCase {
 
     // ===== Private Helper Methods =====
 
-    /**
-     * 이미지 연결 처리
-     */
-    private void processPostImages(Long postId, List<Long> imageIds) {
-        // 실제 구현에서는 ImageService 등을 통해 처리
-        log.debug("게시물 이미지 연결: postId={}, imageCount={}", postId, imageIds.size());
-    }
-
-    /**
-     * 태그 연결 처리
-     */
-    private void processPostTags(Long postId, List<String> tags) {
-        // 실제 구현에서는 TagService 등을 통해 처리
-        log.debug("게시물 태그 연결: postId={}, tagCount={}", postId, tags.size());
-    }
 
 
 }

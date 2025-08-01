@@ -55,7 +55,7 @@ public class PostAdapter implements PostRepository {
 
 
             log.debug("Entity 변환 완료: userId={}, title={}",
-                    entity.getUser() != null ? entity.getUser().getId() : null, entity.getTitle());
+                    entity.getUserId() != null ? entity.getUserId() : null, entity.getTitle());
         } else {
             log.debug("기존 게시물 업데이트: id={}", post.getId());
             entity = updateExistingEntity(post);
@@ -66,7 +66,7 @@ public class PostAdapter implements PostRepository {
 
         log.debug("JPA Repository 저장 완료: savedId={}, userId={}",
                 savedEntity.getId(),
-                savedEntity.getUser() != null ? savedEntity.getUser().getId() : null);
+                savedEntity.getUserId() != null ? savedEntity.getUserId() : null);
 
         return PostEntity.toDomain(savedEntity);
     }
@@ -136,17 +136,7 @@ public class PostAdapter implements PostRepository {
                 .map(PostEntity::toDomain);
     }
 
-    @Override
-    public Page<Post> findByCategoryId(Long categoryId, Pageable pageable) {
-        return postJpaRepository.findByCategoryId(categoryId, pageable)
-                .map(PostEntity::toDomain);
-    }
 
-    @Override
-    public Page<Post> findByLocationId(Long locationId, Pageable pageable) {
-        return postJpaRepository.findByLocationId(locationId, pageable)
-                .map(PostEntity::toDomain);
-    }
 
     @Override
     public Page<Post> findByStatusIn(List<PostStatus> statuses, Pageable pageable) {
@@ -166,29 +156,6 @@ public class PostAdapter implements PostRepository {
                 .map(PostEntity::toDomain);
     }
 
-    @Override
-    public Page<Post> findByTags(List<String> tags, Pageable pageable) {
-        return postJpaRepository.findByTagsAndStatus(tags, PostStatus.PUBLISHED, pageable)
-                .map(PostEntity::toDomain);
-    }
-
-    @Override
-    public Page<Post> findByCriteria(PostSearchCriteria criteria, Pageable pageable) {
-        log.debug("복합 조건 검색: keyword={}, userId={}", criteria.keyword(), criteria.userId());
-
-        return postJpaRepository.findByCriteria(
-                criteria.keyword(),
-                criteria.userId(),
-                criteria.categoryId(),
-                criteria.locationId(),
-                criteria.statuses() != null && !criteria.statuses().isEmpty()
-                        ? criteria.statuses().get(0) : null,
-                criteria.isFeatured(),
-                criteria.startDate(),
-                criteria.endDate(),
-                pageable
-        ).map(PostEntity::toDomain);
-    }
 
     // ===== 날짜 범위 조회 메서드 =====
 
@@ -222,10 +189,6 @@ public class PostAdapter implements PostRepository {
         return postJpaRepository.countByUserIdAndStatus(userId, status);
     }
 
-    @Override
-    public long countByCategoryId(Long categoryId) {
-        return postJpaRepository.countByCategoryId(categoryId);
-    }
 
     @Override
     public long countPublishedPosts() {
@@ -287,42 +250,6 @@ public class PostAdapter implements PostRepository {
                 .map(PostEntity::toDomain);
     }
 
-    // ===== 연관 관계 조회 메서드 =====
-
-    @Override
-    public Optional<Post> findByIdWithAssociations(Long id, boolean includeImages, boolean includeTags, boolean includeComments) {
-        try {
-            if (includeImages && includeTags && includeComments) {
-                return postJpaRepository.findByIdWithAllAssociations(id)
-                        .map(PostEntity::toDomain);
-            } else if (includeImages) {
-                return postJpaRepository.findByIdWithImages(id)
-                        .map(PostEntity::toDomain);
-            } else if (includeTags) {
-                return postJpaRepository.findByIdWithTags(id)
-                        .map(PostEntity::toDomain);
-            } else if (includeComments) {
-                return postJpaRepository.findByIdWithComments(id)
-                        .map(PostEntity::toDomain);
-            }
-
-            return Optional.of(findById(id));
-        } catch (PostNotFoundException e) {
-            return Optional.empty();
-        }
-    }
-
-    @Override
-    public Optional<Post> findByIdWithAuthor(Long id) {
-        return postJpaRepository.findByIdWithAuthor(id)
-                .map(PostEntity::toDomain);
-    }
-
-    @Override
-    public Optional<Post> findByIdWithLocation(Long id) {
-        return postJpaRepository.findByIdWithLocation(id)
-                .map(PostEntity::toDomain);
-    }
 
     // ===== 업데이트 메서드 =====
 
@@ -383,23 +310,6 @@ public class PostAdapter implements PostRepository {
         return oldDrafts.size();
     }
 
-    @Override
-    @Transactional
-    public int archiveInactiveUserPosts(List<Long> userIds) {
-        List<PostEntity> postsToArchive = postJpaRepository.findByUserIdsAndStatus(userIds, PostStatus.PUBLISHED);
-
-        if (!postsToArchive.isEmpty()) {
-            List<Long> postIds = postsToArchive.stream()
-                    .map(PostEntity::getId)
-                    .toList();
-
-            int archivedCount = postJpaRepository.updateStatusBatch(postIds, PostStatus.ARCHIVED);
-            log.info("비활성 사용자 게시물 보관: {} 건", archivedCount);
-            return archivedCount;
-        }
-
-        return 0;
-    }
 
     // ===== Private Helper Methods =====
 

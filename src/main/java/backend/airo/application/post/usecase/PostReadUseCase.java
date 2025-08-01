@@ -7,7 +7,6 @@ import backend.airo.domain.image.query.GetImageQueryService;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.PostStatus;
 import backend.airo.domain.post.exception.PostAccessDeniedException;
-import backend.airo.domain.post.query.GetPostListQuery;
 import backend.airo.domain.post.query.GetPostListQueryService;
 import backend.airo.domain.post.query.GetPostQueryService;
 import backend.airo.domain.post.vo.AuthorInfo;

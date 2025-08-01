@@ -55,21 +55,6 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
      */
     Page<Post> findByUserIdAndStatus(Long userId, PostStatus status, Pageable pageable);
 
-    /**
-     * 카테고리별 게시물 조회
-     * @param categoryId 카테고리 ID
-     * @param pageable 페이징 정보
-     * @return 게시물 페이지
-     */
-    Page<Post> findByCategoryId(Long categoryId, Pageable pageable);
-
-    /**
-     * 위치별 게시물 조회
-     * @param locationId 위치 ID
-     * @param pageable 페이징 정보
-     * @return 게시물 페이지
-     */
-    Page<Post> findByLocationId(Long locationId, Pageable pageable);
 
     /**
      * 상태별 게시물 조회
@@ -93,21 +78,7 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
      */
     Page<Post> findPublishedPosts(Pageable pageable);
 
-    /**
-     * 태그별 게시물 조회
-     * @param tags 태그 목록
-     * @param pageable 페이징 정보
-     * @return 게시물 페이지
-     */
-    Page<Post> findByTags(List<String> tags, Pageable pageable);
 
-    /**
-     * 복합 조건으로 게시물 검색
-     * @param criteria 검색 조건
-     * @param pageable 페이징 정보
-     * @return 게시물 페이지
-     */
-    Page<Post> findByCriteria(PostSearchCriteria criteria, Pageable pageable);
 
     // ===== 날짜 범위 조회 메서드 =====
 
@@ -154,13 +125,6 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
      * @return 게시물 수
      */
     long countByUserIdAndStatus(Long userId, PostStatus status);
-
-    /**
-     * 카테고리별 게시물 수 조회
-     * @param categoryId 카테고리 ID
-     * @return 게시물 수
-     */
-    long countByCategoryId(Long categoryId);
 
     /**
      * 전체 발행된 게시물 수 조회
@@ -226,29 +190,7 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
 
     // ===== 연관 관계 조회 메서드 =====
 
-    /**
-     * 연관 데이터와 함께 게시물 조회
-     * @param id 게시물 ID
-     * @param includeImages 이미지 포함 여부
-     * @param includeTags 태그 포함 여부
-     * @param includeComments 댓글 포함 여부
-     * @return 게시물 도메인 객체 (Optional)
-     */
-    Optional<Post> findByIdWithAssociations(Long id, boolean includeImages, boolean includeTags, boolean includeComments);
 
-    /**
-     * 작성자 정보와 함께 게시물 조회
-     * @param id 게시물 ID
-     * @return 게시물 도메인 객체 (Optional)
-     */
-    Optional<Post> findByIdWithAuthor(Long id);
-
-    /**
-     * 위치 정보와 함께 게시물 조회
-     * @param id 게시물 ID
-     * @return 게시물 도메인 객체 (Optional)
-     */
-    Optional<Post> findByIdWithLocation(Long id);
 
     // ===== 업데이트 메서드 =====
 
@@ -301,10 +243,5 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
      */
     int deleteOldDraftPosts(int days);
 
-    /**
-     * 비활성 사용자의 게시물 보관
-     * @param userIds 비활성 사용자 ID 목록
-     * @return 보관된 게시물 수
-     */
-    int archiveInactiveUserPosts(List<Long> userIds);
+
 }

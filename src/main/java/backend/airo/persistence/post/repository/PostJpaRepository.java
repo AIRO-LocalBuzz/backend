@@ -42,15 +42,11 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
     /**
      * 카테고리별 게시물 조회
      */
-    @Query("SELECT p FROM PostEntity p WHERE p.category.id = :categoryId")
-    Page<PostEntity> findByCategoryId(@Param("categoryId") Long categoryId, Pageable pageable);
-
+//Todo
     /**
      * 위치별 게시물 조회
      */
-    @Query("SELECT p FROM PostEntity p WHERE p.location.id = :locationId")
-    Page<PostEntity> findByLocationId(@Param("locationId") Long locationId, Pageable pageable);
-
+//Todo
     /**
      * 상태별 게시물 조회
      */
@@ -68,61 +64,6 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
 
     // ===== 연관 관계 포함 조회 =====
 
-    /**
-     * 작성자 정보와 함께 조회
-     */
-    @Query("SELECT p FROM PostEntity p " +
-            "LEFT JOIN FETCH p.user " +
-            "WHERE p.id = :id")
-    Optional<PostEntity> findByIdWithAuthor(@Param("id") Long id);
-
-    /**
-     * 위치 정보와 함께 조회
-     */
-    @Query("SELECT p FROM PostEntity p " +
-            "LEFT JOIN FETCH p.location " +
-            "WHERE p.id = :id")
-    Optional<PostEntity> findByIdWithLocation(@Param("id") Long id);
-
-    /**
-     * 이미지와 함께 조회
-     */
-    @Query("SELECT p FROM PostEntity p " +
-            "LEFT JOIN FETCH p.images i " +
-            "WHERE p.id = :id " +
-            "ORDER BY i.sortOrder")
-    Optional<PostEntity> findByIdWithImages(@Param("id") Long id);
-
-    /**
-     * 태그와 함께 조회
-     */
-    @Query("SELECT p FROM PostEntity p " +
-            "LEFT JOIN FETCH p.postTags pt " +
-            "LEFT JOIN FETCH pt.tag " +
-            "WHERE p.id = :id")
-    Optional<PostEntity> findByIdWithTags(@Param("id") Long id);
-
-    /**
-     * 댓글과 함께 조회
-     */
-    @Query("SELECT p FROM PostEntity p " +
-            "LEFT JOIN FETCH p.comments c " +
-            "WHERE p.id = :id " +
-            "ORDER BY c.createdAt")
-    Optional<PostEntity> findByIdWithComments(@Param("id") Long id);
-
-    /**
-     * 모든 연관 데이터와 함께 조회
-     */
-    @Query("SELECT DISTINCT p FROM PostEntity p " +
-            "LEFT JOIN FETCH p.user " +
-            "LEFT JOIN FETCH p.category " +
-            "LEFT JOIN FETCH p.location " +
-            "LEFT JOIN FETCH p.images " +
-            "LEFT JOIN FETCH p.postTags pt " +
-            "LEFT JOIN FETCH pt.tag " +
-            "WHERE p.id = :id")
-    Optional<PostEntity> findByIdWithAllAssociations(@Param("id") Long id);
 
     // ===== 날짜 범위 조회 =====
 
@@ -176,40 +117,10 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
     /**
      * 태그별 게시물 조회
      */
-    @Query("SELECT DISTINCT p FROM PostEntity p " +
-            "JOIN p.postTags pt " +
-            "JOIN pt.tag t " +
-            "WHERE t.name IN :tags " +
-            "AND p.status = :status")
-    Page<PostEntity> findByTagsAndStatus(@Param("tags") List<String> tags,
-                                         @Param("status") PostStatus status,
-                                         Pageable pageable);
-
+   //Todo
     // ===== 복합 조건 검색 =====
 
-    /**
-     * 복합 조건 검색 - 동적 쿼리용
-     */
-    @Query("SELECT DISTINCT p FROM PostEntity p " +
-            "LEFT JOIN p.postTags pt " +
-            "LEFT JOIN pt.tag t " +
-            "WHERE (:keyword IS NULL OR p.title LIKE %:keyword% OR p.content LIKE %:keyword%) " +
-            "AND (:userId IS NULL OR p.user.id = :userId) " +
-            "AND (:categoryId IS NULL OR p.category.id = :categoryId) " +
-            "AND (:locationId IS NULL OR p.location.id = :locationId) " +
-            "AND (:status IS NULL OR p.status = :status) " +
-            "AND (:isFeatured IS NULL OR p.isFeatured = :isFeatured) " +
-            "AND (:startDate IS NULL OR p.createdAt >= :startDate) " +
-            "AND (:endDate IS NULL OR p.createdAt <= :endDate)")
-    Page<PostEntity> findByCriteria(@Param("keyword") String keyword,
-                                    @Param("userId") Long userId,
-                                    @Param("categoryId") Long categoryId,
-                                    @Param("locationId") Long locationId,
-                                    @Param("status") PostStatus status,
-                                    @Param("isFeatured") Boolean isFeatured,
-                                    @Param("startDate") LocalDateTime startDate,
-                                    @Param("endDate") LocalDateTime endDate,
-                                    Pageable pageable);
+
 
     // ===== 통계 및 집계 =====
 
@@ -226,8 +137,7 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
     /**
      * 카테고리별 게시물 수
      */
-    @Query("SELECT COUNT(p) FROM PostEntity p WHERE p.category.id = :categoryId")
-    long countByCategoryId(@Param("categoryId") Long categoryId);
+    //Todo
 
     /**
      * 발행된 게시물 수
@@ -309,9 +219,5 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
             "AND p.createdAt < :cutoffDate")
     List<PostEntity> findOldDraftPosts(@Param("status") PostStatus status, @Param("cutoffDate") LocalDateTime cutoffDate);
 
-    /**
-     * 비활성 사용자의 게시물 조회
-     */
-    @Query("SELECT p FROM PostEntity p WHERE p.user.id IN :userIds AND p.status = :status")
-    List<PostEntity> findByUserIdsAndStatus(@Param("userIds") List<Long> userIds, @Param("status") PostStatus status);
+
 }

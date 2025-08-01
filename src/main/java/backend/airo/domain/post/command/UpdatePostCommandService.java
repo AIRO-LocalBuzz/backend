@@ -80,12 +80,13 @@ public class UpdatePostCommandService{
         }
 
         // TODO: Post 도메인에 categoryId, locationId 필드 추가 후 활성화
-        if (post.getCategoryId() == null) {
+        if (post.getCategory() == null) {
             return false;
         }
-        if (post.getLocationId() == null) {
+        if (post.getLocation() == null) {
             return false;
         }
+
 
         return true;
     }
@@ -95,13 +96,17 @@ public class UpdatePostCommandService{
         return new Post(
                 existingPost.getId(),
                 existingPost.getUserId(),
-                request.categoryId() != null ? request.categoryId() : existingPost.getCategoryId(),
-                request.locationId() != null ? request.locationId() : existingPost.getLocationId(),
                 request.title() != null ? request.title() : existingPost.getTitle(),
                 request.content() != null ? request.content() : existingPost.getContent(),
                 existingPost.getSummary(),
                 request.status() != null ? request.status() : existingPost.getStatus(),
+                request.withWhoTag() != null ? request.withWhoTag() : existingPost.getWithWhoTag(),
+                request.forWhatTag() != null ? request.forWhatTag() : existingPost.getForWhatTag(),
+                request.emotionTags() != null ? request.emotionTags() : existingPost.getEmotionTags(),
+                existingPost.getCategory(),
                 request.travelDate() != null ? request.travelDate() : existingPost.getTravelDate(),
+                request.location() != null ? request.location() : existingPost.getLocation(),
+                request.adress() != null ? request.adress() : existingPost.getAdress(),
                 existingPost.getViewCount(),
                 existingPost.getLikeCount(),
                 existingPost.getCommentCount(),

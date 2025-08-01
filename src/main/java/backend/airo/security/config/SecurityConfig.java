@@ -55,6 +55,7 @@ public class SecurityConfig {
                                 "/api/v1/test/**",
                                 "/api/actuator/health",
                                 "/v1/auth/sign-up",
+                                "/v1/auth/exchange-token",
                                 "/v1/auth/social-login"
                         ).permitAll()
                         .anyRequest().authenticated()

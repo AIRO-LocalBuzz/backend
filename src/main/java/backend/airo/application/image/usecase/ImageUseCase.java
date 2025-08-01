@@ -1,8 +1,8 @@
 package backend.airo.application.image.usecase;
 import backend.airo.domain.image.Image;
-import backend.airo.domain.image.command.CreateImageCommand;
-import backend.airo.domain.image.command.DeleteImageCommand;
-import backend.airo.domain.image.command.UpdateImageCommand;
+import backend.airo.domain.image.command.CreateImageCommandService;
+import backend.airo.domain.image.command.DeleteImageCommandService;
+import backend.airo.domain.image.command.UpdateImageCommandService;
 import backend.airo.domain.image.query.GetImageQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,10 +17,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImageUseCase {
 
-    private final CreateImageCommand createImageCommand;
+    private final CreateImageCommandService createImageCommandService;
     private final GetImageQueryService getImageQueryService;
-    private final UpdateImageCommand updateImageCommand;
-    private final DeleteImageCommand deleteImageCommand;
+    private final UpdateImageCommandService updateImageCommandService;
+    private final DeleteImageCommandService deleteImageCommandService;
 
     // ========== 이미지 업로드 (Create) ==========
 
@@ -30,7 +30,7 @@ public class ImageUseCase {
      * @return 저장된 이미지 정보
      */
     public Image uploadSingleImage(Image image) {
-        return createImageCommand.handle(image);
+        return createImageCommandService.handle(image);
     }
 
     /**
@@ -40,7 +40,7 @@ public class ImageUseCase {
      */
     public List<Image> uploadMultipleImages(List<Image> images) {
         return images.stream()
-                .map(createImageCommand::handle)
+                .map(createImageCommandService::handle)
                 .toList();
     }
 
@@ -50,7 +50,7 @@ public class ImageUseCase {
      * @return 저장된 이미지 정보
      */
     public Image uploadImageWithRetry(Image image) {
-        return createImageCommand.handleWithRetry(image);
+        return createImageCommandService.handleWithRetry(image);
     }
 
     /**
@@ -59,7 +59,7 @@ public class ImageUseCase {
      * @return 저장된 이미지 정보
      */
     public Image uploadImageWithLock(Image image) {
-        return createImageCommand.handleWithLock(image);
+        return createImageCommandService.handleWithLock(image);
     }
 
     /**
@@ -68,7 +68,7 @@ public class ImageUseCase {
      * @return 생성된 썸네일 URL
      */
     public String generateThumbnail(String originalImageUrl) {
-        return createImageCommand.generateThumbnail(originalImageUrl);
+        return createImageCommandService.generateThumbnail(originalImageUrl);
     }
 
     // ========== 이미지 조회 (Read) ==========
@@ -137,7 +137,7 @@ public class ImageUseCase {
      * @return 수정된 이미지 정보
      */
     public Image updateImageSortOrder(Long imageId, Integer newSortOrder) {
-        return updateImageCommand.updateSortOrder(imageId, newSortOrder);
+        return updateImageCommandService.updateSortOrder(imageId, newSortOrder);
     }
 
     /**
@@ -147,7 +147,7 @@ public class ImageUseCase {
      * @return 수정된 이미지 정보
      */
     public Image updateImageCaption(Long imageId, String newCaption) {
-        return updateImageCommand.updateCaption(imageId, newCaption);
+        return updateImageCommandService.updateCaption(imageId, newCaption);
     }
 
 
@@ -159,7 +159,7 @@ public class ImageUseCase {
      * @return 수정된 이미지 정보
      */
     public Image updateImageAltText(Long imageId, String newAltText) {
-        return updateImageCommand.updateAltText(imageId, newAltText);
+        return updateImageCommandService.updateAltText(imageId, newAltText);
     }
 
 
@@ -170,7 +170,7 @@ public class ImageUseCase {
      * @return 재정렬된 이미지 목록
      */
     public List<Image> reorderImages(List<Long> imageIds) {
-        Collection<Image> result = updateImageCommand.reorderImages(imageIds);
+        Collection<Image> result = updateImageCommandService.reorderImages(imageIds);
         return result instanceof List ? (List<Image>) result : new ArrayList<>(result);
     }
 
@@ -182,7 +182,7 @@ public class ImageUseCase {
      * @return 수정된 이미지 목록
      */
     public List<Image> updateMultipleImages(List<Image> images) {
-        return updateImageCommand.updateMultipleImages(images);
+        return updateImageCommandService.updateMultipleImages(images);
     }
 
     // ========== 이미지 삭제 (Delete) ==========
@@ -193,7 +193,7 @@ public class ImageUseCase {
      * @return 삭제 성공 여부
      */
     public boolean deleteSingleImage(Long imageId) {
-        return deleteImageCommand.deleteById(imageId);
+        return deleteImageCommandService.deleteById(imageId);
     }
 
     /**
@@ -203,7 +203,7 @@ public class ImageUseCase {
      * @return 삭제 성공 여부
      */
     public boolean deleteImageWithAuth(Long imageId, Long currentUserId) {
-        return deleteImageCommand.deleteById(imageId, currentUserId);
+        return deleteImageCommandService.deleteById(imageId, currentUserId);
     }
 
     /**
@@ -211,7 +211,7 @@ public class ImageUseCase {
      * @param imageIds 삭제할 이미지 ID 목록
      */
     public void deleteMultipleImages(List<Long> imageIds) {
-        deleteImageCommand.deleteAllById(imageIds);
+        deleteImageCommandService.deleteAllById(imageIds);
     }
 
     /**
@@ -219,7 +219,7 @@ public class ImageUseCase {
      * @param postId 게시물 ID
      */
     public void deleteImagesByPost(Long postId) {
-        deleteImageCommand.deleteByPostId(postId);
+        deleteImageCommandService.deleteByPostId(postId);
     }
 
     /**
@@ -228,7 +228,7 @@ public class ImageUseCase {
      * @param currentUserId 현재 사용자 ID
      */
     public void deleteImagesByPostWithAuth(Long postId, Long currentUserId) {
-        deleteImageCommand.deleteByPostId(postId, currentUserId);
+        deleteImageCommandService.deleteByPostId(postId, currentUserId);
     }
 
 

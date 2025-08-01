@@ -1,9 +1,9 @@
 package backend.airo.application.image.usecase;
 
 import backend.airo.domain.image.Image;
-import backend.airo.domain.image.command.CreateImageCommand;
-import backend.airo.domain.image.command.DeleteImageCommand;
-import backend.airo.domain.image.command.UpdateImageCommand;
+import backend.airo.domain.image.command.CreateImageCommandService;
+import backend.airo.domain.image.command.DeleteImageCommandService;
+import backend.airo.domain.image.command.UpdateImageCommandService;
 import backend.airo.domain.image.query.GetImageQueryService;
 import backend.airo.domain.image.repository.ImageRepository;
 import backend.airo.domain.image.exception.ImageNotFoundException;
@@ -32,17 +32,17 @@ class ImageUseCaseTest {
     @Mock
     private ImageRepository imageRepository;
 
-    private CreateImageCommand createImageCommand;
+    private CreateImageCommandService createImageCommandService;
     private GetImageQueryService getImageQueryService;
-    private UpdateImageCommand updateImageCommand;
-    private DeleteImageCommand deleteImageCommand;
+    private UpdateImageCommandService updateImageCommandService;
+    private DeleteImageCommandService deleteImageCommandService;
 
     @BeforeEach
     void setUp() {
-        createImageCommand = new CreateImageCommand(imageRepository);
+        createImageCommandService = new CreateImageCommandService(imageRepository);
         getImageQueryService = new GetImageQueryService(imageRepository);
-        updateImageCommand = new UpdateImageCommand(imageRepository);
-        deleteImageCommand = new DeleteImageCommand(imageRepository);
+        updateImageCommandService = new UpdateImageCommandService(imageRepository);
+        deleteImageCommandService = new DeleteImageCommandService(imageRepository);
     }
 
     // ========== 이미지 업로드 (Create) ==========
@@ -55,7 +55,7 @@ class ImageUseCaseTest {
         when(imageRepository.save(any(Image.class))).thenReturn(image);
 
         // when
-        Image result = createImageCommand.handle(image);
+        Image result = createImageCommandService.handle(image);
 
         // then
         assertThat(result).isNotNull();
@@ -80,7 +80,7 @@ class ImageUseCaseTest {
 
         // when
         List<Image> results = images.stream()
-                .map(createImageCommand::handle)
+                .map(createImageCommandService::handle)
                 .toList();
 
         // then
@@ -92,7 +92,7 @@ class ImageUseCaseTest {
     @DisplayName("TC-003: 업로드_실패_정보없음")
     void uploadFailWhenImageIsNull() {
         // when & then
-        assertThatThrownBy(() -> createImageCommand.handle(null))
+        assertThatThrownBy(() -> createImageCommandService.handle(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미지 정보는 필수입니다");
 
@@ -109,7 +109,7 @@ class ImageUseCaseTest {
                 .build();
 
         // when & then
-        assertThatThrownBy(() -> createImageCommand.handle(image))
+        assertThatThrownBy(() -> createImageCommandService.handle(image))
                 .isInstanceOf(UnsupportedFormatException.class)
                 .hasMessage("지원하지 않는 파일 형식입니다: application/pdf. 지원되는 형식: image/jpeg, image/jpg, image/png, image/gif");
 
@@ -242,7 +242,7 @@ class ImageUseCaseTest {
         when(imageRepository.save(any(Image.class))).thenReturn(updatedImage);
 
         // when
-        Image result = updateImageCommand.updateSortOrder(imageId, newOrder);
+        Image result = updateImageCommandService.updateSortOrder(imageId, newOrder);
 
         // then
         assertThat(result.getSortOrder()).isEqualTo(newOrder);
@@ -263,7 +263,7 @@ class ImageUseCaseTest {
         when(imageRepository.save(any(Image.class))).thenReturn(updatedImage);
 
         // when
-        Image result = updateImageCommand.updateCaption(imageId, newCaption);
+        Image result = updateImageCommandService.updateCaption(imageId, newCaption);
 
         // then
         assertThat(result.getCaption()).isEqualTo(newCaption);
@@ -283,7 +283,7 @@ class ImageUseCaseTest {
         doNothing().when(imageRepository).deleteById(imageId);
 
         // when
-        deleteImageCommand.deleteById(imageId);
+        deleteImageCommandService.deleteById(imageId);
 
         // then
         verify(imageRepository, times(1)).findById(imageId);
@@ -305,7 +305,7 @@ class ImageUseCaseTest {
         doNothing().when(imageRepository).deleteAllById(imageIds);
 
         // when
-        deleteImageCommand.deleteAllById(imageIds);
+        deleteImageCommandService.deleteAllById(imageIds);
 
         // then
         verify(imageRepository, times(3)).existsById(anyLong());
@@ -322,7 +322,7 @@ class ImageUseCaseTest {
         doNothing().when(imageRepository).deleteById(imageId);
 
         // when
-        boolean result = deleteImageCommand.deleteById(imageId);
+        boolean result = deleteImageCommandService.deleteById(imageId);
 
         // then
         assertThat(result).isTrue();
@@ -338,7 +338,7 @@ class ImageUseCaseTest {
         when(imageRepository.findById(imageId)).thenReturn(null);
 
         // when & then
-        assertThatThrownBy(() -> deleteImageCommand.deleteById(imageId))
+        assertThatThrownBy(() -> deleteImageCommandService.deleteById(imageId))
                 .isInstanceOf(ImageNotFoundException.class)
                 .hasMessage("이미지를 찾을 수 없습니다: " + imageId);
 
@@ -357,7 +357,7 @@ class ImageUseCaseTest {
         when(imageRepository.findById(imageId)).thenReturn(existingImage);
 
         // when & then
-        assertThatThrownBy(() -> deleteImageCommand.deleteById(imageId, currentUserId))
+        assertThatThrownBy(() -> deleteImageCommandService.deleteById(imageId, currentUserId))
                 .isInstanceOf(UnauthorizedException.class)
                 .hasMessage("이미지 삭제 권한이 없습니다");
 
@@ -375,7 +375,7 @@ class ImageUseCaseTest {
         doNothing().when(imageRepository).deleteByPostId(postId);
 
         // when
-        deleteImageCommand.deleteByPostId(postId);
+        deleteImageCommandService.deleteByPostId(postId);
 
         // then
         verify(imageRepository, times(1)).deleteByPostId(postId);
@@ -398,7 +398,7 @@ class ImageUseCaseTest {
         when(imageRepository.saveAll(anyList())).thenReturn(images);
 
         // when
-        Collection<Image> result = updateImageCommand.reorderImages(imageIds);
+        Collection<Image> result = updateImageCommandService.reorderImages(imageIds);
 
         // then
         assertThat(result).hasSize(3);
@@ -423,7 +423,7 @@ class ImageUseCaseTest {
                 .thenReturn(image);
 
         // when
-        Image result = createImageCommand.handleWithRetry(image);
+        Image result = createImageCommandService.handleWithRetry(image);
 
         // then
         assertThat(result).isNotNull();
@@ -439,7 +439,7 @@ class ImageUseCaseTest {
         when(imageRepository.save(any(Image.class))).thenReturn(image);
 
         // when
-        Image result = createImageCommand.handleWithLock(image);
+        Image result = createImageCommandService.handleWithLock(image);
 
         // then
         assertThat(result).isNotNull();

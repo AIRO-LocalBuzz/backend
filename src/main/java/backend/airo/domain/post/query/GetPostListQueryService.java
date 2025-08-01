@@ -5,7 +5,7 @@ import backend.airo.domain.image.repository.ImageRepository;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.PostStatus;
 import backend.airo.domain.post.repository.PostRepository;
-import jakarta.validation.constraints.*;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,8 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.util.List;
+
 
 @RequiredArgsConstructor
 @Component
