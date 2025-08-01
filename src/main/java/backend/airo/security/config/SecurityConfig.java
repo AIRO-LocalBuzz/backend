@@ -55,7 +55,11 @@ public class SecurityConfig {
                                 "/api/v1/test/**",
                                 "/api/actuator/health",
                                 "/v1/auth/sign-up",
-                                "/v1/auth/social-login"
+                                "/v1/auth/social-login",
+                                "/v1/area/**",
+                                "/v1/clutr/fatvl/**",
+                                "/v1/rural/ex/**",
+                                "/v1/shop/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
