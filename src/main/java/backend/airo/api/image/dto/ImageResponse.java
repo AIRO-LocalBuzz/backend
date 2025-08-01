@@ -41,10 +41,8 @@ public record ImageResponse(
         String altText,
 
         @Schema(description = "정렬 순서", example = "1")
-        Integer sortOrder,
+        Integer sortOrder
 
-        @Schema(description = "생성일시", example = "2024-07-29T12:34:56")
-        LocalDateTime createdAt
 ) {
     public static ImageResponse from(Image image) {
         return ImageResponse.builder()
@@ -59,7 +57,6 @@ public record ImageResponse(
                 .caption(image.getCaption())
                 .altText(image.getAltText())
                 .sortOrder(image.getSortOrder())
-                .createdAt(image.getCreatedAt())
                 .build();
     }
 }

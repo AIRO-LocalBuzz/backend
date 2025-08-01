@@ -2,6 +2,7 @@ package backend.airo.persistence.image.entity;
 
 import backend.airo.domain.image.Image;
 import backend.airo.domain.post.Post;
+import backend.airo.persistence.abstracts.BaseEntity;
 import backend.airo.persistence.post.entity.PostEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Table(name = "post_images")
-public class ImageEntity {
+public class ImageEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +22,13 @@ public class ImageEntity {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "original_filename", nullable = false)
+    @Column(name = "post_id", nullable = false)
+    private Long postId;
+
+    @Column(name = "original_filename", nullable = true)
     private String originalFilename;
 
-    @Column(name = "stored_filename", nullable = false)
+    @Column(name = "stored_filename", nullable = true)
     private String storedFilename;
 
     @Column(name = "image_url", columnDefinition = "TEXT", nullable = false)
@@ -51,26 +55,35 @@ public class ImageEntity {
     @Column(name = "is_cover", nullable = false)
     private Boolean isCover = false;
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
 
-    // 연관관계
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
-    private PostEntity post;
 
-    // 기본 생성자
-    public ImageEntity() {
+    public ImageEntity(Long userId, Long postId, String originalFilename, String storedFilename,
+                       String imageUrl, String altText, String caption, Long fileSize, String mimeType,
+                       Integer width, Integer height, Integer sortOrder, Boolean isCover ) {
+        this.userId = userId;
+        this.postId = postId;
+        this.originalFilename = originalFilename;
+        this.storedFilename = storedFilename;
+        this.imageUrl = imageUrl;
+        this.altText = altText;
+        this.caption = caption;
+        this.fileSize = fileSize;
+        this.mimeType = mimeType;
+        this.width = width;
+        this.height = height;
+        this.sortOrder = sortOrder;
+        this.isCover = isCover;
     }
 
-    public ImageEntity(Long userId, String originalFilename, String storedFilename, String imageUrl, String altText, String caption, Long fileSize, String mimeType, Integer width, Integer height, Integer sortOrder, Boolean isCover, LocalDateTime createdAt, Post post) {
-        super();
+
+    public ImageEntity() {
+
     }
 
     public static ImageEntity toEntity(Image image) {
         return new ImageEntity(
                 image.getUserId(),
+                image.getPostId(),
                 image.getOriginalFilename(),
                 image.getStoredFilename(),
                 image.getImageUrl(),
@@ -81,9 +94,7 @@ public class ImageEntity {
                 image.getWidth(),
                 image.getHeight(),
                 image.getSortOrder(),
-                image.getIsCover(),
-                image.getCreatedAt(),
-                image.getPost()
+                image.getIsCover()
         );
     }
 
@@ -91,7 +102,7 @@ public class ImageEntity {
         return new Image(
                 image.getId(),
                 image.getUserId(),
-                image.getPost().getId(),
+                image.getPostId(),
                 image.getOriginalFilename(),
                 image.getStoredFilename(),
                 image.getImageUrl(),
@@ -102,9 +113,7 @@ public class ImageEntity {
                 image.getWidth(),
                 image.getHeight(),
                 image.getSortOrder(),
-                image.getIsCover(),
-                image.getCreatedAt(),
-                PostEntity.toDomain(image.getPost())
+                image.getIsCover()
         );
     }
 

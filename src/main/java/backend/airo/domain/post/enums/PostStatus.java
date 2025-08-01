@@ -1,8 +1,17 @@
 package backend.airo.domain.post.enums;
 
 public enum PostStatus {
-    DRAFT, // Post is in draft status
-    PUBLISHED, // Post is published and visible to users
-    ARCHIVED, // Post is archived and not visible to users
-    DELETED // Post is deleted and not recoverable
+    DRAFT("임시저장"),
+    PUBLISHED("발행됨"),
+    ARCHIVED("보관됨");
+
+    private final String description;
+
+    PostStatus(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }

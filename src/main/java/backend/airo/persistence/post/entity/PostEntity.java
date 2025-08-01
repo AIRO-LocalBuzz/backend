@@ -1,19 +1,13 @@
 package backend.airo.persistence.post.entity;
 import backend.airo.domain.post.Post;
-import backend.airo.domain.post.enums.PostStatus;
+import backend.airo.domain.post.enums.*;
 import backend.airo.persistence.abstracts.BaseEntity;
-import backend.airo.persistence.category.entity.CategoryEntity;
-import backend.airo.persistence.comment.entity.CommentEntity;
-import backend.airo.persistence.image.entity.ImageEntity;
-import backend.airo.persistence.location.entity.LocationEntity;
-import backend.airo.persistence.user.entity.UserEntity;
+import backend.airo.domain.location.Location;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -25,6 +19,9 @@ public class PostEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column (name = "user_id", nullable = false)
+    private Long userId;
 
     @Column(nullable = false, length = 200)
     private String title;
@@ -38,6 +35,25 @@ public class PostEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PostStatus status = PostStatus.DRAFT;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PostWithWhoTag withWhoTag = PostWithWhoTag.ALLONE;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PostForWhatTag forWhatTag = PostForWhatTag.HEALING;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PostCategory category = PostCategory.RESTORANT;
+
+
+    @ElementCollection
+    @CollectionTable(name = "post_emotion_tags", joinColumns = @JoinColumn(name = "post_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "emotion_tag")
+    private List<PostEmotionTag> emotionTags;
 
     @Column(name = "travel_date")
     private LocalDateTime travelDate;
@@ -57,66 +73,79 @@ public class PostEntity extends BaseEntity {
     @Column(name = "published_at")
     private LocalDateTime publishedAt;
 
-    // 연관관계
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
+    @Embedded
+    private Location location;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private CategoryEntity category;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id")
-    private LocationEntity location;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @OrderBy("sortOrder ASC")
-    private List<ImageEntity> images = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<PostTagEntity> postTags = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<PostLikeEntity> postLikes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @OrderBy("createdAt ASC")
-    private List<CommentEntity> comments = new ArrayList<>();
+    @Column(name = "adress")
+    private String adress;
 
 
-    public PostEntity(String title, String content, String summary, PostStatus status, LocalDateTime travelDate, Integer viewCount, Integer likeCount, Integer commentCount, Boolean isFeatured, LocalDateTime publishedAt) {
+
+
+    public PostEntity(Long userId, String title, String content, String summary,
+                      PostStatus status, PostWithWhoTag withWhoTag, PostForWhatTag forWhatTag,
+                      List<PostEmotionTag> emotionTags, PostCategory category, LocalDateTime travelDate, Location location, String adress, Boolean isFeatured, LocalDateTime publishedAt) {
         super();
+        this.userId = userId;
+        this.title = title;
+        this.content = content;
+        this.summary = summary;
+        this.status = status != null ? status : PostStatus.DRAFT;
+        this.withWhoTag = withWhoTag != null ? withWhoTag : PostWithWhoTag.ALLONE;
+        this.forWhatTag = forWhatTag != null ? forWhatTag : PostForWhatTag.HEALING;
+        this.emotionTags = emotionTags;
+        this.category = category != null ? category : PostCategory.RESTORANT;
+        this.travelDate = travelDate;
+        this.location = location;
+        this.adress = adress;
+        this.isFeatured = isFeatured != null ? isFeatured : false;
+        this.viewCount = 0;
+        this.likeCount = 0;
+        this.commentCount = 0;
+        this.isFeatured = false;
     }
+
 
     public static PostEntity toEntity(Post post) {
         return new PostEntity(
+                post.getUserId(),
                 post.getTitle(),
                 post.getContent(),
                 post.getSummary(),
                 post.getStatus(),
+                post.getWithWhoTag(),
+                post.getForWhatTag(),
+                post.getEmotionTags(),
+                post.getCategory(),
                 post.getTravelDate(),
-                post.getViewCount(),
-                post.getLikeCount(),
-                post.getCommentCount(),
+                post.getLocation(),
+                post.getAdress(),
                 post.getIsFeatured(),
                 post.getPublishedAt()
         );
     }
 
-    public static Post toDomain(PostEntity post) {
+
+    public static Post toDomain(PostEntity entity) {
         return new Post(
-                post.getId(),
-                post.getTitle(),
-                post.getContent(),
-                post.getSummary(),
-                post.getStatus(),
-                post.getTravelDate(),
-                post.getViewCount(),
-                post.getLikeCount(),
-                post.getCommentCount(),
-                post.getIsFeatured(),
-                post.getPublishedAt()
+                entity.getId(),
+                entity.getUserId(),
+                entity.getTitle(),
+                entity.getContent(),
+                entity.getSummary(),
+                entity.getStatus(),
+                entity.getWithWhoTag(),
+                entity.getForWhatTag(),
+                entity.getEmotionTags(),
+                entity.getCategory(),
+                entity.getTravelDate(),
+                entity.getLocation(),
+                entity.getAdress(),
+                entity.getViewCount(),
+                entity.getLikeCount(),
+                entity.getCommentCount(),
+                entity.getIsFeatured(),
+                entity.getPublishedAt()
         );
     }
 

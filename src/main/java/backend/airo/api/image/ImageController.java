@@ -5,8 +5,10 @@ import backend.airo.api.global.swagger.ImageControllerSwagger;
 import backend.airo.api.image.dto.ImageCreateRequest;
 import backend.airo.api.image.dto.ImageReorderRequest;
 import backend.airo.api.image.dto.ImageResponse;
-import backend.airo.api.image.dto.ImageStatsResponse;
-import backend.airo.application.image.usecase.ImageUseCase;
+import backend.airo.application.image.usecase.ImageCreateUseCase;
+import backend.airo.application.image.usecase.ImageDeleteUseCase;
+import backend.airo.application.image.usecase.ImageReadUseCase;
+import backend.airo.application.image.usecase.ImageUpdateUseCase;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.user.User;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImageController implements ImageControllerSwagger {
 
-    private final ImageUseCase imageUseCase;
+    private final ImageReadUseCase imageReadUseCase;
+    private final ImageCreateUseCase imageCreateUseCase;
+    private final ImageUpdateUseCase imageUpdateUseCase;
+    private final ImageDeleteUseCase imageDeleteUseCase;
 
     @Override
     @PostMapping
@@ -57,7 +62,7 @@ public class ImageController implements ImageControllerSwagger {
                 .map(request -> request.toImage(user.getId()))
                 .toList();
 
-        List<Image> uploadedImages = imageUseCase.uploadMultipleImages(images);
+        List<Image> uploadedImages = imageCreateUseCase.uploadMultipleImages(images);
         List<ImageResponse> responses = uploadedImages.stream()
                 .map(ImageResponse::from)
                 .toList();
@@ -72,7 +77,7 @@ public class ImageController implements ImageControllerSwagger {
     public ResponseEntity<ImageResponse> getImage(@PathVariable Long imageId) {
         log.info("이미지 조회 요청 - 이미지 ID: {}", imageId);
 
-        Image image = imageUseCase.getSingleImage(imageId);
+        Image image = imageReadUseCase.getSingleImage(imageId);
         ImageResponse response = ImageResponse.from(image);
 
         return ResponseEntity.ok(response);
@@ -83,7 +88,7 @@ public class ImageController implements ImageControllerSwagger {
     public ResponseEntity<List<ImageResponse>> getImagesByPost(@PathVariable Long postId) {
         log.info("게시물별 이미지 목록 조회 요청 - 게시물 ID: {}", postId);
 
-        List<Image> images = imageUseCase.getSortedImagesByPost(postId);
+        List<Image> images = imageReadUseCase.getSortedImagesByPost(postId);
         List<ImageResponse> responses = images.stream()
                 .map(ImageResponse::from)
                 .toList();
@@ -96,7 +101,7 @@ public class ImageController implements ImageControllerSwagger {
     public ResponseEntity<Page<ImageResponse>> getImages(Pageable pageable) {
         log.info("이미지 목록 조회 요청 - 페이지: {}, 크기: {}", pageable.getPageNumber(), pageable.getPageSize());
 
-        Page<Image> images = imageUseCase.getPagedImages(pageable);
+        Page<Image> images = imageReadUseCase.getPagedImages(pageable);
         Page<ImageResponse> responses = images.map(ImageResponse::from);
 
         return ResponseEntity.ok(responses);
@@ -113,17 +118,7 @@ public class ImageController implements ImageControllerSwagger {
     ) {
         log.info("이미지 순서 재정렬 요청 - 사용자 ID: {}, 이미지 개수: {}", user.getId(), request.imageIds().size());
 
-        // 권한 확인 (모든 이미지가 해당 사용자의 것인지 확인)
-        for (Long imageId : request.imageIds()) {
-            Image image = imageUseCase.getSingleImage(imageId);
-            if (!image.getUserId().equals(user.getId())) {
-                log.warn("이미지 재정렬 권한 없음 - 사용자 ID: {}, 이미지 ID: {}, 이미지 소유자 ID: {}",
-                        user.getId(), imageId, image.getUserId());
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-        }
-
-        List<Image> reorderedImages = imageUseCase.reorderImages(request.imageIds());
+        List<Image> reorderedImages = imageUpdateUseCase.reorderImages(request.imageIds());
         List<ImageResponse> responses = reorderedImages.stream()
                 .map(ImageResponse::from)
                 .toList();
@@ -142,7 +137,7 @@ public class ImageController implements ImageControllerSwagger {
             @PathVariable Long imageId) {
         log.info("이미지 삭제 요청 - 사용자 ID: {}, 이미지 ID: {}", user.getId(), imageId);
 
-        imageUseCase.deleteImageWithAuth(imageId, user.getId());
+        imageDeleteUseCase.deleteImageWithAuth(imageId, user.getId());
         return ResponseEntity.noContent().build();
     }
 
@@ -155,37 +150,11 @@ public class ImageController implements ImageControllerSwagger {
     ) {
         log.info("다중 이미지 삭제 요청 - 사용자 ID: {}, 이미지 개수: {}", user.getId(), imageIds.size());
 
-        // 권한 확인
-        for (Long imageId : imageIds) {
-            Image image = imageUseCase.getSingleImage(imageId);
-            if (!image.getUserId().equals(user.getId())) {
-                log.warn("이미지 삭제 권한 없음 - 사용자 ID: {}, 이미지 ID: {}, 이미지 소유자 ID: {}",
-                        user.getId(), imageId, image.getUserId());
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-        }
-
-        imageUseCase.deleteMultipleImages(imageIds);
+        imageDeleteUseCase.deleteMultipleImages(imageIds);
         return ResponseEntity.noContent().build();
     }
 
 
-
-    @GetMapping("/posts/{postId}/stats")
-    public ResponseEntity<ImageStatsResponse> getImageStats(@PathVariable Long postId) {
-        log.info("게시물 이미지 통계 조회 요청 - 게시물 ID: {}", postId);
-
-        int imageCount = imageUseCase.getImageCountByPost(postId);
-        long totalSize = imageUseCase.getTotalImageSizeByPost(postId);
-
-        ImageStatsResponse response = ImageStatsResponse.builder()
-                .postId(postId)
-                .imageCount(imageCount)
-                .totalSize(totalSize)
-                .build();
-
-        return ResponseEntity.ok(response);
-    }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/my")
@@ -196,12 +165,13 @@ public class ImageController implements ImageControllerSwagger {
         log.info("내 이미지 목록 조회 요청 - 사용자 ID: {}", user.getId());
 
         // 사용자별 이미지 조회 로직 (UseCase에 추가 필요)
-        Page<Image> images = imageUseCase.getPagedImages(pageable);
+        Page<Image> images = imageReadUseCase.getPagedImages(pageable);
         // TODO: 실제로는 사용자별 필터링이 필요
         Page<ImageResponse> responses = images.map(ImageResponse::from);
 
         return ResponseEntity.ok(responses);
     }
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/my/posts/{postId}")
@@ -211,14 +181,9 @@ public class ImageController implements ImageControllerSwagger {
     ) {
         log.info("내 게시물 이미지 목록 조회 요청 - 사용자 ID: {}, 게시물 ID: {}", user.getId(), postId);
 
-        List<Image> images = imageUseCase.getSortedImagesByPost(postId);
+        List<Image> images = imageReadUseCase.getSortedImagesByPost(postId);
 
-        // 권한 확인 (해당 게시물의 이미지들이 현재 사용자의 것인지 확인)
-        List<Image> myImages = images.stream()
-                .filter(image -> image.getUserId().equals(user.getId()))
-                .toList();
-
-        List<ImageResponse> responses = myImages.stream()
+        List<ImageResponse> responses = images.stream()
                 .map(ImageResponse::from)
                 .toList();
 

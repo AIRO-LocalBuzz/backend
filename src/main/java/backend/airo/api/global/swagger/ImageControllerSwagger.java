@@ -1,6 +1,4 @@
 package backend.airo.api.global.swagger;
-
-
 import backend.airo.api.annotation.UserPrincipal;
 import backend.airo.api.image.dto.ImageCreateRequest;
 import backend.airo.api.image.dto.ImageReorderRequest;
@@ -20,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Tag(name = "Image", description = "이미지 관리 API")
-@SecurityRequirement(name = "bearerAuth")
+@SecurityRequirement(name = "BearerAuth")
 public interface ImageControllerSwagger {
 
     @Operation(summary = "단일 이미지 업로드", description = "새로운 이미지를 업로드합니다")

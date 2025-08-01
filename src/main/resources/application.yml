@@ -73,9 +73,12 @@ springdoc:
         - backend.airo.api.area_code
         - backend.airo.api.auth
         - backend.airo.api.image
+        - backend.airo.api.post
         - backend.airo.api.rural_ex
     - group: 'User API'
       packages-to-scan: backend.airo.api.user
+    - group: 'Post API'
+      packages-to-scan: backend.airo.api.post
     - group: 'Review API'
       packages-to-scan: backend.airo.api.review
     - group: 'Content API'

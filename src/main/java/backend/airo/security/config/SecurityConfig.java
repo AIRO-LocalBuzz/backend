@@ -59,7 +59,9 @@ public class SecurityConfig {
                                 "/v1/area/**",
                                 "/v1/clutr/fatvl/**",
                                 "/v1/rural/ex/**",
-                                "/v1/shop/**"
+                                "/v1/shop/**",
+                                "/v1/auth/exchange-token",
+                                "/v1/auth/social-login"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
