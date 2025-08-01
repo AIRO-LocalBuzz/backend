@@ -9,14 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import static backend.airo.domain.post.exception.PostErrorCode.POST_ACCESS_DENIED;
 
-
-/**
- * PostUseCase - 게시물 관련 비즈니스 로직 처리
- * Application Layer의 핵심 서비스
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,11 +24,8 @@ public class PostDeleteUseCase {
     public void deletePost(Long postId, Long requesterId) {
         log.info("게시물 삭제 시작: id={}, requesterId={}", postId, requesterId);
 
-
-        // 기존 게시물 조회
         Post existingPost = getPostQueryService.handle(postId);
 
-        // 권한 검증
         validatePostOwnership(existingPost, requesterId);
 
         deletePostCommandService.handle(postId);

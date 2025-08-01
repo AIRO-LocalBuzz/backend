@@ -2,7 +2,7 @@ package backend.airo.domain.post.command;
 
 import backend.airo.api.image.dto.ImageCreateRequest;
 import backend.airo.api.post.dto.PostCreateRequest;
-import backend.airo.application.image.usecase.ImageUseCase;
+import backend.airo.application.image.usecase.ImageCreateUseCase;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.PostStatus;
@@ -14,16 +14,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
-/**
- * 게시물 생성 커맨드
- */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class CreatePostCommandService {
 
     private final PostRepository postRepository;
-    private final ImageUseCase imageUseCase;
+    private final ImageCreateUseCase imageCreateUseCase;
 
     public Post handle(PostCreateRequest request) {
         log.info("게시물 생성 시작: title={}, userId={}, status={}",
@@ -59,7 +56,7 @@ public class CreatePostCommandService {
             images.add(image);
         }
 
-        List<Image> savedImages = imageUseCase.uploadMultipleImages(images);
+        List<Image> savedImages = imageCreateUseCase.uploadMultipleImages(images);
         log.debug("게시물 이미지 저장 완료: postId={}, 저장된 이미지 개수={}", postId, savedImages.size());
     }
 

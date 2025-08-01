@@ -1,6 +1,4 @@
 package backend.airo.api.global.swagger;
-
-
 import backend.airo.api.annotation.UserPrincipal;
 import backend.airo.api.image.dto.ImageCreateRequest;
 import backend.airo.api.image.dto.ImageReorderRequest;

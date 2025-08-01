@@ -10,8 +10,6 @@ import backend.airo.domain.post.Post;
 import backend.airo.api.post.dto.*;
 import backend.airo.domain.user.User;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +36,6 @@ public class PostController implements PostControllerSwagger {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping
-    @SecurityRequirement(name = "BearerAuth")
     public ResponseEntity<PostResponse> createPost(
             @Valid @RequestBody PostCreateRequest request,
             @UserPrincipal User user) {
