@@ -105,6 +105,7 @@ public class PostEntity extends BaseEntity {
         this.likeCount = 0;
         this.commentCount = 0;
         this.isFeatured = false;
+        this.publishedAt = LocalDateTime.now();
     }
 
 

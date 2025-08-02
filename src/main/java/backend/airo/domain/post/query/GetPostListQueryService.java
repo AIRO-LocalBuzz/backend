@@ -47,7 +47,7 @@ public class GetPostListQueryService {
      */
     private Pageable createPageableForPublishedAt(PostListRequest request) {
         // publishedAt 기준으로 항상 최신순 정렬
-        Sort sort = Sort.by(Sort.Direction.DESC, "publishedAt");
+        Sort sort = Sort.by(Sort.Direction.ASC, "publishedAt");
         return PageRequest.of(request.page(), request.size(), sort);
     }
 

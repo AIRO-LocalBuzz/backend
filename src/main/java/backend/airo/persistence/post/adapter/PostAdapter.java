@@ -89,7 +89,7 @@ public class PostAdapter implements PostRepository {
 
     @Override
     public Page<Post> findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(PostStatus status, Pageable pageable) {
-        Page<PostEntity> entities = postJpaRepository.findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(status, pageable);
+        Page<PostEntity> entities = postJpaRepository.findByStatus(status, pageable);
         return entities.map(PostEntity::toDomain);
     }
 

@@ -24,7 +24,7 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
 
     // ===== 기본 조회 메서드 =====
 
-    Page<PostEntity> findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(
+    Page<PostEntity> findByStatus(
             PostStatus status,
             Pageable pageable
     );

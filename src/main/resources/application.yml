@@ -119,7 +119,8 @@ social:
 jwt:
   secret: ${JWT_SECRET:mySecretKey1234567890123456789012345678901234567890}
   access-token:
-    expiration: 3600 # minutes
+    ## 임시 조치
+    expiration: 360000000000 # minutes
   refresh-token:
     expiration: 604800 #days
 
