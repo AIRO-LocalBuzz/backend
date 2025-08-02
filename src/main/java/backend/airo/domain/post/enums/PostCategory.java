@@ -1,7 +1,7 @@
 package backend.airo.domain.post.enums;
 
 public enum PostCategory {
-    RESTORANT("음식점"), // 음식점
+    RESTAURANT("음식점"), // 음식점
     CAFE("카페"), // 카페
     ACCOMMODATION("숙소"), // 숙소
     EVENT("행사"), // 행사

@@ -1,14 +1,10 @@
 package backend.airo.domain.thumbnail;
 
-import backend.airo.domain.location.Location;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.*;
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static backend.airo.domain.post.Post.createForTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ThumbnailRequestTest {
@@ -35,7 +31,7 @@ class ThumbnailRequestTest {
                 "Test Content",
                 List.of(PostEmotionTag.HAPPY, PostEmotionTag.EXCITED),
                 PostCategory.CAFE,
-                new Location(37.5665, 126.9780)
+                LocalDateTime.now()
         );
     }
 }

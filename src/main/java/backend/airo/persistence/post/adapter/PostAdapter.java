@@ -67,6 +67,16 @@ public class PostAdapter implements PostRepository {
 
 
     @Override
+    public Page<Post> findByStatus(PostStatus status, Pageable pageable) {
+        Page<PostEntity> entities = postJpaRepository.findByStatus(status, pageable);
+        log.info("Repository 조회 결과 - Entity 개수: {}", entities.getTotalElements());
+
+        return entities.map(PostEntity::toDomain);
+    }
+
+
+
+    @Override
     public Post findById(Long id) {
         log.debug("게시물 조회: ID={}", id);
         PostEntity postEntity = postJpaRepository.findById(id)
@@ -91,9 +101,27 @@ public class PostAdapter implements PostRepository {
     @Override
     public Page<Post> findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(PostStatus status, Pageable pageable) {
         Page<PostEntity> entities = postJpaRepository.findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(status, pageable);
-        return entities.map(PostEntity::toDomain);
-    }
+        log.info("Repository 조회 결과 - Entity 개수: {}", entities.getTotalElements());
 
+        Page<Post> posts = entities.map(entity -> {
+            try {
+                log.info("Entity ID: {}, title: {}", entity.getId(), entity.getTitle());
+                Post domain = PostEntity.toDomain(entity);
+                log.info("Domain 생성 완료: {}", domain != null ? "OK" : "NULL");
+                return domain;
+            } catch (Exception e) {
+                log.error("toDomain 변환 실패: entity.id={}, error={}", entity.getId(), e.getMessage());
+                return null;
+            }
+        });
+
+        log.info("도메인 변환 후 - Post 개수: {}", posts.getTotalElements());
+        log.info("변환된 Post들:");
+        posts.getContent().forEach(post ->
+                log.info("Post ID: {}, title: {}", post.getId(), post.getTitle()));
+
+        return posts;
+    }
 
 
 

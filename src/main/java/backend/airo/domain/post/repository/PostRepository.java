@@ -36,6 +36,11 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
             PostStatus status,
             Pageable pageable
     );
+
+    Page<Post> findByStatus(
+            PostStatus status,
+            Pageable pageable
+    );
     // ===== 비즈니스 조회 메서드 =====
 
 

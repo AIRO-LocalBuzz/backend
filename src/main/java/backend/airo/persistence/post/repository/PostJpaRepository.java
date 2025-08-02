@@ -29,6 +29,7 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
             Pageable pageable
     );
 
+
     /**
      * 사용자별 게시물 조회
      */

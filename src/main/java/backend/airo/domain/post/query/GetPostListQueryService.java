@@ -7,6 +7,7 @@ import backend.airo.domain.post.enums.PostStatus;
 import backend.airo.domain.post.repository.PostRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 
-
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class GetPostListQueryService {
@@ -33,21 +34,29 @@ public class GetPostListQueryService {
         Pageable pageable = createPageableForPublishedAt(request);
 
         // 발행된 게시물만 조회 (publishedAt이 null이 아닌 것들)
-        Page<Post> postPage = postRepository.findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(
+        Page<Post> postPage = postRepository.findByStatus(
                 PostStatus.PUBLISHED,
                 pageable
         );
 
+        log.info("조회 결과 - 총 개수: {}, 페이지 개수: {}, 현재 페이지 사이즈: {}",
+                postPage.getTotalElements(), postPage.getTotalPages(), postPage.getNumberOfElements());
+
+        if (!postPage.getContent().isEmpty()) {
+            Post firstPost = postPage.getContent().get(0);
+            log.debug("첫 번째 Post - ID: {}, title: {}, publishedAt: {}, status: {}",
+                    firstPost.getId(), firstPost.getTitle(), firstPost.getPublishedAt(), firstPost.getStatus());
+        }
+
         return postPage;
     }
-
 
     /**
      * publishedAt 기준으로 Pageable 생성 (항상 최신순)
      */
     private Pageable createPageableForPublishedAt(PostListRequest request) {
         // publishedAt 기준으로 항상 최신순 정렬
-        Sort sort = Sort.by(Sort.Direction.DESC, "publishedAt");
+        Sort sort = Sort.by(Sort.Direction.ASC, "publishedAt");
         return PageRequest.of(request.page(), request.size(), sort);
     }
 
