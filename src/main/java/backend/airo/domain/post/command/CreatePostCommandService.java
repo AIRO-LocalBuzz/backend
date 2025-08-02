@@ -3,13 +3,16 @@ package backend.airo.domain.post.command;
 import backend.airo.api.image.dto.ImageCreateRequest;
 import backend.airo.api.post.dto.PostCreateRequest;
 import backend.airo.application.image.usecase.ImageCreateUseCase;
+import backend.airo.application.thumbnail.ThumbnailGenerationService;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.PostStatus;
 import backend.airo.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,13 +24,16 @@ public class CreatePostCommandService {
 
     private final PostRepository postRepository;
     private final ImageCreateUseCase imageCreateUseCase;
+    private final ApplicationEventPublisher eventPublisher;
+    private final ThumbnailGenerationService thumbnailGenerationService;
 
-    public Post handle(PostCreateRequest request) {
+    @Transactional
+    public Post handle(PostCreateRequest request, Long userId) {
         log.info("게시물 생성 시작: title={}, userId={}, status={}",
-                request.title(), request.userId(), request.status());
+                request.title(), request.status());
 
         // 도메인 객체 생성
-        Post post = createPostFromCommand(request);
+        Post post = createPostFromCommand(request, userId);
 
         log.debug("생성된 Post 도메인 객체: {}", post);
 
@@ -35,15 +41,17 @@ public class CreatePostCommandService {
         Post savedPost = postRepository.save(post);
         log.info("게시물 저장 완료: id={}, title={}", savedPost.getId(), savedPost.getTitle());
 
-        processPostImages(savedPost.getId(), request);
+        processPostImages(userId, savedPost.getId(), request);
+
+        // AI썸네일 생성 비동기 호출
+//        thumbnailGenerationService.generateThumbnailAsync(savedPost);
 
         return savedPost;
     }
 
 
-    private void processPostImages(Long postId, PostCreateRequest request) {
+    private void processPostImages(Long userId,Long postId, PostCreateRequest request) {
         List<ImageCreateRequest> imageRequests = request.images();
-        Long userId = request.userId();
 
         log.debug("이미지 요청 리스트 개수: {}, userId: {}", imageRequests.size(), userId);
 
@@ -62,13 +70,13 @@ public class CreatePostCommandService {
 
 
 
-    private Post createPostFromCommand(PostCreateRequest request) {
+    private Post createPostFromCommand(PostCreateRequest request, Long userId) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime publishedAt = (request.status() == PostStatus.PUBLISHED) ? now : null;
 
         Post post = new Post(
                 null, // ID는 저장 시 생성
-                request.userId(),
+                userId,
                 request.title(),
                 request.content(),
                 null, // summary는 나중에 AI로 생성
@@ -78,7 +86,7 @@ public class CreatePostCommandService {
                 request.emotionTags(),
                 request.category(),
                 request.travelDate(),
-                request.location(),
+                null,
                 request.adress(),
                 0, // 초기 조회수
                 0, // 초기 좋아요 수

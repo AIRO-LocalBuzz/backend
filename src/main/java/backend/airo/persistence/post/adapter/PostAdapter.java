@@ -1,16 +1,11 @@
 package backend.airo.persistence.post.adapter;
 
-import backend.airo.domain.image.Image;
-import backend.airo.domain.image.exception.ImageNotFoundException;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.repository.PostRepository;
-import backend.airo.domain.post.dto.PostSearchCriteria;
 import backend.airo.domain.post.enums.PostStatus;
 import backend.airo.domain.post.exception.PostNotFoundException;
-import backend.airo.persistence.image.entity.ImageEntity;
 import backend.airo.persistence.post.entity.PostEntity;
 import backend.airo.persistence.post.repository.PostJpaRepository;
-import backend.airo.persistence.user.entity.UserEntity;
 import backend.airo.persistence.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import static backend.airo.domain.post.exception.PostErrorCode.POST_NOT_FOUND;
 
@@ -94,13 +88,14 @@ public class PostAdapter implements PostRepository {
         postJpaRepository.deleteById(id);
     }
 
-
     @Override
-    public Page<Post> findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(
-        PostStatus status,
-        Pageable pageable) {
-    return postJpaRepository.findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(status, pageable);
+    public Page<Post> findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(PostStatus status, Pageable pageable) {
+        Page<PostEntity> entities = postJpaRepository.findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(status, pageable);
+        return entities.map(PostEntity::toDomain);
     }
+
+
+
 
     @Override
     @Transactional

@@ -5,6 +5,7 @@ import backend.airo.domain.location.Location;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class Post {
     private PostForWhatTag forWhatTag;
     private List<PostEmotionTag> emotionTags;
     private PostCategory category;
-    private LocalDateTime travelDate;
+    private LocalDate travelDate;
     private Location location;
     private String adress;
     private Integer viewCount = 0;
@@ -32,7 +33,7 @@ public class Post {
 
     public Post(Long id, Long userId, String title, String content, String summary,
                 PostStatus status, PostWithWhoTag withWhoTag, PostForWhatTag forWhatTag,
-                List<PostEmotionTag> emotionTags, PostCategory category, LocalDateTime travelDate, Location location,
+                List<PostEmotionTag> emotionTags, PostCategory category, LocalDate travelDate, Location location,
                 String adress, Integer viewCount, Integer likeCount, Integer commentCount,
                 Boolean isFeatured, LocalDateTime publishedAt) {
         this.id = id;
@@ -76,7 +77,7 @@ public class Post {
                 PostForWhatTag.HEALING,
                 emotionTags,
                 category,
-                LocalDateTime.now(),
+                LocalDate.now(),
                 location,
                 "Test Address",
                 0, // viewCount

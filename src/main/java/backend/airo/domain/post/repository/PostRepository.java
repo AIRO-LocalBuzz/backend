@@ -38,6 +38,7 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
     );
     // ===== 비즈니스 조회 메서드 =====
 
+
     /**
      * 사용자별 게시물 조회 (페이징)
      * @param userId 사용자 ID

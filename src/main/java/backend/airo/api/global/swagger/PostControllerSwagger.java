@@ -59,9 +59,8 @@ public interface PostControllerSwagger {
     @GetMapping("/{id}")
     ResponseEntity<PostDetailResponse> getPost(
             @Parameter(description = "게시물 ID", required = true)
-            @PathVariable Long userId,
-            @PathVariable Long postId,
-            HttpServletRequest httpRequest);
+            @UserPrincipal User user,
+            @PathVariable Long postId);
 
 
 
@@ -74,7 +73,7 @@ public interface PostControllerSwagger {
     @GetMapping
     ResponseEntity<PostListResponse> getPostList(
             @Valid @ModelAttribute PostListRequest request,
-            HttpServletRequest httpRequest);
+            @UserPrincipal User user);
 
 
 

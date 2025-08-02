@@ -7,7 +7,8 @@ public enum PostCategory {
     EVENT("행사"), // 행사
     EXPERIENCE("체험"), // 체험
     CHALLENGE("챌린지"), // 챌린지
-    LEISURE("여가"); // 여가
+    LEISURE("여가"), // 여가
+    NATURE("자연");  //자연
 
     private final String description;
 
