@@ -19,14 +19,14 @@ public class SpringAIThumbnailProvider implements LLMProvider {
     @Qualifier("openAiChatClient")
     private final ChatClient openAiClient;
 
-    @Qualifier("ollamaChatClient")
-    private final ChatClient ollamaClient;
+//    @Qualifier("ollamaChatClient")
+//    private final ChatClient ollamaClient;
 
     private final ObjectMapper objectMapper;
 
     @Override
     public ThumbnailResult generateThumbnail(ThumbnailRequest request) {
-        List<ChatClient> clients = List.of(openAiClient, ollamaClient);
+        List<ChatClient> clients = List.of(openAiClient);
 
         for (ChatClient client : clients) {
             try {

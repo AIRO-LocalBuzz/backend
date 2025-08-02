@@ -21,9 +21,8 @@ public class AIConfig {
     @Bean("thumbnailLLMProvider")
     public LLMProvider multiLLMProvider(
             @Qualifier("openAiChatClient") ChatClient openAiClient,
-            @Qualifier("ollamaChatClient") ChatClient ollamaClient,
             ObjectMapper objectMapper) {
 
-        return new SpringAIThumbnailProvider(openAiClient, ollamaClient, objectMapper);
+        return new SpringAIThumbnailProvider(openAiClient, objectMapper);
     }
 }
