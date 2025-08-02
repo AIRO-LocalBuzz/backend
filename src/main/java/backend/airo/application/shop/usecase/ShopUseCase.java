@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 
 @Component
@@ -16,8 +17,10 @@ public class ShopUseCase {
     private final GetShopListQuery getShopListQuery;
     private final GetShopQuery getShopQuery;
 
-    public Page<Shop> getShopList(String megaName, String cityName, Pageable pageable) {
-        return getShopListQuery.handle(megaName, cityName, pageable);
+    public Page<Shop> getShopList(String megaName, String cityName, Pageable pageable, String largeCategoryCode, String middleCategoryCode, String smallCategoryCode) {
+        String middleCode = StringUtils.hasText(middleCategoryCode) ? middleCategoryCode : null;
+        String smallCode = StringUtils.hasText(smallCategoryCode) ? smallCategoryCode : null;
+        return getShopListQuery.handle(megaName, cityName, largeCategoryCode, middleCode, smallCode, pageable);
     }
 
     public Shop getShopInfo(Long shopId) {

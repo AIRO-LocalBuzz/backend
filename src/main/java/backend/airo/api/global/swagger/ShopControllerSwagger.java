@@ -30,6 +30,9 @@ public interface ShopControllerSwagger {
     Response<PageResponse<ShopListResponse>>  getShoplList(
             @RequestParam() String megaCode,
             @RequestParam() String cityCode,
+            @RequestParam(defaultValue = "") String largeCategoryCode,
+            @RequestParam(defaultValue = "") String middleCategoryCode,
+            @RequestParam(defaultValue = "") String smallCategoryCode,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     );

@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ShopRepository extends AggregateSupport<Shop, Long> {
 
-    Page<Shop> findAll(String megaName, String cityName, Pageable pageable);
+    Page<Shop> findAll(String megaName, String cityName, String largeCategoryCode, String middleCategoryCode, String smallCategoryCode, Pageable pageable);
 
     void deleteAll();
 }
