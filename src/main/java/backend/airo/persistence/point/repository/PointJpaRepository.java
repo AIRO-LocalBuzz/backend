@@ -10,10 +10,10 @@ public interface PointJpaRepository extends JpaRepository<PointEntity, Long> {
 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query(value = """
-            INSERT INTO user_point (user_id, point_score)
-            VALUES (:userId, :delta) AS new
-            ON DUPLICATE KEY UPDATE point_score = user_point.point_score + new.point_score
-            """, nativeQuery = true)
+        INSERT INTO user_point (user_id, point_score)
+        VALUES (:userId, :delta)
+        ON DUPLICATE KEY UPDATE point_score = point_score + :delta
+        """, nativeQuery = true)
     void upsertIncrement(@Param("userId") Long userId, @Param("delta") long delta);
 
     PointEntity findByUserId(Long userId);
