@@ -43,12 +43,12 @@ public class PostEntity extends BaseEntity {
     private PostWithWhoTag withWhoTag = PostWithWhoTag.ALLONE;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = true)
     private PostForWhatTag forWhatTag = PostForWhatTag.HEALING;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PostCategory category = PostCategory.RESTORANT;
+    private PostCategory category = PostCategory.RESTAURANT;
 
 
     @ElementCollection
@@ -96,7 +96,7 @@ public class PostEntity extends BaseEntity {
         this.withWhoTag = withWhoTag != null ? withWhoTag : PostWithWhoTag.ALLONE;
         this.forWhatTag = forWhatTag != null ? forWhatTag : PostForWhatTag.HEALING;
         this.emotionTags = emotionTags;
-        this.category = category != null ? category : PostCategory.RESTORANT;
+        this.category = category != null ? category : PostCategory.RESTAURANT;
         this.travelDate = travelDate;
         this.location = location;
         this.adress = adress;
@@ -105,7 +105,7 @@ public class PostEntity extends BaseEntity {
         this.likeCount = 0;
         this.commentCount = 0;
         this.isFeatured = false;
-        this.publishedAt = LocalDateTime.now();
+        this.publishedAt = publishedAt != null ? publishedAt : LocalDateTime.now();
     }
 
 

@@ -41,7 +41,6 @@ public class PostReadUseCase {
 
         Post post = getPostQueryService.handle(postId);
 
-//        validatePostAccess(post, requesterId);
 
         if(!isPostOwner(post, requesterId)) {
             post.incrementViewCount();
@@ -73,16 +72,6 @@ public class PostReadUseCase {
         return new AuthorInfo(author.getId(), author.getName(), author.getProfileImageUrl());
     }
 
-
-    private void validatePostAccess(Post post, Long requesterId) {
-        if ( isPostOwner(post, requesterId)) {
-            throw new PostAccessDeniedException(post.getId(), requesterId, POST_ACCESS_DENIED);
-        }
-
-        if (post.getStatus() != PostStatus.PUBLISHED || !isPostOwner(post, requesterId)) {
-            throw new PostAccessDeniedException(post.getId(), requesterId, POST_ACCESS_DENIED);
-        }
-    }
 
 
     private boolean isPostOwner(Post post, Long userId) {

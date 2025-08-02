@@ -32,6 +32,7 @@ import static backend.airo.domain.post.exception.PostErrorCode.POST_NOT_FOUND;
 public class PostAdapter implements PostRepository {
 
     private final PostJpaRepository postJpaRepository;
+    private final UserJpaRepository userJpaRepository;
 
     // ===== CRUD 메서드 =====
 
@@ -87,11 +88,6 @@ public class PostAdapter implements PostRepository {
         postJpaRepository.deleteById(id);
     }
 
-    @Override
-    public Page<Post> findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(PostStatus status, Pageable pageable) {
-        Page<PostEntity> entities = postJpaRepository.findByStatus(status, pageable);
-        return entities.map(PostEntity::toDomain);
-    }
 
     @Override
     public int incrementLikeCount(Long postId) {
