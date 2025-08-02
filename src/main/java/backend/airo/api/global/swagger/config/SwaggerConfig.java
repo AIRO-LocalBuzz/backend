@@ -84,10 +84,7 @@ public class SwaggerConfig {
                         .url("http://localhost:9001/api")
                         .description("로컬 개발 서버"),
                 new Server()
-                        .url("http://221.139.119.140:9001/api")
-                        .description("개발 서버"),
-                new Server()
-                        .url("https://localbuzz/api")
+                        .url("https://airo-buzz.shop/api")
                         .description("운영 서버")
         );
     }
