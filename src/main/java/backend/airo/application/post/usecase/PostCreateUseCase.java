@@ -22,13 +22,13 @@ public class PostCreateUseCase {
     private final CreatePostCommandService createPostCommandService;
 
     @Transactional
-    public Post createPost(PostCreateRequest request) {
+    public Post createPost(PostCreateRequest request, Long userId) {
 
         if (request.status() == PostStatus.PUBLISHED && !request.canPublish()) {
             throw new PostPublishException(null, "발행에 필요한 필수 정보가 누락되었습니다 (카테고리, 위치)", POST_ALREADY_PUBLISHED);
         }
 
-        return createPostCommandService.handle(request);
+        return createPostCommandService.handle(request, userId);
     }
 
 

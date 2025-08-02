@@ -29,21 +29,6 @@ public record PostListRequest(
         @Pattern(regexp = "^(ASC|DESC)$", message = "정렬 방향은 ASC 또는 DESC여야 합니다")
         String sortDirection,
 
-        @Schema(description = "게시물 상태 목록", example = "[\"PUBLISHED\"]")
-        List<PostStatus> statuses,
-
-        @Schema(description = "작성자 ID", example = "1")
-        @Positive(message = "작성자 ID는 양수여야 합니다")
-        Long userId,
-
-        @Schema(description = "카테고리 ID", example = "1")
-        @Positive(message = "카테고리 ID는 양수여야 합니다")
-        Long categoryId,
-
-        @Schema(description = "위치 ID", example = "1")
-        @Positive(message = "위치 ID는 양수여야 합니다")
-        Long locationId,
-
         @Schema(description = "태그 목록", example = "[\"부산\", \"여행\"]")
         @Size(max = 10, message = "태그는 최대 10개까지 검색 가능합니다")
         List<@NotBlank @Size(max = 50) String> tags,

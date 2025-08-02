@@ -2,12 +2,10 @@ package backend.airo.api.post;
 
 import backend.airo.api.annotation.UserPrincipal;
 import backend.airo.api.global.swagger.PostControllerSwagger;
-import backend.airo.application.comment.usecase.CommentUseCase;
 import backend.airo.application.post.usecase.PostCreateUseCase;
 import backend.airo.application.post.usecase.PostDeleteUseCase;
 import backend.airo.application.post.usecase.PostReadUseCase;
 import backend.airo.application.post.usecase.PostUpdateUseCase;
-import backend.airo.domain.comment.Comment;
 import backend.airo.domain.post.Post;
 import backend.airo.api.post.dto.*;
 import backend.airo.domain.user.User;
@@ -22,8 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 
 @Slf4j
 @RestController
@@ -36,7 +32,6 @@ public class PostController implements PostControllerSwagger {
     private final PostUpdateUseCase postUpdateUseCase;
     private final PostDeleteUseCase postDeleteUseCase;
 
-
     // ===== 게시물 생성 =====
 
     @PostMapping
@@ -46,12 +41,12 @@ public class PostController implements PostControllerSwagger {
             @UserPrincipal User user) {
         log.info("게시물 생성 요청 원본: {}", request);
         log.info("세부 정보 - title: {}, userId: {}, categoryId: {}, locationId: {}",
-                request.title(), request.userId(), request.category(), request.location());
+                request.title(),user.getId(), request.category());
 
-        log.info("게시물 생성 요청: title={}, userId={}", request.title(), request.userId());
+        log.info("게시물 생성 요청: title={}, userId={}", request.title(), user.getId());
 
 
-        Post createdPost = postCreateUseCase.createPost(request);
+        Post createdPost = postCreateUseCase.createPost(request, user.getId());
         PostResponse response = PostResponse.fromDomain(createdPost);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -65,6 +60,8 @@ public class PostController implements PostControllerSwagger {
             @Parameter(description = "게시물 ID", required = true)
             @UserPrincipal User user,
             @PathVariable Long postId) {
+
+
         PostDetailResponse response = postReadUseCase.getPostById(postId, user.getId());
 
         return ResponseEntity.ok(response);
@@ -84,15 +81,16 @@ public class PostController implements PostControllerSwagger {
 
     // ===== 게시물 수정 =====
 
-    @PutMapping("/{id}")
+    @PutMapping("/{postId}")
     public ResponseEntity<PostResponse> updatePost(
             @Parameter(description = "게시물 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable Long postId,
             @Valid @RequestBody PostUpdateRequest request,
             @UserPrincipal User user) {
-        Post updatedPost = postUpdateUseCase.updatePost(id, user.getId(), request);
+        Post updatedPost = postUpdateUseCase.updatePost(postId, user.getId(), request);
 
         PostResponse response = PostResponse.fromDomain(updatedPost);
+
         return ResponseEntity.ok(response);
     }
 
@@ -100,7 +98,7 @@ public class PostController implements PostControllerSwagger {
 
     // ===== 게시물 삭제 =====
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(
             @Parameter(description = "게시물 ID", required = true)
             @PathVariable Long id,

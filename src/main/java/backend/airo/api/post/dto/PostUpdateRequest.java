@@ -5,6 +5,7 @@ import backend.airo.domain.location.Location;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public record PostUpdateRequest(
 
         @Schema(description = "여행 날짜", example = "2024-08-15T10:30:00")
         @PastOrPresent(message = "여행 날짜는 현재 또는 과거여야 합니다")
-        LocalDateTime travelDate,
+        LocalDate travelDate,
 
         @Schema(description = "위치 정보")
         Location location,

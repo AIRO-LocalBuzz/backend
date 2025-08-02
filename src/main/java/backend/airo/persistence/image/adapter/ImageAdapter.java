@@ -75,6 +75,12 @@ public class ImageAdapter implements ImageRepository {
                 .toList();
     }
 
+
+    @Override
+    public List<String> findImageUrlsByPostId(Long postId) {
+        return imageJpaRepository.findImageUrlsByPostId(postId);
+    }
+
     @Override
     public List<Image> findByMimeType(String mimeType) {
         List<ImageEntity> entities = imageJpaRepository.findByMimeType(mimeType);

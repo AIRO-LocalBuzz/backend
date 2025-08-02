@@ -5,6 +5,7 @@ import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.PostStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public record PostResponse(
         PostStatus status,
 
         @Schema(description = "여행 날짜", example = "2024-08-15T10:30:00")
-        LocalDateTime travelDate,
+        LocalDate travelDate,
 
         @Schema(description = "조회수", example = "150")
         Integer viewCount,
