@@ -22,20 +22,23 @@ public class PointAdapter implements PointRepository {
 
     @Override
     public Point save(Point aggregate) {
-        PointEntity pointEntity = pointJpaRepository.findById(aggregate.getId())
-                .map(getPointEntity -> {
-                    getPointEntity.updatePoint(aggregate);
-                    return getPointEntity;
-                }).orElseGet(() -> PointEntity.toEntity(aggregate));
-
-        PointEntity savePointEntity = pointJpaRepository.save(pointEntity);
-        return PointEntity.toDomain(savePointEntity);
+        return null;
     }
 
     @Override
     public Optional<Point> findByUserId(Long userId) {
         return pointJpaRepository.findById(userId)
                 .map(PointEntity::toDomain);
+    }
+
+    @Override
+    public Long findPointByUserId(Long userId) {
+        return pointJpaRepository.findByUserId(userId).getPointScore();
+    }
+
+    @Override
+    public void upsertIncrement(Long userId, long point) {
+        pointJpaRepository.upsertIncrement(userId, point);
     }
 
     @Override

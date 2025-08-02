@@ -14,9 +14,7 @@ import lombok.NoArgsConstructor;
 public class PointEntity extends ImmutableEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id = 0L;
-
+    @Column(name = "user_id")
     private Long userId;
 
     private Long pointScore;
@@ -26,9 +24,6 @@ public class PointEntity extends ImmutableEntity {
         this.pointScore = pointScore;
     }
 
-    public void updatePoint(Point point) {
-        this.pointScore = point.getPointScore();
-    }
 
     public static PointEntity toEntity(Point point) {
         return new PointEntity(
@@ -39,7 +34,6 @@ public class PointEntity extends ImmutableEntity {
 
     public static Point toDomain(PointEntity pointEntity) {
         return new Point(
-                pointEntity.id,
                 pointEntity.userId,
                 pointEntity.pointScore
         );

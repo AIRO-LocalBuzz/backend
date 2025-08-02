@@ -1,6 +1,9 @@
 package backend.airo.application.post.usecase;
 
 import backend.airo.api.post.dto.PostCreateRequest;
+import backend.airo.domain.point.command.UpsertPointCommand;
+import backend.airo.domain.point_history.command.CreatePointHistoryCommand;
+import backend.airo.domain.point_history.vo.PointType;
 import backend.airo.domain.post.command.CreatePostCommandService;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.PostStatus;
@@ -20,6 +23,9 @@ import static backend.airo.domain.post.exception.PostErrorCode.POST_ALREADY_PUBL
 public class PostCreateUseCase {
 
     private final CreatePostCommandService createPostCommandService;
+    private final UpsertPointCommand upsertPointCommand;
+    private final CreatePointHistoryCommand createPointHistoryCommand;
+
 
     @Transactional
     public Post createPost(PostCreateRequest request, Long userId) {
@@ -30,6 +36,10 @@ public class PostCreateUseCase {
 
         Post savedPost = createPostCommandService.handle(request, userId);
 
+        boolean handle = createPointHistoryCommand.handle(userId, 100L, savedPost.getId(), PointType.REPORT);
+        if (handle) {
+            upsertPointCommand.handle(userId, 100L);
+        }
         return savedPost;
     }
 

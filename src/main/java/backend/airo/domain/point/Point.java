@@ -7,17 +7,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Point {
 
-    private final Long id;
     private final Long userId;
     private Long pointScore = 0L;
 
-    public Point(Long id, Long userId, Long pointScore) {
-        this.id = id;
+    public Point(Long userId, Long pointScore) {
         this.userId = userId;
         this.pointScore = pointScore;
     }
 
-    public void updatePoint(Long point) {
-        this.pointScore += point;
-    }
 }
