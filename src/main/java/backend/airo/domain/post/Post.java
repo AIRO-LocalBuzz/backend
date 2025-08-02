@@ -5,6 +5,7 @@ import backend.airo.domain.location.Location;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Post {
     private final Long id;
-    private final Long userId;
+    private Long userId;
     private String title;
     private String content;
     private String summary;
@@ -21,7 +22,7 @@ public class Post {
     private PostForWhatTag forWhatTag;
     private List<PostEmotionTag> emotionTags;
     private PostCategory category;
-    private LocalDateTime travelDate;
+    private LocalDate travelDate;
     private Location location;
     private String adress;
     private Integer viewCount = 0;
@@ -32,7 +33,7 @@ public class Post {
 
     public Post(Long id, Long userId, String title, String content, String summary,
                 PostStatus status, PostWithWhoTag withWhoTag, PostForWhatTag forWhatTag,
-                List<PostEmotionTag> emotionTags, PostCategory category, LocalDateTime travelDate, Location location,
+                List<PostEmotionTag> emotionTags, PostCategory category, LocalDate travelDate, Location location,
                 String adress, Integer viewCount, Integer likeCount, Integer commentCount,
                 Boolean isFeatured, LocalDateTime publishedAt) {
         this.id = id;
@@ -53,6 +54,38 @@ public class Post {
         this.commentCount = commentCount;
         this.isFeatured = isFeatured;
         this.publishedAt = publishedAt;
+    }
+
+
+    public static Post createForTest(
+            Long id,
+            Long userId,
+            String title,
+            String content,
+            List<PostEmotionTag> emotionTags,
+            PostCategory category,
+            Location location
+    ) {
+        return new Post(
+                id,
+                userId,
+                title,
+                content,
+                null, // summary
+                PostStatus.PUBLISHED,
+                PostWithWhoTag.ALLONE,
+                PostForWhatTag.HEALING,
+                emotionTags,
+                category,
+                LocalDate.now(),
+                location,
+                "Test Address",
+                0, // viewCount
+                0, // likeCount
+                0, // commentCount
+                false, // isFeatured
+                LocalDateTime.now() // publishedAt
+        );
     }
 
     public void incrementViewCount() {

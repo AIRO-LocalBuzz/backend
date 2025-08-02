@@ -38,7 +38,7 @@ public class PostReadUseCase {
 
         Post post = getPostQueryService.handle(postId);
 
-        validatePostAccess(post, requesterId);
+//        validatePostAccess(post, requesterId);
 
         if(!isPostOwner(post, requesterId)) {
             post.incrementViewCount();
@@ -56,7 +56,7 @@ public class PostReadUseCase {
 
     public Page<Post> getRecentPostList(PostListRequest request) {
         log.debug("최근 게시물 목록 조회: page={}, size={}, userId={}",
-                request.page(), request.size(), request.userId());
+                request.page(), request.size());
 
         return getPostListQueryService.getRecentPosts(request);
 

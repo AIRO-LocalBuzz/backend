@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -56,7 +58,7 @@ public class PostEntity extends BaseEntity {
     private List<PostEmotionTag> emotionTags;
 
     @Column(name = "travel_date")
-    private LocalDateTime travelDate;
+    private LocalDate travelDate;
 
     @Column(name = "view_count", nullable = false)
     private Integer viewCount = 0;
@@ -84,7 +86,7 @@ public class PostEntity extends BaseEntity {
 
     public PostEntity(Long userId, String title, String content, String summary,
                       PostStatus status, PostWithWhoTag withWhoTag, PostForWhatTag forWhatTag,
-                      List<PostEmotionTag> emotionTags, PostCategory category, LocalDateTime travelDate, Location location, String adress, Boolean isFeatured, LocalDateTime publishedAt) {
+                      List<PostEmotionTag> emotionTags, PostCategory category, LocalDate travelDate, Location location, String adress, Boolean isFeatured, LocalDateTime publishedAt) {
         super();
         this.userId = userId;
         this.title = title;

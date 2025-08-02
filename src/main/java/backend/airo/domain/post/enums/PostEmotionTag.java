@@ -2,6 +2,7 @@ package backend.airo.domain.post.enums;
 
 public enum PostEmotionTag {
     // 기쁨과 즐거움
+    HAPPY("행복"),
     EXCITED("설렘"),
     THRILLED("신남"),
     FASCINATING("흥미진진"),

@@ -41,12 +41,12 @@ public class PostController implements PostControllerSwagger {
             @UserPrincipal User user) {
         log.info("게시물 생성 요청 원본: {}", request);
         log.info("세부 정보 - title: {}, userId: {}, categoryId: {}, locationId: {}",
-                request.title(), request.userId(), request.category(), request.location());
+                request.title(),user.getId(), request.category());
 
-        log.info("게시물 생성 요청: title={}, userId={}", request.title(), request.userId());
+        log.info("게시물 생성 요청: title={}, userId={}", request.title(), user.getId());
 
 
-        Post createdPost = postCreateUseCase.createPost(request);
+        Post createdPost = postCreateUseCase.createPost(request, user.getId());
         PostResponse response = PostResponse.fromDomain(createdPost);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -54,26 +54,25 @@ public class PostController implements PostControllerSwagger {
 
     // ===== 게시물 조회 =====
 
-
-    @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{postId}")
     public ResponseEntity<PostDetailResponse> getPost(
             @Parameter(description = "게시물 ID", required = true)
-            @PathVariable Long userId,
-            @PathVariable Long postId,
-            HttpServletRequest httpRequest) {
+            @UserPrincipal User user,
+            @PathVariable Long postId) {
 
-        Long requesterId = getCurrentUserId(httpRequest);
 
-        PostDetailResponse response = postReadUseCase.getPostById(postId, userId);
+        PostDetailResponse response = postReadUseCase.getPostById(postId, user.getId());
 
         return ResponseEntity.ok(response);
     }
 
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<PostListResponse> getPostList(
             @Valid @ModelAttribute PostListRequest request,
-            HttpServletRequest httpRequest) {
+            @UserPrincipal User user) {
 
         Page<Post> postPage = postReadUseCase.getRecentPostList(request);
         PostListResponse response = PostListResponse.fromDomain(postPage);
@@ -84,16 +83,16 @@ public class PostController implements PostControllerSwagger {
 
     // ===== 게시물 수정 =====
 
-    @PutMapping("/{id}")
+    @PutMapping("/{postId}")
     public ResponseEntity<PostResponse> updatePost(
             @Parameter(description = "게시물 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable Long postId,
             @Valid @RequestBody PostUpdateRequest request,
             HttpServletRequest httpRequest) {
 
         Long requesterId = getCurrentUserId(httpRequest);
 
-        Post updatedPost = postUpdateUseCase.updatePost(id, requesterId, request);
+        Post updatedPost = postUpdateUseCase.updatePost(postId, requesterId, request);
         PostResponse response = PostResponse.fromDomain(updatedPost);
 
         return ResponseEntity.ok(response);
@@ -103,15 +102,15 @@ public class PostController implements PostControllerSwagger {
 
     // ===== 게시물 삭제 =====
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(
             @Parameter(description = "게시물 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable Long postId,
             HttpServletRequest httpRequest) {
 
         Long requesterId = getCurrentUserId(httpRequest);
 
-        postDeleteUseCase.deletePost(id, requesterId);
+        postDeleteUseCase.deletePost(postId, requesterId);
 
         return ResponseEntity.noContent().build();
     }

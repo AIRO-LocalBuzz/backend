@@ -1,5 +1,5 @@
 // 테스트 코드
-package backend.airo.domain.post.events;
+package backend.airo.domain.post.event;
 
 import backend.airo.domain.post.enums.PostStatus;
 import org.junit.jupiter.api.DisplayName;

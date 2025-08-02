@@ -1,11 +1,10 @@
-package backend.airo.domain.post.events;
+package backend.airo.domain.post.event;
 
 import backend.airo.domain.post.enums.PostStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class PostStatusChangedEventTest {
 
