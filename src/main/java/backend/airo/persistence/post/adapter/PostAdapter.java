@@ -32,7 +32,7 @@ import static backend.airo.domain.post.exception.PostErrorCode.POST_NOT_FOUND;
 public class PostAdapter implements PostRepository {
 
     private final PostJpaRepository postJpaRepository;
-    private final UserJpaRepository userJpaRepository;
+
 
     // ===== CRUD 메서드 =====
 
@@ -64,6 +64,15 @@ public class PostAdapter implements PostRepository {
 
         return PostEntity.toDomain(savedEntity);
     }
+
+
+    @Override
+    public Page<Post> findByStatus(PostStatus status, Pageable pageable) {
+        Page<PostEntity> entities = postJpaRepository.findByStatus(status, pageable);
+        log.info("Repository 조회 결과 - Entity 개수: {}", entities.getTotalElements());
+        return entities.map(PostEntity::toDomain);
+    }
+
 
 
     @Override

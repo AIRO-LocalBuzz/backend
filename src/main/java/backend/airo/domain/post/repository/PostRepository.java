@@ -32,7 +32,7 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
     void deleteById(Long id);
 
 
-    Page<Post> findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(
+    Page<Post> findByStatus(
             PostStatus status,
             Pageable pageable
     );
