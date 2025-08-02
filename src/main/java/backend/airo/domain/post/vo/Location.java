@@ -1,4 +1,4 @@
-package backend.airo.domain.location;
+package backend.airo.domain.post.vo;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;

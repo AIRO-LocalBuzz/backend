@@ -2,7 +2,6 @@ package backend.airo.api.post.dto;
 
 import backend.airo.api.image.dto.ImageCreateRequest;
 import backend.airo.domain.post.enums.*;
-import backend.airo.domain.location.Location;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 

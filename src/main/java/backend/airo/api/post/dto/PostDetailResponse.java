@@ -1,9 +1,8 @@
 package backend.airo.api.post.dto;
-import backend.airo.api.image.dto.ImageResponse;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.*;
-import backend.airo.domain.location.Location;
+import backend.airo.domain.post.vo.Location;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -71,9 +70,10 @@ public record PostDetailResponse(
         @Schema(description = "이미지 목록")
         List<Image> images
 ) {
-        public static PostDetailResponse fromDomain(Post post,
+        public static PostDetailResponse toResponse(Post post,
                                                     AuthorInfo author,
-                                                    List<Image> imageList) {
+                                                    List<Image> imageList
+        ) {
                 return new PostDetailResponse(
                         post.getId(),
                         post.getTitle(),

@@ -37,15 +37,15 @@ class SpringAIThumbnailProviderTest {
     }
 
     private SpringAIThumbnailProvider createProviderWithMocks() throws Exception {
-        SpringAIThumbnailProvider provider = new SpringAIThumbnailProvider(null, null, null);
+        SpringAIThumbnailProvider provider = new SpringAIThumbnailProvider(null, null);
 
         Field openAiField = SpringAIThumbnailProvider.class.getDeclaredField("openAiClient");
         openAiField.setAccessible(true);
         openAiField.set(provider, openAiClient);
 
-        Field ollamaField = SpringAIThumbnailProvider.class.getDeclaredField("ollamaClient");
-        ollamaField.setAccessible(true);
-        ollamaField.set(provider, ollamaClient);
+//        Field ollamaField = SpringAIThumbnailProvider.class.getDeclaredField("ollamaClient");
+//        ollamaField.setAccessible(true);
+//        ollamaField.set(provider, ollamaClient);
 
         Field mapperField = SpringAIThumbnailProvider.class.getDeclaredField("objectMapper");
         mapperField.setAccessible(true);
@@ -81,33 +81,33 @@ class SpringAIThumbnailProviderTest {
         assertThat(result.emotions()).containsExactly("행복", "기쁨");
         assertThat(result.suggestedTitle()).isEqualTo("개선된 제목");
     }
-
-    @Test
-    @DisplayName("OpenAI 실패 시 Ollama로 폴백한다")
-    void shouldFallbackToOllamaWhenOpenAIFails() {
-        // given
-        ThumbnailRequest request = createTestRequest();
-        String jsonResponse = """
-            {
-              "spotName": "폴백 장소",
-              "mainImageUrl": "image2.jpg",
-              "recommendedTags": ["폴백태그"],
-              "suggestedTitle": "폴백 제목",
-              "suggestedTitle": "폴백 제목"
-            }
-            """;
-
-        when(openAiClient.call(anyString())).thenThrow(new RuntimeException("OpenAI 오류"));
-        when(ollamaClient.call(anyString())).thenReturn(jsonResponse);
-
-        // when
-        ThumbnailResult result = provider.generateThumbnail(request);
-
-        // then
-        assertThat(result.spotName()).isEqualTo("폴백 장소");
-        assertThat(result.mainImageUrl()).isEqualTo("image2.jpg");
-        assertThat(result.suggestedTitle()).isEqualTo("폴백 제목");
-    }
+//
+//    @Test
+//    @DisplayName("OpenAI 실패 시 Ollama로 폴백한다")
+//    void shouldFallbackToOllamaWhenOpenAIFails() {
+//        // given
+//        ThumbnailRequest request = createTestRequest();
+//        String jsonResponse = """
+//            {
+//              "spotName": "폴백 장소",
+//              "mainImageUrl": "image2.jpg",
+//              "recommendedTags": ["폴백태그"],
+//              "suggestedTitle": "폴백 제목",
+//              "suggestedTitle": "폴백 제목"
+//            }
+//            """;
+//
+//        when(openAiClient.call(anyString())).thenThrow(new RuntimeException("OpenAI 오류"));
+//        when(ollamaClient.call(anyString())).thenReturn(jsonResponse);
+//
+//        // when
+//        ThumbnailResult result = provider.generateThumbnail(request);
+//
+//        // then
+//        assertThat(result.spotName()).isEqualTo("폴백 장소");
+//        assertThat(result.mainImageUrl()).isEqualTo("image2.jpg");
+//        assertThat(result.suggestedTitle()).isEqualTo("폴백 제목");
+//    }
 
     @Test
     @DisplayName("모든 LLM 실패 시 기본값을 반환한다")
@@ -116,7 +116,7 @@ class SpringAIThumbnailProviderTest {
         ThumbnailRequest request = createTestRequest();
 
         when(openAiClient.call(anyString())).thenThrow(new RuntimeException("OpenAI 오류"));
-        when(ollamaClient.call(anyString())).thenThrow(new RuntimeException("Ollama 오류"));
+//        when(ollamaClient.call(anyString())).thenThrow(new RuntimeException("Ollama 오류"));
 
         // when
         ThumbnailResult result = provider.generateThumbnail(request);

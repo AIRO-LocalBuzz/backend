@@ -30,7 +30,7 @@ public class CreatePostCommandService {
     @Transactional
     public Post handle(PostCreateRequest request, Long userId) {
         log.info("게시물 생성 시작: title={}, userId={}, status={}",
-                request.title(), request.status());
+                request.title(), userId ,request.status());
 
         // 도메인 객체 생성
         Post post = createPostFromCommand(request, userId);
@@ -71,8 +71,8 @@ public class CreatePostCommandService {
 
 
     private Post createPostFromCommand(PostCreateRequest request, Long userId) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime publishedAt = (request.status() == PostStatus.PUBLISHED) ? now : null;
+//        LocalDateTime now = LocalDateTime.now();
+//        LocalDateTime publishedAt = PostStatus.PUBLISHED.equals(request.status()) ? now : null;
 
         Post post = new Post(
                 null, // ID는 저장 시 생성
@@ -92,10 +92,10 @@ public class CreatePostCommandService {
                 0, // 초기 좋아요 수
                 0, // 초기 댓글 수
                 request.isFeatured(),
-                publishedAt
+                LocalDateTime.now()
         );
 
-        log.debug("createPostFromCommand 결과 Post: {}", post);
+        log.info("createPostFromCommand 결과 - publishedAt: {}", post.getPublishedAt());
         return post;
     }
 }

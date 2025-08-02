@@ -2,6 +2,9 @@ package backend.airo.application.post.usecase;
 
 import backend.airo.api.post.dto.PostDetailResponse;
 import backend.airo.api.post.dto.PostListRequest;
+import backend.airo.domain.comment.Comment;
+import backend.airo.domain.comment.command.GetCommentCountCommand;
+import backend.airo.domain.comment.command.GetCommentListCommand;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.image.query.GetImageQueryService;
 import backend.airo.domain.post.Post;
@@ -38,7 +41,6 @@ public class PostReadUseCase {
 
         Post post = getPostQueryService.handle(postId);
 
-//        validatePostAccess(post, requesterId);
 
         if(!isPostOwner(post, requesterId)) {
             post.incrementViewCount();
@@ -50,7 +52,7 @@ public class PostReadUseCase {
                 getImageQueryService.getImagesBelongsPost(postId)
         );
 
-        return PostDetailResponse.fromDomain(post, authorInfo, imageList);
+        return PostDetailResponse.toResponse(post, authorInfo, imageList);
     }
 
 
@@ -70,16 +72,6 @@ public class PostReadUseCase {
         return new AuthorInfo(author.getId(), author.getName(), author.getProfileImageUrl());
     }
 
-
-    private void validatePostAccess(Post post, Long requesterId) {
-        if ( isPostOwner(post, requesterId)) {
-            throw new PostAccessDeniedException(post.getId(), requesterId, POST_ACCESS_DENIED);
-        }
-
-        if (post.getStatus() != PostStatus.PUBLISHED || !isPostOwner(post, requesterId)) {
-            throw new PostAccessDeniedException(post.getId(), requesterId, POST_ACCESS_DENIED);
-        }
-    }
 
 
     private boolean isPostOwner(Post post, Long userId) {

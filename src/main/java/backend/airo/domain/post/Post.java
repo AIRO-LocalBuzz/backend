@@ -1,7 +1,7 @@
 package backend.airo.domain.post;
 
 import backend.airo.domain.post.enums.*;
-import backend.airo.domain.location.Location;
+import backend.airo.domain.post.vo.Location;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -64,7 +64,7 @@ public class Post {
             String content,
             List<PostEmotionTag> emotionTags,
             PostCategory category,
-            Location location
+            LocalDateTime publishedAt
     ) {
         return new Post(
                 id,
@@ -78,13 +78,13 @@ public class Post {
                 emotionTags,
                 category,
                 LocalDate.now(),
-                location,
+                new Location(0.0, 0.0), // Dummy location
                 "Test Address",
                 0, // viewCount
                 0, // likeCount
                 0, // commentCount
                 false, // isFeatured
-                LocalDateTime.now() // publishedAt
+                publishedAt
         );
     }
 

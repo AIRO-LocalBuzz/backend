@@ -7,7 +7,7 @@
 //import backend.airo.domain.post.event.PostCreatedEvent;
 //import backend.airo.domain.thumbnail.LLMProvider;
 //import backend.airo.domain.thumbnail.ThumbnailResult;
-//import backend.airo.domain.location.Location;
+//import backend.airo.domain.post.vo.Location;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;

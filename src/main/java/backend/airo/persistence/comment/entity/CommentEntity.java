@@ -1,15 +1,14 @@
 package backend.airo.persistence.comment.entity;
 
+import backend.airo.domain.comment.Comment;
 import backend.airo.persistence.abstracts.BaseEntity;
-import backend.airo.persistence.post.entity.PostEntity;
-import backend.airo.persistence.user.entity.UserEntity;
 import jakarta.persistence.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "comments")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentEntity extends BaseEntity {
 
     @Id
@@ -19,23 +18,31 @@ public class CommentEntity extends BaseEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted = false;
+    private Long postId;
 
-    // 연관관계
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
-    private PostEntity post;
+    private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
+    public CommentEntity(String content, Long postId, Long userId) {
+        this.content = content;
+        this.postId = postId;
+        this.userId = userId;
+    }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_comment_id")
-    private CommentEntity parentComment;
 
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @OrderBy("createdAt ASC")
-    private List<CommentEntity> replies = new ArrayList<>();
+    public static CommentEntity toEntity(Comment comment) {
+        return new CommentEntity(
+                comment.getContent(),
+                comment.getPostId(),
+                comment.getUserId()
+        );
+    }
+
+    public static Comment toDomain(CommentEntity commentEntity) {
+        return new Comment(
+                commentEntity.id,
+                commentEntity.content,
+                commentEntity.postId,
+                commentEntity.userId
+        );
+    }
 }

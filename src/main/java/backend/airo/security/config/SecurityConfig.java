@@ -81,7 +81,7 @@ public class SecurityConfig {
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080", "http://localhost:9001", "http://localhost:63342", "https://airo-buzz.shop"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080", "http://localhost:9001", "http://localhost:63342", "https://airo-buzz.shop", "http://localhost:5173", "http://localhost:5174", "http://localhost:5175"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setAllowCredentials(true);
