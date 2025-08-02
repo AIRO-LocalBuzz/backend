@@ -1,4 +1,11 @@
 spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.7
   application:
     name: "airo"
   datasource:
@@ -6,10 +13,44 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: profile, email
+            redirect-uri: "https://airo-buzz.shop/api/login/oauth2/code/{registrationId}"
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            scope: profile_nickname
+            client-name: Kakao
+            authorization-grant-type: authorization_code
+            redirect-uri: "https://airo-buzz.shop/api/login/oauth2/code/{registrationId}"
+            client-authentication-method: client_secret_post
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+  data:
+    redis:
+      host: redis
+      port: 6379
+      # password: your-password  # 필요시 설정
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -30,20 +71,71 @@ springdoc:
   show-actuator: false
   group-configs:
     - group: 'All API'
-      packages-to-scan: backend.airo.api
-    - group: 'Example API'
-      packages-to-scan: backend.airo.api.example
+      packages-to-scan:
+        - backend.airo.api.user
+        - backend.airo.api.review
+        - backend.airo.api.content
+        - backend.airo.api.shop
+        - backend.airo.api.clutr_fatvl
+        - backend.airo.api.area_code
+        - backend.airo.api.auth
+        - backend.airo.api.image
+        - backend.airo.api.post
+        - backend.airo.api.rural_ex
     - group: 'User API'
       packages-to-scan: backend.airo.api.user
+    - group: 'Post API'
+      packages-to-scan: backend.airo.api.post
     - group: 'Review API'
       packages-to-scan: backend.airo.api.review
     - group: 'Content API'
       packages-to-scan: backend.airo.api.content
+    - group: 'Shop API'
+      packages-to-scan: backend.airo.api.shop
+    - group: 'ClutrFatvl API'
+      packages-to-scan: backend.airo.api.clutr_fatvl
+    - group: 'RuralEx API'
+      packages-to-scan: backend.airo.api.rural_ex
+    - group: 'AreaCode API'
+      packages-to-scan: backend.airo.api.area_code
+    - group: 'Auth API'
+      packages-to-scan: backend.airo.api.auth
+    - group: 'Image API'
+      packages-to-scan: backend.airo.api.image
 
 
 server:
-  port: 9001
+  port: ${SERVER_PORT}
   servlet:
     context-path: /api
 
+# Social Login Configuration
+social:
+  firebase:
+    service-account-key: ${FIREBASE_SERVICE_ACCOUNT_KEY:}
+    project-id: ${FIREBASE_PROJECT_ID:}
 
+# JWT Configuration
+jwt:
+  secret: ${JWT_SECRET:mySecretKey1234567890123456789012345678901234567890}
+  access-token:
+    expiration: 3600 # minutes
+  refresh-token:
+    expiration: 604800 #days
+
+logging:
+  level:
+    backend.airo.infra.open_api: DEBUG
+
+openapi:
+  service:
+    key: ${OPEN_API_KET}
+
+discord:
+  bot:
+    token: ${DISCORD_BOT_TOKEN}
+    channel_id: ${DISCORD_BOT_CHANNEL_ID}
+
+security:
+  swagger-bypass:
+    enabled: true

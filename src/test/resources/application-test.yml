@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: "airo-test"
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    generate-ddl: true
+
+# Test configuration for social login
+social:
+  firebase:
+    service-account-key: ""
+    project-id: ""
+  kakao:
+    client-id: ""
+    redirect-uri: ""
+
+jwt:
+  secret: "380d3be99d2d18d234723df05e0e2e077eab944d10cea7a804e4f708742ed7ec"
+  expiration: 86400000
+
+logging:
+  level:
+    backend.airo: DEBUG
+    org.hibernate.SQL: DEBUG
