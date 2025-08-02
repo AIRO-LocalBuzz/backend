@@ -38,7 +38,7 @@ spring:
             user-name-attribute: id
   data:
     redis:
-      host: localhost
+      host: redis
       port: 6379
       # password: your-password  # 필요시 설정
       timeout: 2000ms
