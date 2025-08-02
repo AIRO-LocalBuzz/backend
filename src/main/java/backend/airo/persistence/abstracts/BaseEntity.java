@@ -1,5 +1,6 @@
 package backend.airo.persistence.abstracts;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -15,13 +16,14 @@ import java.time.LocalDateTime;
  */
 @Getter
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity {
+public abstract class BaseEntity extends AuditingEntity {
 
     @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @Column(updatable = false)
     private LocalDateTime updatedAt;
 
 }

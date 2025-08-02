@@ -1,18 +1,17 @@
 package backend.airo.persistence.image.entity;
 
 import backend.airo.domain.image.Image;
-import backend.airo.domain.post.Post;
 import backend.airo.persistence.abstracts.BaseEntity;
-import backend.airo.persistence.post.entity.PostEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Table(name = "post_images")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ImageEntity extends BaseEntity {
 
     @Id
@@ -73,11 +72,6 @@ public class ImageEntity extends BaseEntity {
         this.height = height;
         this.sortOrder = sortOrder;
         this.isCover = isCover;
-    }
-
-
-    public ImageEntity() {
-
     }
 
     public static ImageEntity toEntity(Image image) {
