@@ -2,6 +2,8 @@ package backend.airo.application.post.usecase;
 
 import backend.airo.api.post.dto.PostDetailResponse;
 import backend.airo.api.post.dto.PostListRequest;
+import backend.airo.domain.comment.Comment;
+import backend.airo.domain.comment.command.GetCommentListCommand;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.image.query.GetImageQueryService;
 import backend.airo.domain.post.Post;
@@ -32,6 +34,7 @@ public class PostReadUseCase {
     private final GetUserQuery getUserQueryService;
     private final GetImageQueryService getImageQueryService;
     private final GetPostListQueryService getPostListQueryService;
+    private final GetCommentListCommand getCommentListCommand;
 
     public PostDetailResponse getPostById(Long postId, Long requesterId) {
         log.debug("게시물 조회: id={}, requesterId={}", postId, requesterId);
@@ -50,7 +53,9 @@ public class PostReadUseCase {
                 getImageQueryService.getImagesBelongsPost(postId)
         );
 
-        return PostDetailResponse.fromDomain(post, authorInfo, imageList);
+        List<Comment> commentList = getCommentListCommand.handle(postId);
+
+        return PostDetailResponse.toResponse(post, authorInfo, imageList, commentList);
     }
 
 

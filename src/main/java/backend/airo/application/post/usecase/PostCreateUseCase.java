@@ -28,9 +28,7 @@ public class PostCreateUseCase {
             throw new PostPublishException(null, "발행에 필요한 필수 정보가 누락되었습니다 (카테고리, 위치)", POST_ALREADY_PUBLISHED);
         }
 
-        Post savedPost = createPostCommandService.handle(request);
-
-        return savedPost;
+        return createPostCommandService.handle(request);
     }
 
 

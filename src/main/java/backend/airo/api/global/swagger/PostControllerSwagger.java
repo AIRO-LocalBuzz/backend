@@ -59,9 +59,8 @@ public interface PostControllerSwagger {
     @GetMapping("/{id}")
     ResponseEntity<PostDetailResponse> getPost(
             @Parameter(description = "게시물 ID", required = true)
-            @PathVariable Long userId,
-            @PathVariable Long postId,
-            HttpServletRequest httpRequest);
+            @UserPrincipal User user,
+            @PathVariable Long postId);
 
 
 
@@ -73,8 +72,7 @@ public interface PostControllerSwagger {
     })
     @GetMapping
     ResponseEntity<PostListResponse> getPostList(
-            @Valid @ModelAttribute PostListRequest request,
-            HttpServletRequest httpRequest);
+            @Valid @ModelAttribute PostListRequest request);
 
 
 
@@ -99,7 +97,7 @@ public interface PostControllerSwagger {
             @Parameter(description = "게시물 ID", required = true)
             @PathVariable Long id,
             @Valid @RequestBody PostUpdateRequest request,
-            HttpServletRequest httpRequest);
+            @UserPrincipal User user);
 
 
 
@@ -117,7 +115,7 @@ public interface PostControllerSwagger {
     ResponseEntity<Void> deletePost(
             @Parameter(description = "게시물 ID", required = true)
             @PathVariable Long id,
-            HttpServletRequest httpRequest);
+            @UserPrincipal User user);
 
 
 //
@@ -136,18 +134,4 @@ public interface PostControllerSwagger {
 //    @GetMapping("/recent-popular")
 //    ResponseEntity<List<PostResponse>> getRecentPopularPosts(
 //            @Valid @ModelAttribute RecentPopularPostsRequest request);
-
-
-
-    // ===== Private Helper Methods =====
-
-    /**
-     * 현재 요청 사용자 ID 추출
-     * 실제 구현에서는 JWT 토큰이나 세션에서 추출
-     */
-    private Long getCurrentUserId(HttpServletRequest request) {
-        // TODO: JWT 토큰이나 인증 정보에서 사용자 ID 추출
-        String userIdHeader = request.getHeader("X-User-Id");
-        return userIdHeader != null ? Long.parseLong(userIdHeader) : null;
-    }
 }

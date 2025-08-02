@@ -1,10 +1,12 @@
 package backend.airo.api.post.dto;
 
+import backend.airo.domain.comment.Comment;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.PostStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 게시물 응답 DTO
@@ -40,6 +42,7 @@ public record PostResponse(
 
         @Schema(description = "생성 시간", example = "2024-08-10T09:00:00")
         LocalDateTime createdAt
+
 
 ) {
     public static PostResponse fromDomain(Post post) {

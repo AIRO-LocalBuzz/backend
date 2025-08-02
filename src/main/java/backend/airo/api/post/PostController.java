@@ -2,10 +2,12 @@ package backend.airo.api.post;
 
 import backend.airo.api.annotation.UserPrincipal;
 import backend.airo.api.global.swagger.PostControllerSwagger;
+import backend.airo.application.comment.usecase.CommentUseCase;
 import backend.airo.application.post.usecase.PostCreateUseCase;
 import backend.airo.application.post.usecase.PostDeleteUseCase;
 import backend.airo.application.post.usecase.PostReadUseCase;
 import backend.airo.application.post.usecase.PostUpdateUseCase;
+import backend.airo.domain.comment.Comment;
 import backend.airo.domain.post.Post;
 import backend.airo.api.post.dto.*;
 import backend.airo.domain.user.User;
@@ -20,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Slf4j
 @RestController
@@ -32,10 +36,11 @@ public class PostController implements PostControllerSwagger {
     private final PostUpdateUseCase postUpdateUseCase;
     private final PostDeleteUseCase postDeleteUseCase;
 
+
     // ===== 게시물 생성 =====
 
-    @PreAuthorize("isAuthenticated()")
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PostResponse> createPost(
             @Valid @RequestBody PostCreateRequest request,
             @UserPrincipal User user) {
@@ -58,13 +63,9 @@ public class PostController implements PostControllerSwagger {
     @GetMapping("/{id}")
     public ResponseEntity<PostDetailResponse> getPost(
             @Parameter(description = "게시물 ID", required = true)
-            @PathVariable Long userId,
-            @PathVariable Long postId,
-            HttpServletRequest httpRequest) {
-
-        Long requesterId = getCurrentUserId(httpRequest);
-
-        PostDetailResponse response = postReadUseCase.getPostById(postId, userId);
+            @UserPrincipal User user,
+            @PathVariable Long postId) {
+        PostDetailResponse response = postReadUseCase.getPostById(postId, user.getId());
 
         return ResponseEntity.ok(response);
     }
@@ -72,8 +73,7 @@ public class PostController implements PostControllerSwagger {
 
     @GetMapping
     public ResponseEntity<PostListResponse> getPostList(
-            @Valid @ModelAttribute PostListRequest request,
-            HttpServletRequest httpRequest) {
+            @Valid @ModelAttribute PostListRequest request) {
 
         Page<Post> postPage = postReadUseCase.getRecentPostList(request);
         PostListResponse response = PostListResponse.fromDomain(postPage);
@@ -89,13 +89,10 @@ public class PostController implements PostControllerSwagger {
             @Parameter(description = "게시물 ID", required = true)
             @PathVariable Long id,
             @Valid @RequestBody PostUpdateRequest request,
-            HttpServletRequest httpRequest) {
+            @UserPrincipal User user) {
+        Post updatedPost = postUpdateUseCase.updatePost(id, user.getId(), request);
 
-        Long requesterId = getCurrentUserId(httpRequest);
-
-        Post updatedPost = postUpdateUseCase.updatePost(id, requesterId, request);
         PostResponse response = PostResponse.fromDomain(updatedPost);
-
         return ResponseEntity.ok(response);
     }
 
@@ -107,11 +104,9 @@ public class PostController implements PostControllerSwagger {
     public ResponseEntity<Void> deletePost(
             @Parameter(description = "게시물 ID", required = true)
             @PathVariable Long id,
-            HttpServletRequest httpRequest) {
+            @UserPrincipal User user) {
 
-        Long requesterId = getCurrentUserId(httpRequest);
-
-        postDeleteUseCase.deletePost(id, requesterId);
+        postDeleteUseCase.deletePost(id, user.getId());
 
         return ResponseEntity.noContent().build();
     }
@@ -163,14 +158,4 @@ public class PostController implements PostControllerSwagger {
 //    }
 
     // ===== Private Helper Methods =====
-
-    /**
-     * 현재 요청 사용자 ID 추출
-     * 실제 구현에서는 JWT 토큰이나 세션에서 추출
-     */
-    private Long getCurrentUserId(HttpServletRequest request) {
-        // TODO: JWT 토큰이나 인증 정보에서 사용자 ID 추출
-        String userIdHeader = request.getHeader("X-User-Id");
-        return userIdHeader != null ? Long.parseLong(userIdHeader) : null;
-    }
 }
