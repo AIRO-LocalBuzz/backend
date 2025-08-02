@@ -32,7 +32,7 @@ import static backend.airo.domain.post.exception.PostErrorCode.POST_NOT_FOUND;
 public class PostAdapter implements PostRepository {
 
     private final PostJpaRepository postJpaRepository;
-    private final UserJpaRepository userJpaRepository;
+
 
     // ===== CRUD 메서드 =====
 
@@ -70,7 +70,6 @@ public class PostAdapter implements PostRepository {
     public Page<Post> findByStatus(PostStatus status, Pageable pageable) {
         Page<PostEntity> entities = postJpaRepository.findByStatus(status, pageable);
         log.info("Repository 조회 결과 - Entity 개수: {}", entities.getTotalElements());
-
         return entities.map(PostEntity::toDomain);
     }
 
@@ -98,31 +97,16 @@ public class PostAdapter implements PostRepository {
         postJpaRepository.deleteById(id);
     }
 
+
     @Override
-    public Page<Post> findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(PostStatus status, Pageable pageable) {
-        Page<PostEntity> entities = postJpaRepository.findByStatusAndPublishedAtIsNotNullOrderByPublishedAtDesc(status, pageable);
-        log.info("Repository 조회 결과 - Entity 개수: {}", entities.getTotalElements());
-
-        Page<Post> posts = entities.map(entity -> {
-            try {
-                log.info("Entity ID: {}, title: {}", entity.getId(), entity.getTitle());
-                Post domain = PostEntity.toDomain(entity);
-                log.info("Domain 생성 완료: {}", domain != null ? "OK" : "NULL");
-                return domain;
-            } catch (Exception e) {
-                log.error("toDomain 변환 실패: entity.id={}, error={}", entity.getId(), e.getMessage());
-                return null;
-            }
-        });
-
-        log.info("도메인 변환 후 - Post 개수: {}", posts.getTotalElements());
-        log.info("변환된 Post들:");
-        posts.getContent().forEach(post ->
-                log.info("Post ID: {}, title: {}", post.getId(), post.getTitle()));
-
-        return posts;
+    public int incrementLikeCount(Long postId) {
+        return postJpaRepository.incrementLikeCount(postId);
     }
 
+    @Override
+    public int decrementLikeCount(Long postId) {
+        return postJpaRepository.decrementLikeCount(postId);
+    }
 
 
     @Override
@@ -139,198 +123,6 @@ public class PostAdapter implements PostRepository {
         return savedEntities.stream()
                 .map(PostEntity::toDomain)
                 .toList();
-    }
-
-
-
-    // ===== 비즈니스 조회 메서드 =====
-
-    @Override
-    public Page<Post> findByUserId(Long userId, Pageable pageable) {
-        log.debug("사용자별 게시물 조회: userId={}, page={}", userId, pageable.getPageNumber());
-
-        return postJpaRepository.findByUserId(userId, pageable)
-                .map(PostEntity::toDomain);
-    }
-
-    @Override
-    public Page<Post> findByUserIdAndStatus(Long userId, PostStatus status, Pageable pageable) {
-        return postJpaRepository.findByUserIdAndStatus(userId, status, pageable)
-                .map(PostEntity::toDomain);
-    }
-
-
-
-    @Override
-    public Page<Post> findByStatusIn(List<PostStatus> statuses, Pageable pageable) {
-        return postJpaRepository.findByStatusIn(statuses, pageable)
-                .map(PostEntity::toDomain);
-    }
-
-    @Override
-    public Page<Post> findFeaturedPosts(Pageable pageable) {
-        return postJpaRepository.findByIsFeaturedTrueAndStatus(PostStatus.PUBLISHED, pageable)
-                .map(PostEntity::toDomain);
-    }
-
-    @Override
-    public Page<Post> findPublishedPosts(Pageable pageable) {
-        return postJpaRepository.findByStatus(PostStatus.PUBLISHED, pageable)
-                .map(PostEntity::toDomain);
-    }
-
-
-    // ===== 날짜 범위 조회 메서드 =====
-
-    @Override
-    public Page<Post> findByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
-        return postJpaRepository.findByCreatedAtBetween(startDate, endDate, pageable)
-                .map(PostEntity::toDomain);
-    }
-
-    @Override
-    public Page<Post> findByPublishedAtBetween(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
-        return postJpaRepository.findByPublishedAtBetween(startDate, endDate, pageable)
-                .map(PostEntity::toDomain);
-    }
-
-    @Override
-    public Page<Post> findByTravelDateBetween(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable) {
-        return postJpaRepository.findByTravelDateBetween(startDate, endDate, pageable)
-                .map(PostEntity::toDomain);
-    }
-
-    // ===== 통계 및 집계 메서드 =====
-
-    @Override
-    public long countByUserId(Long userId) {
-        return postJpaRepository.countByUserId(userId);
-    }
-
-    @Override
-    public long countByUserIdAndStatus(Long userId, PostStatus status) {
-        return postJpaRepository.countByUserIdAndStatus(userId, status);
-    }
-
-
-    @Override
-    public long countPublishedPosts() {
-        return postJpaRepository.countByStatus(PostStatus.PUBLISHED);
-    }
-
-    @Override
-    public List<Post> findPopularPosts(int limit) {
-        Pageable pageable = PageRequest.of(0, limit);
-        return postJpaRepository.findTopByOrderByViewCountDesc(PostStatus.PUBLISHED, pageable)
-                .stream()
-                .map(PostEntity::toDomain)
-                .toList();
-    }
-
-    @Override
-    public List<Post> findRecentPopularPosts(int days, int limit) {
-        LocalDateTime since = LocalDateTime.now().minusDays(days);
-        Pageable pageable = PageRequest.of(0, limit);
-
-        return postJpaRepository.findRecentPopularPosts(PostStatus.PUBLISHED, since, pageable)
-                .stream()
-                .map(PostEntity::toDomain)
-                .toList();
-    }
-
-    @Override
-    public List<Post> findMostLikedPosts(int limit) {
-        Pageable pageable = PageRequest.of(0, limit);
-        return postJpaRepository.findTopByOrderByLikeCountDesc(PostStatus.PUBLISHED, pageable)
-                .stream()
-                .map(PostEntity::toDomain)
-                .toList();
-    }
-
-    // ===== 검색 메서드 =====
-
-    @Override
-    public Page<Post> findByTitleContaining(String keyword, Pageable pageable) {
-        return postJpaRepository.findByTitleContainingAndStatus(keyword, PostStatus.PUBLISHED, pageable)
-                .map(PostEntity::toDomain);
-    }
-
-    @Override
-    public Page<Post> findByContentContaining(String keyword, Pageable pageable) {
-        return postJpaRepository.findByContentContainingAndStatus(keyword, PostStatus.PUBLISHED, pageable)
-                .map(PostEntity::toDomain);
-    }
-
-    @Override
-    public Page<Post> findByTitleOrContentContaining(String keyword, Pageable pageable) {
-        return postJpaRepository.findByTitleOrContentContaining(keyword, PostStatus.PUBLISHED, pageable)
-                .map(PostEntity::toDomain);
-    }
-
-    @Override
-    public Page<Post> searchFullText(String keyword, Pageable pageable) {
-        return postJpaRepository.searchFullText(keyword, PostStatus.PUBLISHED, pageable)
-                .map(PostEntity::toDomain);
-    }
-
-
-    // ===== 업데이트 메서드 =====
-
-
-    @Override
-    @Transactional
-    public boolean updateLikeCount(Long id, int likeCount) {
-        int updatedRows = postJpaRepository.updateLikeCount(id, likeCount);
-        return updatedRows > 0;
-    }
-
-    @Override
-    @Transactional
-    public boolean updateCommentCount(Long id, int commentCount) {
-        int updatedRows = postJpaRepository.updateCommentCount(id, commentCount);
-        return updatedRows > 0;
-    }
-
-    @Override
-    @Transactional
-    public boolean updateStatus(Long id, PostStatus status) {
-        int updatedRows = postJpaRepository.updateStatus(id, status);
-        log.debug("게시물 상태 변경: ID={}, 상태={}, 업데이트 건수={}", id, status, updatedRows);
-        return updatedRows > 0;
-    }
-
-    @Override
-    @Transactional
-    public boolean publishPost(Long id, LocalDateTime publishedAt) {
-        int updatedRows = postJpaRepository.publishPost(id, PostStatus.PUBLISHED, publishedAt);
-        return updatedRows > 0;
-    }
-
-    // ===== 배치 처리 메서드 =====
-
-    @Override
-    @Transactional
-    public int updateStatusBatch(List<Long> ids, PostStatus status) {
-        log.debug("게시물 상태 일괄 변경: {} 건, 상태={}", ids.size(), status);
-        return postJpaRepository.updateStatusBatch(ids, status);
-    }
-
-    @Override
-    @Transactional
-    public int deleteOldDraftPosts(int days) {
-        LocalDateTime cutoffDate = LocalDateTime.now().minusDays(days);
-
-        List<PostEntity> oldDrafts = postJpaRepository.findOldDraftPosts(PostStatus.DRAFT, cutoffDate);
-        if (!oldDrafts.isEmpty()) {
-            List<Long> idsToDelete = oldDrafts.stream()
-                    .map(PostEntity::getId)
-                    .toList();
-
-            postJpaRepository.deleteAllById(idsToDelete);
-            log.info("오래된 임시저장 게시물 삭제: {} 건", oldDrafts.size());
-        }
-
-        return oldDrafts.size();
     }
 
 

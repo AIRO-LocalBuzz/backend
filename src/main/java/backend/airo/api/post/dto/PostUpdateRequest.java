@@ -1,12 +1,11 @@
 package backend.airo.api.post.dto;
 
 import backend.airo.domain.post.enums.*;
-import backend.airo.domain.location.Location;
+import backend.airo.domain.post.vo.Location;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Schema(description = "게시물 수정 요청")

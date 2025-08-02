@@ -2,6 +2,9 @@ package backend.airo.application.post.usecase;
 
 import backend.airo.api.post.dto.PostDetailResponse;
 import backend.airo.api.post.dto.PostListRequest;
+import backend.airo.domain.comment.Comment;
+import backend.airo.domain.comment.command.GetCommentCountCommand;
+import backend.airo.domain.comment.command.GetCommentListCommand;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.image.query.GetImageQueryService;
 import backend.airo.domain.post.Post;
@@ -49,7 +52,7 @@ public class PostReadUseCase {
                 getImageQueryService.getImagesBelongsPost(postId)
         );
 
-        return PostDetailResponse.fromDomain(post, authorInfo, imageList);
+        return PostDetailResponse.toResponse(post, authorInfo, imageList);
     }
 
 

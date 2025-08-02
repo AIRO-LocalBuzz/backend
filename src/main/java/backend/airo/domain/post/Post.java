@@ -1,7 +1,7 @@
 package backend.airo.domain.post;
 
 import backend.airo.domain.post.enums.*;
-import backend.airo.domain.location.Location;
+import backend.airo.domain.post.vo.Location;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

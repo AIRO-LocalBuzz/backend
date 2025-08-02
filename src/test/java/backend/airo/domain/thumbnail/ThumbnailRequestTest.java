@@ -3,8 +3,10 @@ package backend.airo.domain.thumbnail;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.*;
 import org.junit.jupiter.api.Test;
+
 import java.time.LocalDateTime;
 import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ThumbnailRequestTest {
