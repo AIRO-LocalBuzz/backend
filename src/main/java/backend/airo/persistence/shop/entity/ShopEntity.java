@@ -9,15 +9,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-//@Table(name = "shop",
-//        indexes = {
-//                @Index(name = "IDX_SHOP_NAME", columnList = "shopName"),
-//                @Index(name = "IDX_REGION", columnList = "ctprvn_cd, signgu_cd, adong_cd"),
-//                @Index(name = "IDX_KSIC", columnList = "ksic_code")
-//        },
-//        uniqueConstraints = {
-//                @UniqueConstraint(name = "uk_bizes_id", columnNames = "bizes_id")
-//        })
+@Table(name = "shop_entity",
+        indexes = {
+                @Index(name = "idx_shop_region", columnList = "ctprvn_cd, signgu_cd"),
+                @Index(
+                        name = "idx_shop_region_category",
+                        columnList = "ctprvn_cd, signgu_cd, inds_lcls_cd, inds_mcls_cd, inds_scls_cd"
+                )
+        })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class ShopEntity extends BaseEntity {

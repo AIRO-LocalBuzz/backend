@@ -2,8 +2,13 @@ package backend.airo.persistence.post.entity;
 
 import backend.airo.persistence.abstracts.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "post_likes")
 public class PostLikeEntity extends BaseEntity {
 
