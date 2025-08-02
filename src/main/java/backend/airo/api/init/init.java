@@ -37,7 +37,7 @@ public class init {
 
     @GetMapping("shop/data")
     public void initControl3() {
-        clutrFatvlService.collectFestivalOf();
+        shopService.collectShopOf();
     }
 
 

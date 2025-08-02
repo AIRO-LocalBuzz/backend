@@ -22,8 +22,16 @@ public class ShopAdapter implements ShopRepository {
     private final ShopJpaRepository shopJpaRepository;
 
     @Override
-    public Page<Shop> findAll(String megaName, String cityName, Pageable pageable) {
-        Page<ShopEntity> shopEntities = shopJpaRepository.findByRegion_CtprvnCdAndRegion_SignguCd(megaName, cityName, pageable);
+    public Page<Shop> findAll(String megaName, String cityName, String largeCategoryCode, String middleCategoryCode, String smallCategoryCode, Pageable pageable) {
+
+        Page<ShopEntity> shopEntities = shopJpaRepository.searchByRegionAndOptionalCategories(
+                megaName,
+                cityName,
+                largeCategoryCode,
+                middleCategoryCode,
+                smallCategoryCode,
+                pageable
+        );
         if (shopEntities.isEmpty()) {
             return new PageImpl<>(List.of(), pageable, 0);
         }

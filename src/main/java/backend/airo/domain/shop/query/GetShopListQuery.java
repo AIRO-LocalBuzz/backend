@@ -14,8 +14,8 @@ public class GetShopListQuery {
 
     private final ShopRepository shopRepository;
 
-    public Page<Shop> handle(String megaName, String cityName, Pageable pageable) {
-        return shopRepository.findAll(megaName, cityName, pageable);
+    public Page<Shop> handle(String megaName, String cityName, String largeCategoryCode, String middleCategoryCode, String smallCategoryCode, Pageable pageable) {
+        return shopRepository.findAll(megaName, cityName,largeCategoryCode, middleCategoryCode, smallCategoryCode , pageable);
     }
 
 }

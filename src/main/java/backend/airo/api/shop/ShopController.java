@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,12 +34,14 @@ public class ShopController implements ShopControllerSwagger {
     public Response<PageResponse<ShopListResponse>> getShoplList(
             @RequestParam() String megaCode,
             @RequestParam() String cityCode,
+            @RequestParam() String largeCategoryCode,
+            @RequestParam(defaultValue = "") String middleCategoryCode,
+            @RequestParam(defaultValue = "") String smallCategoryCode,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Shop> shopList = shopUseCase.getShopList(megaCode, cityCode, pageable);
-
+        Page<Shop> shopList = shopUseCase.getShopList(megaCode, cityCode, pageable, largeCategoryCode, middleCategoryCode, smallCategoryCode);
         List<ShopListResponse> content = shopList.getContent().stream()
                 .map(ShopListResponse::create).toList();
 
