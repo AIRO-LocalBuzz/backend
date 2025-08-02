@@ -34,6 +34,7 @@ public class PostController implements PostControllerSwagger {
 
     // ===== 게시물 생성 =====
 
+    @Override
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PostResponse> createPost(
@@ -53,9 +54,8 @@ public class PostController implements PostControllerSwagger {
     }
 
     // ===== 게시물 조회 =====
-
-
-    @GetMapping("/{id}")
+    @Override
+    @GetMapping("/{postId}")
     public ResponseEntity<PostDetailResponse> getPost(
             @Parameter(description = "게시물 ID", required = true)
             @UserPrincipal User user,
@@ -68,6 +68,7 @@ public class PostController implements PostControllerSwagger {
     }
 
 
+    @Override
     @GetMapping
     public ResponseEntity<PostListResponse> getPostList(
             @Valid @ModelAttribute PostListRequest request) {
@@ -80,8 +81,9 @@ public class PostController implements PostControllerSwagger {
 
 
     // ===== 게시물 수정 =====
-
+    @Override
     @PutMapping("/{postId}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PostResponse> updatePost(
             @Parameter(description = "게시물 ID", required = true)
             @PathVariable Long postId,
@@ -97,14 +99,14 @@ public class PostController implements PostControllerSwagger {
 
 
     // ===== 게시물 삭제 =====
-
+    @Override
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(
             @Parameter(description = "게시물 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable Long postId,
             @UserPrincipal User user) {
 
-        postDeleteUseCase.deletePost(id, user.getId());
+        postDeleteUseCase.deletePost(postId, user.getId());
 
         return ResponseEntity.noContent().build();
     }

@@ -1,11 +1,8 @@
 package backend.airo.api.post.dto;
-import backend.airo.api.comment.dto.CommentResponse;
-import backend.airo.api.image.dto.ImageResponse;
-import backend.airo.domain.comment.Comment;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.*;
-import backend.airo.domain.location.Location;
+import backend.airo.domain.post.vo.Location;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -61,9 +58,6 @@ public record PostDetailResponse(
         @Schema(description = "댓글 수", example = "8")
         Integer commentCount,
 
-        @Schema(description = "댓글 정보")
-        List<CommentResponse> commentResponses,
-
         @Schema(description = "추천 게시물 여부", example = "false")
         Boolean isFeatured,
 
@@ -78,8 +72,8 @@ public record PostDetailResponse(
 ) {
         public static PostDetailResponse toResponse(Post post,
                                                     AuthorInfo author,
-                                                    List<Image> imageList,
-                                                    List<Comment> commentList) {
+                                                    List<Image> imageList
+        ) {
                 return new PostDetailResponse(
                         post.getId(),
                         post.getTitle(),
@@ -95,13 +89,6 @@ public record PostDetailResponse(
                         post.getViewCount(),
                         post.getLikeCount(),
                         post.getCommentCount(),
-                        commentList.stream().map(list ->
-                                new CommentResponse(
-                                        list.getId(),
-                                        list.getContent(),
-                                        list.getPostId(),
-                                        list.getUserId()
-                                )).toList(),
                         post.getIsFeatured(),
                         post.getPublishedAt(),
                         author,

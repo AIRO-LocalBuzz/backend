@@ -40,4 +40,9 @@ public class CommentAdapter implements CommentRepository {
         List<CommentEntity> commentEntities = commentJpaRepository.findByPostId(postId);
         return commentEntities.stream().map(CommentEntity::toDomain).toList();
     }
+
+    @Override
+    public Long findCommentCount(Long postId) {
+        return commentJpaRepository.countByPostId(postId);
+    }
 }

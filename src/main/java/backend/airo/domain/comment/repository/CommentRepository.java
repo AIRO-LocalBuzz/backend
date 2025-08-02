@@ -9,4 +9,6 @@ public interface CommentRepository extends AggregateSupport<Comment, Long> {
 
     List<Comment> findAllByPostId(Long postID);
 
+    Long findCommentCount(Long postId);
+
 }

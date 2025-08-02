@@ -37,5 +37,8 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
             Pageable pageable
     );
 
+    int incrementLikeCount(Long postId);
+    int decrementLikeCount(Long postId);
+
 
 }

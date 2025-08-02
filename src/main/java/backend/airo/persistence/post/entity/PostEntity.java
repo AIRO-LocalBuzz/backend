@@ -2,7 +2,7 @@ package backend.airo.persistence.post.entity;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.*;
 import backend.airo.persistence.abstracts.BaseEntity;
-import backend.airo.domain.location.Location;
+import backend.airo.domain.post.vo.Location;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
