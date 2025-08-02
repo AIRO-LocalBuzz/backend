@@ -82,6 +82,9 @@ springdoc:
         - backend.airo.api.image
         - backend.airo.api.post
         - backend.airo.api.rural_ex
+        - backend.airo.api.point
+        - backend.airo.api.point_history
+        - backend.airo.api.comment
     - group: 'User API'
       packages-to-scan: backend.airo.api.user
     - group: 'Post API'
@@ -102,6 +105,12 @@ springdoc:
       packages-to-scan: backend.airo.api.auth
     - group: 'Image API'
       packages-to-scan: backend.airo.api.image
+    - group: 'Point API'
+      packages-to-scan: backend.airo.api.point
+    - group: 'Point_History API'
+      packages-to-scan: backend.airo.api.point_history
+    - group: 'Comment API'
+      packages-to-scan: backend.airo.api.comment
 
 
 server:
