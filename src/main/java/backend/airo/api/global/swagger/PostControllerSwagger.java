@@ -64,6 +64,15 @@ public interface PostControllerSwagger {
 
 
 
+    @Operation(summary = "썸네일 조회", description = "썸네일 ID로 썸네일을 조회합니다.")
+    @GetMapping("/{thumbnailId}")
+    ResponseEntity<ThumbnailResponseDto> getThumbnail(
+            @Parameter(description = "썸네일 ID", required = true)
+            @UserPrincipal User user,
+            @PathVariable Long thumbnailId);
+
+
+
     @Operation(summary = "게시물 목록 조회", description = "조건에 따라 게시물 목록을 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",

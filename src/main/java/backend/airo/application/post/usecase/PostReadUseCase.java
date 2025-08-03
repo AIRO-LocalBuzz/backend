@@ -2,6 +2,7 @@ package backend.airo.application.post.usecase;
 
 import backend.airo.api.post.dto.PostDetailResponse;
 import backend.airo.api.post.dto.PostListRequest;
+import backend.airo.api.post.dto.ThumbnailResponseDto;
 import backend.airo.domain.comment.Comment;
 import backend.airo.domain.comment.command.GetCommentCountCommand;
 import backend.airo.domain.comment.command.GetCommentListCommand;
@@ -13,6 +14,7 @@ import backend.airo.domain.post.exception.PostAccessDeniedException;
 import backend.airo.domain.post.query.GetPostListQueryService;
 import backend.airo.domain.post.query.GetPostQueryService;
 import backend.airo.domain.post.vo.AuthorInfo;
+import backend.airo.domain.thumbnail.Thumbnail;
 import backend.airo.domain.user.User;
 import backend.airo.domain.user.query.GetUserQuery;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +55,15 @@ public class PostReadUseCase {
         );
 
         return PostDetailResponse.toResponse(post, authorInfo, imageList);
+    }
+
+
+    public ThumbnailResponseDto getThumbnailById(Long thumbnailId) {
+
+
+        Thumbnail Thumbnail = getPostQueryService.handleThumbnail(thumbnailId);
+
+        return ThumbnailResponseDto.fromDomain(Thumbnail);
     }
 
 

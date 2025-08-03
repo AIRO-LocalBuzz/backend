@@ -32,7 +32,7 @@ public record PostCreateRequest(
         @Size(max = 5, message = "감정 태그는 최대 5개까지 추가 가능합니다")
         List<PostEmotionTag> emotionTags,
 
-        @Schema(description = "카테고리", example = "RESTORANT")
+        @Schema(description = "카테고리", example = "RESTAURANT")
         PostCategory category,
 
         @Schema(description = "여행 날짜", example = "2024-08-15T10:30:00")

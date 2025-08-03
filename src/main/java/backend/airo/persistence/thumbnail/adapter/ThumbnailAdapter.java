@@ -30,8 +30,10 @@ public class ThumbnailAdapter implements ThumbnailRepository {
     }
 
     @Override
-    public Thumbnail findById(Long aLong) {
-        return null;
+    public Thumbnail findById(Long id) {
+        return thumbnailJpaRepository.findById(id)
+                .map(ThumbnailEntity::toDomain)
+                .orElse(null);
     }
 
     @Override

@@ -11,6 +11,7 @@ import backend.airo.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ public class CreatePostCommandService {
     private final ApplicationEventPublisher eventPublisher;
     private final ThumbnailGenerationService thumbnailGenerationService;
 
-    @Transactional
+    @Transactional// 비동기 실행을 위한 Executor 지정
     public Post handle(PostCreateRequest request, Long userId) {
         log.info("게시물 생성 시작: title={}, userId={}, status={}",
                 request.title(), userId ,request.status());
@@ -43,8 +44,8 @@ public class CreatePostCommandService {
 
         processPostImages(userId, savedPost.getId(), request);
 
-        // AI썸네일 생성 비동기 호출
-//        thumbnailGenerationService.generateThumbnailAsync(savedPost);
+//         AI썸네일 생성 비동기 호출
+        thumbnailGenerationService.generateThumbnailAsync(savedPost);
 
         return savedPost;
     }
