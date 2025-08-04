@@ -23,6 +23,8 @@ import java.util.List;
 @Tag(name = "Post", description = "게시물 관리 API")
 @SecurityRequirement(name = "BearerAuth")
 public interface PostControllerSwagger {
+
+
     @Operation(summary = "게시물 생성", description = "새로운 게시물을 생성합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",
@@ -40,6 +42,27 @@ public interface PostControllerSwagger {
    ResponseEntity<PostResponse> createPost(
             @Valid @RequestBody PostCreateRequest request,
             @UserPrincipal User user);
+
+
+
+    @Operation(summary = "썸네일과 함께 게시물 생성", description = "새로운 게시물과 썸네일을 생성합니다. (운영용-테스트금지")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "게시물 생성 성공",
+                    content = @Content(schema = @Schema(implementation = PostResponse.class))),
+            @ApiResponse(responseCode = "400",
+                    description = "잘못된 요청 데이터",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "403",
+                    description = "발행 권한 없음",
+                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/thumbnail")
+    ResponseEntity<PostResponse> createPostAndThumbnail(
+            @Valid @RequestBody PostCreateRequest request,
+            @UserPrincipal User user);
+
 
 
 

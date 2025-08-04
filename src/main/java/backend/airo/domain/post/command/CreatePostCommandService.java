@@ -28,8 +28,28 @@ public class CreatePostCommandService {
     private final ApplicationEventPublisher eventPublisher;
     private final ThumbnailGenerationService thumbnailGenerationService;
 
-    @Transactional// 비동기 실행을 위한 Executor 지정
+    @Transactional
     public Post handle(PostCreateRequest request, Long userId) {
+        log.info("게시물 생성 시작: title={}, userId={}, status={}",
+                request.title(), userId ,request.status());
+
+        // 도메인 객체 생성
+        Post post = createPostFromCommand(request, userId);
+
+        log.debug("생성된 Post 도메인 객체: {}", post);
+
+        // 게시물 저장
+        Post savedPost = postRepository.save(post);
+        log.info("게시물 저장 완료: id={}, title={}", savedPost.getId(), savedPost.getTitle());
+
+        processPostImages(userId, savedPost.getId(), request);
+
+        return savedPost;
+    }
+
+
+    @Transactional// 비동기 실행을 위한 Executor 지정
+    public Post handleWithThumbnail(PostCreateRequest request, Long userId) {
         log.info("게시물 생성 시작: title={}, userId={}, status={}",
                 request.title(), userId ,request.status());
 
