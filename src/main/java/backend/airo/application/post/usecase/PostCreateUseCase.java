@@ -43,5 +43,21 @@ public class PostCreateUseCase {
         return savedPost;
     }
 
+    @Transactional
+    public Post createPostAndThumbnail(PostCreateRequest request, Long userId) {
+
+        if (request.status() == PostStatus.PUBLISHED && !request.canPublish()) {
+            throw new PostPublishException(null, "발행에 필요한 필수 정보가 누락되었습니다 (카테고리, 위치)", POST_ALREADY_PUBLISHED);
+        }
+
+        Post savedPost = createPostCommandService.handleWithThumbnail(request, userId);
+
+        boolean handle = createPointHistoryCommand.handle(userId, 100L, savedPost.getId(), PointType.REPORT);
+        if (handle) {
+            upsertPointCommand.handle(userId, 100L);
+        }
+        return savedPost;
+    }
+
 
 }

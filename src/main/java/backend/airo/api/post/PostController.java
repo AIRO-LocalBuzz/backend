@@ -10,7 +10,6 @@ import backend.airo.domain.post.Post;
 import backend.airo.api.post.dto.*;
 import backend.airo.domain.user.User;
 import io.swagger.v3.oas.annotations.Parameter;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +51,26 @@ public class PostController implements PostControllerSwagger {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @Override
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/thumbnail")
+    public ResponseEntity<PostResponse> createPostAndThumbnail(
+            @Valid @RequestBody PostCreateRequest request,
+            @UserPrincipal User user) {
+        log.info("게시물+썸네일 생성 요청 원본: {}", request);
+        log.info("세부 정보 - title: {}, userId: {}, categoryId: {}, locationId: {}",
+                request.title(),user.getId(), request.category());
+
+        log.info("게시물+썸네일 생성 요청: title={}, userId={}", request.title(), user.getId());
+
+
+        Post createdPost = postCreateUseCase.createPostAndThumbnail(request, user.getId());
+        PostResponse response = PostResponse.fromDomain(createdPost);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
 
     // ===== 게시물 조회 =====
     @Override
