@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface ThumbnailJpaRepository extends JpaRepository<ThumbnailEntity, Long> {
     Optional<ThumbnailEntity> findByPostId(Long postId);
     void deleteByPostId(Long postId);
+    Optional<ThumbnailEntity> findById(Long postId);
 }

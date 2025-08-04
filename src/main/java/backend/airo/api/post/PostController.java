@@ -67,6 +67,20 @@ public class PostController implements PostControllerSwagger {
         return ResponseEntity.ok(response);
     }
 
+    @Override
+    @GetMapping("thumbnail/{thumbnailId}")
+    public ResponseEntity<ThumbnailResponseDto> getThumbnail(
+            @Parameter(description = "썸네일 ID", required = true)
+            @UserPrincipal User user,
+            @PathVariable Long thumbnailId) {
+
+
+        ThumbnailResponseDto response = postReadUseCase.getThumbnailById(thumbnailId);
+
+        return ResponseEntity.ok(response);
+    }
+
+
 
     @Override
     @GetMapping
