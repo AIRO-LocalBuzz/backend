@@ -23,7 +23,6 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 public class ThumbnailGenerationService {
 
-    @Qualifier("thumbnailLLMProvider")
     private final LLMProvider llmProvider;
     private final ImageRepository imageRepository;
     private final ThumbnailRepository thumbnailRepository;
