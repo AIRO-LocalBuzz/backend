@@ -24,7 +24,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Configuration
 @RequiredArgsConstructor
@@ -56,10 +55,11 @@ public class ClutrFatvlJobConfiguration {
     public Step clutrFatvlStep(
             ItemStreamReader<List<OpenApiClutrFatvlInfo>> reader,
             ItemProcessor<List<OpenApiClutrFatvlInfo>, List<ClutrFatvl>> processor,
-            ItemWriter<List<ClutrFatvl>> writer
+            ItemWriter<List<ClutrFatvl>> writer,
+            @Value("${spring.jpa.properties.hibernate.jdbc.batch_size}") int chunkSize
     ) {
         return new StepBuilder(JOB_NAME + ".step", repo)
-                .<List<OpenApiClutrFatvlInfo>, List<ClutrFatvl>>chunk(10, tx) // 한 번에 10개의 List (최대 10,000건)
+                .<List<OpenApiClutrFatvlInfo>, List<ClutrFatvl>>chunk(chunkSize, tx) // 한 번에 10개의 List (최대 10,000건)
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)
