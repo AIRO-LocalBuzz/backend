@@ -2,6 +2,7 @@ package backend.airo.api.global.swagger;
 
 
 import backend.airo.api.annotation.UserPrincipal;
+import backend.airo.api.global.dto.Response;
 import backend.airo.api.post.dto.*;
 import backend.airo.domain.user.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,11 +32,11 @@ public interface PostControllerSwagger {
                     description = "게시물 생성 성공",
                     content = @Content(schema = @Schema(implementation = PostResponse.class))),
             @ApiResponse(responseCode = "400",
-                    description = "잘못된 요청 데이터",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    description = "잘못된 요청 데이터 (POST_204: 제목 필수, POST_203: 내용 길이 초과, POST_301-306: 발행 조건 미충족)",
+                    content = @Content(schema = @Schema(implementation = Response.class))),
             @ApiResponse(responseCode = "403",
-                    description = "발행 권한 없음",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    description = "발행 권한 없음 (POST_101: 접근 권한 없음)",
+                    content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PreAuthorize("isAuthenticated()")
     @PostMapping
@@ -52,10 +53,10 @@ public interface PostControllerSwagger {
                     content = @Content(schema = @Schema(implementation = PostResponse.class))),
             @ApiResponse(responseCode = "400",
                     description = "잘못된 요청 데이터",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    content = @Content(schema = @Schema(implementation = Response.class))),
             @ApiResponse(responseCode = "403",
                     description = "발행 권한 없음",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/thumbnail")
@@ -74,10 +75,10 @@ public interface PostControllerSwagger {
                     content = @Content(schema = @Schema(implementation = PostDetailResponse.class))),
             @ApiResponse(responseCode = "404",
                     description = "게시물을 찾을 수 없음",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    content = @Content(schema = @Schema(implementation = Response.class))),
             @ApiResponse(responseCode = "403",
                     description = "접근 권한 없음",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @GetMapping("/{id}")
     ResponseEntity<PostDetailResponse> getPost(
@@ -116,13 +117,13 @@ public interface PostControllerSwagger {
                     content = @Content(schema = @Schema(implementation = PostResponse.class))),
             @ApiResponse(responseCode = "400",
                     description = "잘못된 요청 데이터",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    content = @Content(schema = @Schema(implementation = Response.class))),
             @ApiResponse(responseCode = "403",
                     description = "수정 권한 없음",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    content = @Content(schema = @Schema(implementation = Response.class))),
             @ApiResponse(responseCode = "404",
                     description = "게시물을 찾을 수 없음",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PutMapping("/{id}")
     ResponseEntity<PostResponse> updatePost(
@@ -138,10 +139,10 @@ public interface PostControllerSwagger {
             @ApiResponse(responseCode = "204", description = "게시물 삭제 성공"),
             @ApiResponse(responseCode = "403",
                     description = "삭제 권한 없음",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+                    content = @Content(schema = @Schema(implementation = Response.class))),
             @ApiResponse(responseCode = "404",
                     description = "게시물을 찾을 수 없음",
-                    content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+                    content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deletePost(
