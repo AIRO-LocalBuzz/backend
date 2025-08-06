@@ -1,9 +1,8 @@
 package backend.airo.api.init;
 
-import backend.airo.batch.area_code.AreaCodeService;
-import backend.airo.batch.cure_fatvl.ClutrFatvlService;
-import backend.airo.batch.rural_ex.RuralExService;
-import backend.airo.batch.shop.ShopService;
+import backend.airo.worker.schedule.area_code.AreaCodeService;
+import backend.airo.worker.schedule.rural_ex.RuralExService;
+import backend.airo.worker.schedule.shop.ShopService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class init {
 
-    private final ClutrFatvlService clutrFatvlService;
     private final AreaCodeService areaCodeService;
     private final ShopService shopService;
     private final RuralExService ruralExService;
@@ -24,15 +22,8 @@ public class init {
 
     @GetMapping("all/data")
     public void initControl1() {
-        clutrFatvlService.collectFestivalOf();
         areaCodeService.collectCodeOf();
         shopService.collectShopOf();
-    }
-
-    @GetMapping("clutrFatvl/data")
-    public void initControl2() {
-        log.info("지역 문화 축제 데이터 수집 요청");
-        clutrFatvlService.collectFestivalOf();
     }
 
     @GetMapping("shop/data")

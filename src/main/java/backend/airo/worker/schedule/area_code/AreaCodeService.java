@@ -1,4 +1,4 @@
-package backend.airo.batch.area_code;
+package backend.airo.worker.schedule.area_code;
 
 import backend.airo.domain.area_code.CityCode;
 import backend.airo.domain.area_code.MegaCode;

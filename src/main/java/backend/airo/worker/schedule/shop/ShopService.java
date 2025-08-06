@@ -1,4 +1,4 @@
-package backend.airo.batch.shop;
+package backend.airo.worker.schedule.shop;
 
 import backend.airo.support.TimeCatch;
 import lombok.RequiredArgsConstructor;

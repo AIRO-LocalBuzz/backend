@@ -1,0 +1,189 @@
+package backend.airo.batch.jobs.cure_fatvl;
+
+import backend.airo.application.clure_fatvl.dto.OpenApiClutrFatvlInfo;
+import backend.airo.application.clure_fatvl.dto.OpenApiClutrFatvlResponse;
+import backend.airo.cache.AreaCodeCache;
+import backend.airo.cache.AreaName;
+import backend.airo.domain.clure_fatvl.ClutrFatvl;
+import backend.airo.persistence.clutrfatvl.repository.ClutrFatvlBulkRepository;
+import backend.airo.support.ClutrFatvlJobListener;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.*;
+import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Configuration
+@RequiredArgsConstructor
+@Slf4j
+public class ClutrFatvlJobConfiguration {
+
+    public static final String JOB_NAME = "ClutrFatvlJob";
+
+    private final JobRepository repo;
+    private final PlatformTransactionManager tx;
+    private final ClutrFatvlFetcher clutrFatvlFetcher;
+    private final ClutrFatvlBulkRepository clutrFatvlBulkRepository;
+
+
+    private final AreaCodeCache areaCodeCache;
+
+    // === Job ===
+    @Bean(name = JOB_NAME)
+    public Job clutrFatvlJob(Step clutrFatvlStep, ClutrFatvlJobListener listener) {
+        return new JobBuilder(JOB_NAME, repo)
+                .start(clutrFatvlStep)
+                .incrementer(new RunIdIncrementer())
+                .listener(listener)
+                .build();
+    }
+
+    // === step ===
+    @Bean(name = JOB_NAME + ".step")
+    public Step clutrFatvlStep(
+            ItemStreamReader<List<OpenApiClutrFatvlInfo>> reader,
+            ItemProcessor<List<OpenApiClutrFatvlInfo>, List<ClutrFatvl>> processor,
+            ItemWriter<List<ClutrFatvl>> writer
+    ) {
+        return new StepBuilder(JOB_NAME + ".step", repo)
+                .<List<OpenApiClutrFatvlInfo>, List<ClutrFatvl>>chunk(10, tx) // 한 번에 10개의 List (최대 10,000건)
+                .reader(reader)
+                .processor(processor)
+                .writer(writer)
+                .build();
+    }
+
+
+    // === Reader ===
+    @Bean(name = JOB_NAME + ".reader")
+    @StepScope
+    public ItemStreamReader<List<OpenApiClutrFatvlInfo>> clutrReader(
+            @Value("#{jobParameters['pageSize'] ?: 1000}") Integer pageSize) {
+
+        return new ItemStreamReader<>() {
+            private LocalDate current = LocalDate.now(ZoneId.of("Asia/Seoul"));
+            private final LocalDate end = current.plusMonths(6);
+            private boolean finished = false;
+            private int page = 1;
+
+            @Override
+            public List<OpenApiClutrFatvlInfo> read() {
+                if (finished) return null;
+
+                List<OpenApiClutrFatvlInfo> buffer = new ArrayList<>();
+                while (buffer.size() < 1000 && !finished) {
+                    if (current.isAfter(end)) {
+                        finished = true;
+                        break;
+                    }
+
+                    OpenApiClutrFatvlResponse resp = clutrFatvlFetcher.fetchClutrFatvl(
+                            String.valueOf(page),
+                            String.valueOf(pageSize),
+                            current.toString()
+                    );
+
+                    if (resp.resultCode() == null || !"00".equals(resp.resultCode())) {
+                        current = current.plusDays(1);
+                        page = 1;
+                        continue;
+                    }
+
+                    List<OpenApiClutrFatvlInfo> items = resp.openApiClutrFatvlInfos();
+                    if (items == null || items.isEmpty()) {
+                        current = current.plusDays(1);
+                        page = 1;
+                        continue;
+                    }
+
+                    buffer.addAll(items);
+
+                    if (items.size() < pageSize) {
+                        current = current.plusDays(1);
+                        page = 1;
+                    } else {
+                        page++;
+                    }
+                }
+
+                return buffer.isEmpty() ? null : buffer;
+            }
+
+            @Override public void open(ExecutionContext executionContext) {}
+            @Override public void update(ExecutionContext executionContext) {}
+            @Override public void close() {}
+        };
+    }
+
+
+
+    // === Processor ===
+    @Bean(name = JOB_NAME + ".processor")
+    public ItemProcessor<List<OpenApiClutrFatvlInfo>, List<ClutrFatvl>> clutrProcessor() {
+        return items -> items.stream()
+                .map(item -> {
+                    try {
+                        AreaName region = areaNameParsing(item.road(), item.lot());
+                        String megaCode = areaCodeCache.getMegaCode(region.mega());
+                        String cityCode = areaCodeCache.getCityCode(region.mega(), region.city());
+                        return ClutrFatvl.create(item, megaCode, cityCode);
+                    } catch (Exception e) {
+                        log.error("Processor 예외 발생: {}", e.getMessage(), e);
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    @Bean(name = JOB_NAME + ".writer")
+    public ItemWriter<List<ClutrFatvl>> clutrWriter() {
+        return chunk -> {
+            for (List<ClutrFatvl> group : chunk.getItems()) {
+                if (!group.isEmpty()) {
+                    clutrFatvlBulkRepository.batchInsert(group);
+                    log.info("[Writer] batch insert size: {}", group.size());
+                }
+            }
+        };
+    }
+
+
+    //TODO Redis 캐시로 옮기면 해당 로직으로 변경 예정
+    private AreaName areaNameParsing(String roadAddr, String lotAddr) {
+        String fullAddress = roadAddr;
+        if (fullAddress == null || fullAddress.isBlank()) {
+            fullAddress = lotAddr;
+        }
+
+        if (fullAddress == null || fullAddress.isBlank()) {
+            return new AreaName("UNKNOWN", "UNKNOWN");
+        }
+
+        String[] tokens = fullAddress.trim().split(" ");
+        String mega = tokens.length > 0 ? tokens[0] : "UNKNOWN";
+
+        StringBuilder cityBuilder = new StringBuilder();
+        for (int i = 1; i < Math.min(tokens.length, 4); i++) {
+            if (tokens[i].endsWith("시") || tokens[i].endsWith("군") || tokens[i].endsWith("구")) {
+                cityBuilder.append(tokens[i]).append(" ");
+            }
+        }
+
+        String city = cityBuilder.toString().trim();
+        return new AreaName(mega, city);
+    }
+}

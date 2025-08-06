@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Builder
 public record ClutrFatvListResponse(
 
-        Long id,
+        String id,
         String name,
         LocalDate startDate,
         LocalDate endDate,

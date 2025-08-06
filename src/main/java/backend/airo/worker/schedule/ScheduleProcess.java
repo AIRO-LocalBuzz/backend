@@ -1,21 +1,18 @@
-package backend.airo.batch;
+package backend.airo.worker.schedule;
 
-import backend.airo.batch.area_code.AreaCodeService;
-import backend.airo.batch.cure_fatvl.ClutrFatvlService;
-import backend.airo.batch.rural_ex.RuralExService;
-import backend.airo.batch.shop.ShopService;
+import backend.airo.worker.schedule.shop.ShopService;
+import backend.airo.worker.schedule.area_code.AreaCodeService;
+import backend.airo.worker.schedule.rural_ex.RuralExService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+@EnableScheduling
 @Component
 @RequiredArgsConstructor
-@Slf4j
-//TODO 추후에 스프링 Batch로 바꿀 예정
-public class BatchProcessJob {
+public class ScheduleProcess {
 
-    private final ClutrFatvlService clutrFatvlService;
     private final AreaCodeService areaCodeService;
     private final ShopService shopService;
     private final RuralExService ruralExService;
@@ -37,12 +34,4 @@ public class BatchProcessJob {
     public void getAsyncShop() {
         shopService.collectShopOf();
     }
-
-
-    // 매일 아침 8시 30분에 배치 작업 시작 [ 각 지역별 문화, 축제 데이터 수집 ]
-    @Scheduled(cron = "0 30 8 * * *", zone = "Asia/Seoul")
-    public void getAsyncDailyFestival() {
-        clutrFatvlService.collectFestivalOf();
-    }
-
 }

@@ -1,4 +1,4 @@
-package backend.airo.batch.rural_ex;
+package backend.airo.worker.schedule.rural_ex;
 
 import backend.airo.domain.rural_ex.RuralEx;
 import backend.airo.domain.rural_ex.command.CreateAllRuralExCommand;

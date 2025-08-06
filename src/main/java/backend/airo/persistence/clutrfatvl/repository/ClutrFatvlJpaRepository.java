@@ -17,6 +17,4 @@ public interface ClutrFatvlJpaRepository extends JpaRepository<ClutrFatvlEntity,
     @Query("DELETE FROM ClutrFatvlEntity f WHERE f.period.start BETWEEN :start AND :end")
     void deleteAllByFstvlStartDateBetween(@Param("start") LocalDate start, @Param("end") LocalDate end);
 
-
-
 }

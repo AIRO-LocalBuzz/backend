@@ -26,6 +26,7 @@ jobs:
       OPEN_API_KET: ${{ secrets.OPEN_API_KET }}
       DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       DISCORD_BOT_CHANNEL_ID: ${{ secrets.DISCORD_BOT_CHANNEL_ID }}
+      BATCH_SIZE: ${{ secrets.BATCH_SIZE }}
     steps:
       - name: 현재 저장소 코드 Clone
         uses: actions/checkout@v4
@@ -50,6 +51,7 @@ jobs:
           OPEN_API_KET=$OPEN_API_KET
           DISCORD_BOT_TOKEN=$DISCORD_BOT_TOKEN
           DISCORD_BOT_CHANNEL_ID=$DISCORD_BOT_CHANNEL_ID
+          BATCH_SIZE=$BATCH_SIZE
           EOF
 
       - name: 현재 코드 및 파일들을 서버로 전송
