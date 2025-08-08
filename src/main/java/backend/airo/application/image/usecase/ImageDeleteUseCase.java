@@ -1,5 +1,8 @@
 package backend.airo.application.image.usecase;
+import backend.airo.common.exception.NullErrorCode;
 import backend.airo.domain.image.command.DeleteImageCommandService;
+import backend.airo.domain.image.exception.ImageErrorCode;
+import backend.airo.domain.image.util.NullCheckProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -8,32 +11,30 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImageDeleteUseCase {
 
-
+    private final Class<?> sourceClass = ImageDeleteUseCase.class;
     private final DeleteImageCommandService deleteImageCommandService;
 
+    public boolean deleteImageWithAuth(Long imageId, Long userId) {
 
-    public boolean deleteSingleImage(Long imageId) {
-        return deleteImageCommandService.deleteById(imageId);
+        return deleteImageCommandService.deleteById(
+                NullCheckProvider.checkNotNull(imageId, NullErrorCode.IMAGE_ID_REQUIRED, sourceClass),
+                NullCheckProvider.checkNotNull(userId, NullErrorCode.USER_ID_REQUIRED, sourceClass)
+        );
+    }
+
+    public void deleteMultipleImages(List<Long> imageIds, Long userId) {
+        deleteImageCommandService.deleteAllById(
+                NullCheckProvider.checkNotNull(imageIds, NullErrorCode.IMAGE_IDS_REQUIRED, sourceClass),
+                NullCheckProvider.checkNotNull(userId, NullErrorCode.USER_ID_REQUIRED, sourceClass)
+        );
     }
 
 
-    public boolean deleteImageWithAuth(Long imageId, Long currentUserId) {
-        return deleteImageCommandService.deleteById(imageId, currentUserId);
+    public void deleteImagesByPostWithAuth(Long postId, Long userId) {
+        deleteImageCommandService.deleteByPostId(
+                NullCheckProvider.checkNotNull(postId, NullErrorCode.POST_ID_REQUIRED, sourceClass),
+                NullCheckProvider.checkNotNull(userId, NullErrorCode.USER_ID_REQUIRED, sourceClass)
+        );
     }
-
-    public void deleteMultipleImages(List<Long> imageIds) {
-        deleteImageCommandService.deleteAllById(imageIds);
-    }
-
-
-    public void deleteImagesByPost(Long postId) {
-        deleteImageCommandService.deleteByPostId(postId);
-    }
-
-
-    public void deleteImagesByPostWithAuth(Long postId, Long currentUserId) {
-        deleteImageCommandService.deleteByPostId(postId, currentUserId);
-    }
-
 
 }

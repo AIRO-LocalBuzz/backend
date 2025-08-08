@@ -8,7 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-
+@Builder
 @RequiredArgsConstructor
 @Getter
 @Setter
@@ -63,5 +63,6 @@ public class Image {
         this.mimeType = mimeType;
         this.isCover = false; // 기본값 설정
     }
+
 
 }

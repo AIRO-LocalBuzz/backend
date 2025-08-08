@@ -6,10 +6,10 @@ import backend.airo.common.exception.BaseErrorCode;
 /**
  * 게시물 관련 비즈니스 예외의 기본 클래스
  */
-public class PostException extends AiroException {
+public class PostLikeException extends AiroException {
 
     // 기본 생성자
-    public PostException(BaseErrorCode errorCode, String sourceLayer) {
+    public PostLikeException(BaseErrorCode errorCode, String sourceLayer) {
         super(errorCode, sourceLayer);
     }
 

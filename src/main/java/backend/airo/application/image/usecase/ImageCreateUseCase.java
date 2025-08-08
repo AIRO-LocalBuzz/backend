@@ -34,8 +34,5 @@ public class ImageCreateUseCase {
     }
 
 
-    public String generateThumbnail(String originalImageUrl) {
-        return createImageCommandService.generateThumbnail(originalImageUrl);
-    }
 
 }

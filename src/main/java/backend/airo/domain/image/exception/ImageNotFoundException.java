@@ -1,20 +1,37 @@
 package backend.airo.domain.image.exception;
 
-public class ImageNotFoundException extends RuntimeException {
+import java.util.List;
 
-    public ImageNotFoundException(String message) {
-        super(message);
-    }
+/**
+ * 이미지를 찾을 수 없을 때 발생하는 예외
+ */
+public class ImageNotFoundException extends ImageException {
 
-    public ImageNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    private final Long imageId;
+    private final List<Long> imageIds;
 
     public ImageNotFoundException(Long imageId) {
-        super("이미지를 찾을 수 없습니다: " + imageId);
+        super(ImageErrorCode.IMAGE_NOT_FOUND, "DOMAIN");
+        this.imageId = imageId;
+        this.imageIds = null;
     }
 
-    public ImageNotFoundException(String field, Object value) {
-        super(String.format("이미지를 찾을 수 없습니다. %s: %s", field, value));
+    public ImageNotFoundException(List<Long> imageIds) {
+        super(ImageErrorCode.IMAGE_NOT_FOUND, "DOMAIN");
+        this.imageIds = imageIds;
+        this.imageId = null;
     }
+
+
+    @Override
+    public String getMessage() {
+        if (imageId != null) {
+            return String.format("%s - 이미지를 찾을 수 없습니다. ImageID: %d", sourceLayer, imageId);
+        }else if (imageIds != null) {
+            return String.format("%s - 찾을 수 있는 이미지가 없습니다. ImageIDs: %s", sourceLayer, imageIds);
+        }else{
+            return String.format("%s - 이미지 정보가 없습니다.", sourceLayer);
+        }
+    }
+
 }

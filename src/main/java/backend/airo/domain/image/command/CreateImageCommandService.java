@@ -1,6 +1,8 @@
 package backend.airo.domain.image.command;
 
 import backend.airo.domain.image.Image;
+import backend.airo.domain.image.exception.ImageErrorCode;
+import backend.airo.domain.image.exception.InvalidImageException;
 import backend.airo.domain.image.exception.UnsupportedFormatException;
 import backend.airo.domain.image.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
@@ -79,27 +81,24 @@ public class CreateImageCommandService {
         }
     }
 
-    public String generateThumbnail(String originalImageUrl) {
-        if (originalImageUrl == null || originalImageUrl.trim().isEmpty()) {
-            throw new IllegalArgumentException("원본 이미지 URL은 필수입니다");
-        }
-
-        return imageRepository.generateThumbnail(originalImageUrl);
-    }
-
     private void validateImage(Image image) {
         if (image == null) {
-            throw new IllegalArgumentException("이미지 정보는 필수입니다");
+            throw new InvalidImageException(ImageErrorCode.IMAGE_INFO_REQUIRED, "image", "null");
         }
 
         if (image.getImageUrl() == null || image.getImageUrl().trim().isEmpty()) {
-            throw new IllegalArgumentException("이미지 URL은 필수입니다");
+            throw new InvalidImageException(ImageErrorCode.IMAGE_URL_REQUIRED, "imageUrl", image.getImageUrl());
         }
     }
 
     private void validateMimeType(String mimeType) {
-        if (mimeType == null || !SUPPORTED_MIME_TYPES.contains(mimeType.toLowerCase())) {
+        if (mimeType == null) {
+            throw new InvalidImageException(ImageErrorCode.IMAGE_MIME_TYPE_REQUIRED, "mimeType", "null");
+        }
+
+        if (!SUPPORTED_MIME_TYPES.contains(mimeType.toLowerCase())) {
             throw new UnsupportedFormatException(mimeType, SUPPORTED_MIME_TYPES.toArray(new String[0]));
         }
     }
+
 }

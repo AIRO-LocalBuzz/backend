@@ -2,6 +2,7 @@ package backend.airo.domain.post;
 
 import backend.airo.domain.post.enums.*;
 import backend.airo.domain.post.vo.Location;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Builder
 @RequiredArgsConstructor
 public class Post {
     private final Long id;

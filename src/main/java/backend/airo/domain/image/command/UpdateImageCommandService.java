@@ -2,7 +2,9 @@ package backend.airo.domain.image.command;
 
 
 import backend.airo.domain.image.Image;
+import backend.airo.domain.image.exception.ImageErrorCode;
 import backend.airo.domain.image.exception.ImageNotFoundException;
+import backend.airo.domain.image.exception.InvalidImageException;
 import backend.airo.domain.image.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -21,7 +24,7 @@ public class UpdateImageCommandService {
 
     public Image updateSortOrder(Long imageId, Integer newSortOrder) {
         if (imageId == null) {
-            throw new IllegalArgumentException("이미지 ID는 필수입니다");
+            throw new InvalidImageException(ImageErrorCode.IMAGE_ID_REQUIRED, "imageId", "null");
         }
 
         if (newSortOrder == null || newSortOrder < 0) {
@@ -40,7 +43,7 @@ public class UpdateImageCommandService {
 
     public Image updateCaption(Long imageId, String newCaption) {
         if (imageId == null) {
-            throw new IllegalArgumentException("이미지 ID는 필수입니다");
+            throw new InvalidImageException(ImageErrorCode.IMAGE_ID_REQUIRED, "imageId", "null");
         }
 
         Image existingImage = imageRepository.findById(imageId);
@@ -56,7 +59,7 @@ public class UpdateImageCommandService {
 
     public Image updateAltText(Long imageId, String newAltText) {
         if (imageId == null) {
-            throw new IllegalArgumentException("이미지 ID는 필수입니다");
+            throw new InvalidImageException(ImageErrorCode.IMAGE_ID_REQUIRED, "imageId", "null");
         }
 
         Image existingImage = imageRepository.findById(imageId);
@@ -72,13 +75,25 @@ public class UpdateImageCommandService {
 
 
     public Collection<Image> reorderImages(List<Long> imageIds) {
+
         if (imageIds == null || imageIds.isEmpty()) {
             throw new IllegalArgumentException("이미지 ID 목록은 필수입니다");
         }
 
         Collection<Image> images = imageRepository.findAllById(imageIds);
+
         if (images.size() != imageIds.size()) {
-            throw new ImageNotFoundException("일부 이미지를 찾을 수 없습니다");
+            // 누락된 ID 찾기
+            Set<Long> foundIds = images.stream()
+                    .map(Image::getId)
+                    .collect(Collectors.toSet());
+
+            Long missingId = imageIds.stream()
+                    .filter(id -> !foundIds.contains(id))
+                    .findFirst()
+                    .orElse(null);
+
+            throw new ImageNotFoundException(missingId);
         }
 
         // Map으로 변환하여 더 안전하게 처리

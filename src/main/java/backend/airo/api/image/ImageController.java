@@ -137,8 +137,13 @@ public class ImageController implements ImageControllerSwagger {
             @PathVariable Long imageId) {
         log.info("이미지 삭제 요청 - 사용자 ID: {}, 이미지 ID: {}", user.getId(), imageId);
 
-        imageDeleteUseCase.deleteImageWithAuth(imageId, user.getId());
-        return ResponseEntity.noContent().build();
+        if(imageDeleteUseCase.deleteImageWithAuth(imageId, user.getId())) {
+            return ResponseEntity.noContent().build();
+        } else {
+            log.warn("이미지 삭제 실패 - 이미지 ID: {}", imageId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
     }
 
     @Override
@@ -150,7 +155,7 @@ public class ImageController implements ImageControllerSwagger {
     ) {
         log.info("다중 이미지 삭제 요청 - 사용자 ID: {}, 이미지 개수: {}", user.getId(), imageIds.size());
 
-        imageDeleteUseCase.deleteMultipleImages(imageIds);
+        imageDeleteUseCase.deleteMultipleImages(imageIds, user.getId());
         return ResponseEntity.noContent().build();
     }
 

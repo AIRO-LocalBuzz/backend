@@ -12,6 +12,14 @@ public enum PostErrorCode implements BaseErrorCode {
     // 404 에러들
     POST_NOT_FOUND(404, "POST_001", "게시물을 찾을 수 없습니다"),
     POST_AUTHOR_NOT_FOUND(404, "POST_002", "게시물 작성자를 찾을 수 없습니다"),
+    POST_LIKE_NOT_FOUND(404, "POST_LIKE_101", "좋아요를 찾을 수 없습니다"),
+    POST_ID_REQUIRED(400, "POST_LIKE_001", "게시물 ID는 필수입니다"),
+    USER_ID_REQUIRED(400, "POST_LIKE_002", "사용자 ID는 필수입니다"),
+    POST_ID_POSITIVE(400, "POST_LIKE_003", "게시물 ID는 양수여야 합니다"),
+    USER_ID_POSITIVE(400, "POST_LIKE_004", "사용자 ID는 양수여야 합니다"),
+    POST_REQUEST_REQUIRED(400, "POST_001", "게시물 요청은 필수입니다"),
+    POST_CONTENT_REQUIRED(400, "POST_002", "게시물 내용은 필수입니다"),
+    POST_STATUS_REQUIRED(400, "POST_003", "게시물 상태는 필수입니다"),
 
     // 403 에러들
     POST_ACCESS_DENIED(403, "POST_101", "게시물에 접근할 권한이 없습니다"),
@@ -36,9 +44,10 @@ public enum PostErrorCode implements BaseErrorCode {
     POST_CANNOT_DELETE_PUBLISHED(400, "POST_403", "발행된 게시물은 바로 삭제할 수 없습니다"),
     POST_CANNOT_PUBLISH_ARCHIVED(400, "POST_404", "보관된 게시물은 발행할 수 없습니다"),
     POST_ALREADY_IN_STATUS(400, "POST_405", "이미 해당 상태입니다"),
-    POST_CANNOT_CHANGE_STATUS(400, "POST_406", "게시물 상태를 변경할 수 없습니다");
+    POST_CANNOT_CHANGE_STATUS(400, "POST_406", "게시물 상태를 변경할 수 없습니다"),
 
-
+    // 409 에러들
+    POST_LIKE_ALREADY_EXISTS(409, "POST_LIKE_201", "이미 좋아요가 존재합니다");
 
     private final int status;
     private final String code;

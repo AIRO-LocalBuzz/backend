@@ -20,6 +20,11 @@ public class GetImageQueryService {
         if (id == null) {
             throw new IllegalArgumentException("이미지 ID는 필수입니다");
         }
+
+        if (imageExists(id) == false) {
+            throw new IllegalArgumentException("해당 ID의 이미지를 찾을 수 없습니다");
+        }
+
         Image image = imageRepository.findById(id);
 
         return image;
@@ -37,6 +42,7 @@ public class GetImageQueryService {
         if (postId == null) {
             throw new IllegalArgumentException("게시물 ID는 필수입니다");
         }
+
 
         return imageRepository.findImagesAllByPostId(postId);
     }

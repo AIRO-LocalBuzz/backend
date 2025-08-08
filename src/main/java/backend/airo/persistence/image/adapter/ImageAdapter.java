@@ -54,7 +54,15 @@ public class ImageAdapter implements ImageRepository {
     }
 
     @Override
+    public boolean existsByPostId(Long id) {
+        return imageJpaRepository.existsByPostId(id);
+    }
+
+    @Override
     public Collection<Image> findImagesAllByPostId(Long postId) {
+        if (!imageJpaRepository.existsByPostId(postId)) {
+            throw new ImageNotFoundException(postId);
+        }
         Collection<ImageEntity> entities = imageJpaRepository.findByPostId(postId);
         return entities.stream()
                 .map(ImageEntity::toDomain)
@@ -122,6 +130,9 @@ public class ImageAdapter implements ImageRepository {
 
     @Override
     public void deleteByPostId(Long postId) {
+        if (!imageJpaRepository.existsByPostId(postId)) {
+            throw new ImageNotFoundException(postId);
+        }
         imageJpaRepository.deleteByPostId(postId);
     }
 
