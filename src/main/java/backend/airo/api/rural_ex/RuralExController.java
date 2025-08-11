@@ -6,7 +6,8 @@ import backend.airo.api.global.swagger.RuralExControllerSwagger;
 import backend.airo.api.rural_ex.dto.RuralExInfoResponse;
 import backend.airo.api.rural_ex.dto.RuralExListResponse;
 import backend.airo.application.rural_ex.usecase.RuralExUseCase;
-import backend.airo.cache.AreaCodeCache;
+import backend.airo.cache.area_code.AreaCodeCacheService;
+import backend.airo.cache.rural_ex.RuralExCacheService;
 import backend.airo.domain.rural_ex.RuralEx;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -27,19 +28,23 @@ import java.util.List;
 public class RuralExController implements RuralExControllerSwagger {
 
     private final RuralExUseCase ruralExUseCase;
-    //TODO Redis로 바꿀 것
-    private final AreaCodeCache areaCodeCache;
+    private final AreaCodeCacheService areaCodeCacheService;
+
 
     @Override
     @GetMapping("/rural/ex")
     public Response<PageResponse<RuralExListResponse>> getClureFatvlList(
-            @RequestParam() String megaCode,
-            @RequestParam() String cityCode,
+            @RequestParam() Long megaCode,
+            @RequestParam() Long cityCode,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<RuralEx> ruralExes = ruralExUseCase.getRuralListQuery(areaCodeCache.getMegaName(megaCode), areaCodeCache.getCityName(cityCode), pageable);
+        Page<RuralEx> ruralExes = ruralExUseCase.getRuralListQuery(
+                areaCodeCacheService.getMegaName(megaCode),
+                areaCodeCacheService.getCityName(megaCode, cityCode),
+                pageable
+        );
         List<RuralExListResponse> content = ruralExes.getContent().stream().map(RuralExListResponse::create).toList();
         return Response.success(
                 new PageResponse<>(

@@ -9,4 +9,8 @@ public interface MegaRepository extends AggregateSupport<MegaCode, Long> {
 
     List<MegaCode> findAll();
 
+    String findByMegaCode(Long megaId);
+
+    Long findByMegaName(String megaName);
+
 }

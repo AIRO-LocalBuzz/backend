@@ -1,4 +1,4 @@
-package backend.airo.infra.redis.config;
+package backend.airo.redis.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

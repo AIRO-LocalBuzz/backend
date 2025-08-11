@@ -75,14 +75,14 @@ public class ClutrFatvl {
         this.insttNm = insttNm;
     }
 
-    public static ClutrFatvl create(OpenApiClutrFatvlInfo dto, String megaCode, String cityCode) {
+    public static ClutrFatvl create(OpenApiClutrFatvlInfo dto, Long megaCode, Long cityCode) {
         return ClutrFatvl.builder()
                 .fstvlNm(dto.fstvlNm())
                 .opar(dto.opar())
                 .fstvlCo(dto.fstvlCo())
                 .period(new FestivalPeriod(dto.start(), dto.end()))
                 .location(new GeoPoint(dto.lat(), dto.lon()))
-                .address(new Address(dto.road(), dto.lot(), megaCode, cityCode))
+                .address(new Address(dto.road(), dto.lot(), String.valueOf(megaCode), String.valueOf(cityCode)))
                 .mnnstNm(dto.mnnstNm())
                 .auspcInsttNm(dto.auspcInsttNm())
                 .suprtInsttNm(dto.suprtInsttNm())

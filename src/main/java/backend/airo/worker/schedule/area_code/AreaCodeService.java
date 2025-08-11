@@ -24,8 +24,6 @@ public class AreaCodeService {
     private final CreateAllCityCodeCommand createAllCityCodeCommand;
     private final TimeCatch timeCatch = new TimeCatch("AreaCode Time Check");
 
-//    private final
-
     public void collectCodeOf() {
         timeCatch.start();
         //1. 지역 코드 수집

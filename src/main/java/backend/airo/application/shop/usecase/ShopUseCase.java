@@ -1,5 +1,6 @@
 package backend.airo.application.shop.usecase;
 
+import backend.airo.cache.shop.ShopCacheService;
 import backend.airo.domain.shop.Shop;
 import backend.airo.domain.shop.query.GetShopListQuery;
 import backend.airo.domain.shop.query.GetShopQuery;
@@ -14,8 +15,8 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class ShopUseCase {
 
+    private final ShopCacheService shopCacheService;
     private final GetShopListQuery getShopListQuery;
-    private final GetShopQuery getShopQuery;
 
     public Page<Shop> getShopList(String megaName, String cityName, Pageable pageable, String largeCategoryCode, String middleCategoryCode, String smallCategoryCode) {
         String middleCode = StringUtils.hasText(middleCategoryCode) ? middleCategoryCode : null;
@@ -24,7 +25,7 @@ public class ShopUseCase {
     }
 
     public Shop getShopInfo(Long shopId) {
-        return getShopQuery.handle(shopId);
+        return shopCacheService.getShop(shopId);
     }
 
 

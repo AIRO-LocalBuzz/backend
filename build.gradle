@@ -40,7 +40,11 @@ dependencies {
 
 	// Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	implementation 'io.lettuce:lettuce-core'
+
+	//Spring Actuactor
+	implementation "org.springframework.boot:spring-boot-starter-actuator"
 
 	// Documentation
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'

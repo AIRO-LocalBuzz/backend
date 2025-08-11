@@ -1,4 +1,4 @@
-package backend.airo.cache;
+package backend.airo.cache.vo;
 
 public record AreaName(
         String mega,

@@ -2,11 +2,11 @@ package backend.airo.batch.jobs.cure_fatvl;
 
 import backend.airo.application.clure_fatvl.dto.OpenApiClutrFatvlInfo;
 import backend.airo.application.clure_fatvl.dto.OpenApiClutrFatvlResponse;
-import backend.airo.cache.AreaCodeCache;
-import backend.airo.cache.AreaName;
+import backend.airo.cache.vo.AreaName;
+import backend.airo.cache.area_code.AreaCodeCacheService;
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.persistence.clutrfatvl.repository.ClutrFatvlBulkRepository;
-import backend.airo.support.ClutrFatvlJobListener;
+import backend.airo.worker.listener.ClutrFatvlJobListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.*;
@@ -36,9 +36,7 @@ public class ClutrFatvlJobConfiguration {
     private final PlatformTransactionManager tx;
     private final ClutrFatvlFetcher clutrFatvlFetcher;
     private final ClutrFatvlBulkRepository clutrFatvlBulkRepository;
-
-
-    private final AreaCodeCache areaCodeCache;
+    private final AreaCodeCacheService areaCodeCacheService;
 
     // === Job ===
     @Bean(name = JOB_NAME)
@@ -137,8 +135,8 @@ public class ClutrFatvlJobConfiguration {
                 .map(item -> {
                     try {
                         AreaName region = areaNameParsing(item.road(), item.lot());
-                        String megaCode = areaCodeCache.getMegaCode(region.mega());
-                        String cityCode = areaCodeCache.getCityCode(region.mega(), region.city());
+                        Long megaCode = areaCodeCacheService.getMegaCode(region.mega());
+                        Long cityCode = areaCodeCacheService.getCityCode(megaCode, region.city());
                         return ClutrFatvl.create(item, megaCode, cityCode);
                     } catch (Exception e) {
                         log.error("Processor 예외 발생: {}", e.getMessage(), e);

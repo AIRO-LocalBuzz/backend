@@ -1,5 +1,6 @@
 package backend.airo.application.rural_ex.usecase;
 
+import backend.airo.cache.rural_ex.RuralExCacheService;
 import backend.airo.domain.rural_ex.RuralEx;
 import backend.airo.domain.rural_ex.query.GetRuralExQuery;
 import backend.airo.domain.rural_ex.query.GetRuralListQuery;
@@ -13,13 +14,13 @@ import org.springframework.stereotype.Component;
 public class RuralExUseCase {
 
     private final GetRuralListQuery getRuralListQuery;
-    private final GetRuralExQuery getRuralExQuery;
+    private final RuralExCacheService ruralExCacheService;
 
     public Page<RuralEx> getRuralListQuery(String megaName, String cityName, Pageable pageable) {
         return getRuralListQuery.handle(megaName, cityName, pageable);
     }
 
     public RuralEx getClutrFatvlInfo(Long ruralExId) {
-        return getRuralExQuery.handle(ruralExId);
+        return ruralExCacheService.getRuralEx(ruralExId);
     }
 }

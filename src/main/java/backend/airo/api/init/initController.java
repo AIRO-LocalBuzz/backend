@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/v1/init/")
 @RequiredArgsConstructor
-public class init {
+public class initController {
 
     private final AreaCodeService areaCodeService;
     private final ShopService shopService;
