@@ -1,6 +1,7 @@
 package backend.airo.domain.user;
 
 import backend.airo.domain.user.enums.ProviderType;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

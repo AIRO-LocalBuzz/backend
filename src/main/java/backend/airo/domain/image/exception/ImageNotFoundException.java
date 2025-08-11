@@ -23,15 +23,4 @@ public class ImageNotFoundException extends ImageException {
     }
 
 
-    @Override
-    public String getMessage() {
-        if (imageId != null) {
-            return String.format("%s - 이미지를 찾을 수 없습니다. ImageID: %d", sourceLayer, imageId);
-        }else if (imageIds != null) {
-            return String.format("%s - 찾을 수 있는 이미지가 없습니다. ImageIDs: %s", sourceLayer, imageIds);
-        }else{
-            return String.format("%s - 이미지 정보가 없습니다.", sourceLayer);
-        }
-    }
-
 }

@@ -56,11 +56,13 @@ public class Image {
         this.isCover = false; // 기본값 설정
     }
 
-    public Image (Long userId, String imageUrl, String mimeType) {
+    public Image (Long userId, Long postId, String imageUrl, String mimeType) {
         this.id = null;
         this.userId = userId;
+        this.postId = postId; // 게시물 ID가 없는 경우
         this.imageUrl = imageUrl;
         this.mimeType = mimeType;
+        this.sortOrder = 0;
         this.isCover = false; // 기본값 설정
     }
 

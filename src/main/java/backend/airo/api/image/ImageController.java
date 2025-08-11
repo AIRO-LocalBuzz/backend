@@ -1,6 +1,7 @@
 package backend.airo.api.image;
 
 import backend.airo.api.annotation.UserPrincipal;
+import backend.airo.api.global.dto.Response;
 import backend.airo.api.global.swagger.ImageControllerSwagger;
 import backend.airo.api.image.dto.ImageCreateRequest;
 import backend.airo.api.image.dto.ImageReorderRequest;
@@ -11,6 +12,8 @@ import backend.airo.application.image.usecase.ImageReadUseCase;
 import backend.airo.application.image.usecase.ImageUpdateUseCase;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.user.User;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -18,11 +21,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/v1/images")
 @RequiredArgsConstructor
@@ -38,12 +43,11 @@ public class ImageController implements ImageControllerSwagger {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ImageResponse> uploadSingleImage(
             @UserPrincipal User user,
-            @RequestBody ImageCreateRequest request) {
+            @RequestBody @Valid ImageCreateRequest request) {
 
         log.info("단일 이미지 업로드 요청 - 사용자 ID: {}, 이미지 URL: {}", user.getId(), request.imageUrl());
 
-        Image image = request.toImage(user.getId());
-
+        Image image = imageCreateUseCase.uploadSingleImage(request.toImage(user.getId()));
         ImageResponse response = ImageResponse.from(image);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -74,7 +78,7 @@ public class ImageController implements ImageControllerSwagger {
 
     @Override
     @GetMapping("/{imageId}")
-    public ResponseEntity<ImageResponse> getImage(@PathVariable Long imageId) {
+    public ResponseEntity<ImageResponse> getImage(@PathVariable @Min(1) Long imageId) {
         log.info("이미지 조회 요청 - 이미지 ID: {}", imageId);
 
         Image image = imageReadUseCase.getSingleImage(imageId);
@@ -82,6 +86,7 @@ public class ImageController implements ImageControllerSwagger {
 
         return ResponseEntity.ok(response);
     }
+
 
     @Override
     @GetMapping("/posts/{postId}")
@@ -95,6 +100,7 @@ public class ImageController implements ImageControllerSwagger {
 
         return ResponseEntity.ok(responses);
     }
+
 
     @Override
     @GetMapping
@@ -128,35 +134,32 @@ public class ImageController implements ImageControllerSwagger {
 
 
 
-
     @Override
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{imageId}")
-    public ResponseEntity<Void> deleteImage(
+    public ResponseEntity<Response<Void>> deleteImage(
             @UserPrincipal User user,
             @PathVariable Long imageId) {
         log.info("이미지 삭제 요청 - 사용자 ID: {}, 이미지 ID: {}", user.getId(), imageId);
 
-        if(imageDeleteUseCase.deleteImageWithAuth(imageId, user.getId())) {
-            return ResponseEntity.noContent().build();
-        } else {
-            log.warn("이미지 삭제 실패 - 이미지 ID: {}", imageId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+
+            imageDeleteUseCase.deleteImageWithAuth(imageId, user.getId());
+
+            return ResponseEntity.ok(Response.success("삭제 성공"));
 
     }
 
     @Override
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping
-    public ResponseEntity<Void> deleteMultipleImages(
+    public ResponseEntity<Response<Void>> deleteMultipleImages(
             @UserPrincipal User user,
             @RequestParam List<Long> imageIds
     ) {
         log.info("다중 이미지 삭제 요청 - 사용자 ID: {}, 이미지 개수: {}", user.getId(), imageIds.size());
 
         imageDeleteUseCase.deleteMultipleImages(imageIds, user.getId());
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Response.success("삭제 성공"));
     }
 
 

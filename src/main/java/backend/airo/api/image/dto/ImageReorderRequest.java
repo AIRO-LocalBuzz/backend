@@ -1,6 +1,7 @@
 package backend.airo.api.image.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
@@ -8,5 +9,6 @@ import java.util.List;
 public record ImageReorderRequest(
         @Schema(description = "재정렬할 이미지 ID 목록 (원하는 순서대로)",
                 example = "[3, 1, 2]")
+        @NotEmpty
         List<Long> imageIds
 ) {}

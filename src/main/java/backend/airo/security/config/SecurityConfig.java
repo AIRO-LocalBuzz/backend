@@ -1,5 +1,6 @@
 package backend.airo.security.config;
 
+import backend.airo.api.global.security.CustomAuthenticationEntryPoint;
 import backend.airo.application.auth.oauth2.CustomOAuth2UserService;
 import backend.airo.security.filter.JwtAuthenticationFilter;
 import backend.airo.security.filter.SwaggerBypassAuthenticationFilter;
@@ -38,6 +39,9 @@ public class SecurityConfig {
         http
                 .addFilterBefore(swaggerBypassAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(CsrfConfigurer::disable)
                 .httpBasic(HttpBasicConfigurer::disable)
@@ -51,6 +55,7 @@ public class SecurityConfig {
                                 "/webjars/**",
                                 "/api/auth/**",
                                 "/api/oauth2/**",
+                                "/api/login",
                                 "/api/login/oauth2/**",
                                 "/api/v1/test/**",
                                 "/api/actuator/health",
@@ -73,7 +78,9 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService)
                         )
                         .successHandler(oauth2AuthenticationSuccessHandler)  // 분리된 핸들러 사용
-                );
+                )
+
+        ;
 
         return http.build();
     }

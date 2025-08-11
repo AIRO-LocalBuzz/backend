@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "post_images")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ImageEntity extends BaseEntity {
+public class  ImageEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class ImageEntity extends BaseEntity {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "post_id", nullable = false)
+    @Column(name = "post_id", nullable = true)
     private Long postId;
 
     @Column(name = "original_filename", nullable = true)

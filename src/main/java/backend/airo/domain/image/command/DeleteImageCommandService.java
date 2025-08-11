@@ -18,10 +18,9 @@ public class DeleteImageCommandService {
     private final ImageRepository imageRepository;
 
 
-    public boolean deleteById(Long imageId, Long userId) {
+    public void deleteById(Long imageId, Long userId) {
         getImagesAndCheckOwner(imageId, userId);
         imageRepository.deleteById(imageId);
-        return true;
     }
 
 
