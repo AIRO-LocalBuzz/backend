@@ -28,8 +28,6 @@ import java.util.List;
 public interface ImageControllerSwagger {
 
 
-
-
     @Operation(summary = "단일 이미지 업로드", description = "새로운 이미지를 업로드합니다")
     @ApiResponses({
             @ApiResponse(
@@ -44,13 +42,13 @@ public interface ImageControllerSwagger {
             ),
     })
     @PostMapping
-    ResponseEntity<ImageResponse> uploadSingleImage(
+    Response<ImageResponse> uploadSingleImage(
             @UserPrincipal User user,
             @RequestBody @Valid ImageCreateRequest request
     );
 
 
-
+//------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -68,12 +66,13 @@ public interface ImageControllerSwagger {
             ),
     })
     @PostMapping("/bulk")
-    ResponseEntity<List<ImageResponse>> uploadMultipleImages(
+    Response<List<ImageResponse>> uploadMultipleImages(
             @UserPrincipal User user,
             @RequestBody List<ImageCreateRequest> requests
             );
 
 
+//-------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -87,9 +86,10 @@ public interface ImageControllerSwagger {
             @ApiResponse(responseCode = "404", description = "이미지를 찾을 수 없음")
     })
     @GetMapping("/{imageId}")
-    ResponseEntity<ImageResponse> getImage(@PathVariable @Min(1) Long imageId);
+    Response<ImageResponse> getImage(@PathVariable @Min(1) Long imageId);
 
 
+//-------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -103,9 +103,10 @@ public interface ImageControllerSwagger {
             @ApiResponse(responseCode = "404", description = "게시물을 찾을 수 없음")
     })
     @GetMapping("/posts/{postId}")
-    ResponseEntity<List<ImageResponse>> getImagesByPost(@PathVariable Long postId);
+    Response<List<ImageResponse>> getImagesByPost(@PathVariable Long postId);
 
 
+//-------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -116,11 +117,12 @@ public interface ImageControllerSwagger {
             content = @Content(schema = @Schema(implementation = Page.class))
     )
     @GetMapping
-    ResponseEntity<Page<ImageResponse>> getImages(
+    Response<Page<ImageResponse>> getImages(
             @Parameter(description = "페이지 정보") Pageable pageable
     );
 
 
+//-------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -135,13 +137,13 @@ public interface ImageControllerSwagger {
             @ApiResponse(responseCode = "401", description = "권한 없음")
     })
     @PutMapping("/reorder")
-    ResponseEntity<List<ImageResponse>> reorderImages(
+    Response<List<ImageResponse>> reorderImages(
             @UserPrincipal User user,
             @RequestBody ImageReorderRequest request
     );
 
 
-
+//-------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -152,12 +154,13 @@ public interface ImageControllerSwagger {
             @ApiResponse(responseCode = "401", description = "권한 없음")
     })
     @DeleteMapping("/{imageId}")
-    ResponseEntity<Response<Void>> deleteImage(
+    Response<Void> deleteImage(
             @UserPrincipal User user,
             @PathVariable Long imageId
     );
 
 
+//-------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -169,13 +172,13 @@ public interface ImageControllerSwagger {
             @ApiResponse(responseCode = "401", description = "권한 없음")
     })
     @DeleteMapping
-    ResponseEntity<Response<Void>> deleteMultipleImages(
+    Response<Void> deleteMultipleImages(
             @UserPrincipal User user,
             @RequestParam List<Long> imageIds
     );
 
 
-
+//-------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -192,13 +195,13 @@ public interface ImageControllerSwagger {
                     content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @GetMapping("/my")
-    ResponseEntity<Page<ImageResponse>> getMyImages(
+    Response<Page<ImageResponse>> getMyImages(
             @UserPrincipal User user,
             @Parameter(description = "페이지 정보") Pageable pageable
     );
 
 
-
+//-------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -215,7 +218,7 @@ public interface ImageControllerSwagger {
                     content = @Content(schema = @Schema(implementation = Response.class))),
     })
     @GetMapping("/my/posts/{postId}")
-    ResponseEntity<List<ImageResponse>> getMyImagesByPost(
+    Response<List<ImageResponse>> getMyImagesByPost(
             @UserPrincipal User user,
             @PathVariable Long postId
     );

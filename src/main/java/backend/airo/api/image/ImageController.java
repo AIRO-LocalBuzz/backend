@@ -18,13 +18,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @Slf4j
 @Validated
@@ -41,7 +40,7 @@ public class ImageController implements ImageControllerSwagger {
     @Override
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<ImageResponse> uploadSingleImage(
+    public Response<ImageResponse> uploadSingleImage(
             @UserPrincipal User user,
             @RequestBody @Valid ImageCreateRequest request) {
 
@@ -49,17 +48,16 @@ public class ImageController implements ImageControllerSwagger {
 
         Image image = imageCreateUseCase.uploadSingleImage(request.toImage(user.getId()));
         ImageResponse response = ImageResponse.from(image);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return Response.success(response);
     }
-
 
     @Override
     @PostMapping("/bulk")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<ImageResponse>> uploadMultipleImages(
+    public Response<List<ImageResponse>> uploadMultipleImages(
             @UserPrincipal User user,
             @RequestBody List<ImageCreateRequest> requests
-            ) {
+    ) {
         log.info("다중 이미지 업로드 요청 - 사용자 ID: {}, 이미지 개수: {}", user.getId(), requests.size());
 
         List<Image> images = requests.stream()
@@ -71,26 +69,23 @@ public class ImageController implements ImageControllerSwagger {
                 .map(ImageResponse::from)
                 .toList();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responses);
+        return Response.success(responses);
     }
-
-
 
     @Override
     @GetMapping("/{imageId}")
-    public ResponseEntity<ImageResponse> getImage(@PathVariable @Min(1) Long imageId) {
+    public Response<ImageResponse> getImage(@PathVariable @Min(1) Long imageId) {
         log.info("이미지 조회 요청 - 이미지 ID: {}", imageId);
 
         Image image = imageReadUseCase.getSingleImage(imageId);
         ImageResponse response = ImageResponse.from(image);
 
-        return ResponseEntity.ok(response);
+        return Response.success(response);
     }
-
 
     @Override
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<List<ImageResponse>> getImagesByPost(@PathVariable Long postId) {
+    public Response<List<ImageResponse>> getImagesByPost(@PathVariable Long postId) {
         log.info("게시물별 이미지 목록 조회 요청 - 게시물 ID: {}", postId);
 
         List<Image> images = imageReadUseCase.getSortedImagesByPost(postId);
@@ -98,27 +93,24 @@ public class ImageController implements ImageControllerSwagger {
                 .map(ImageResponse::from)
                 .toList();
 
-        return ResponseEntity.ok(responses);
+        return Response.success(responses);
     }
-
 
     @Override
     @GetMapping
-    public ResponseEntity<Page<ImageResponse>> getImages(Pageable pageable) {
+    public Response<Page<ImageResponse>> getImages(Pageable pageable) {
         log.info("이미지 목록 조회 요청 - 페이지: {}, 크기: {}", pageable.getPageNumber(), pageable.getPageSize());
 
         Page<Image> images = imageReadUseCase.getPagedImages(pageable);
         Page<ImageResponse> responses = images.map(ImageResponse::from);
 
-        return ResponseEntity.ok(responses);
+        return Response.success(responses);
     }
-
-
 
     @Override
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/reorder")
-    public ResponseEntity<List<ImageResponse>> reorderImages(
+    public Response<List<ImageResponse>> reorderImages(
             @UserPrincipal User user,
             @RequestBody ImageReorderRequest request
     ) {
@@ -129,72 +121,61 @@ public class ImageController implements ImageControllerSwagger {
                 .map(ImageResponse::from)
                 .toList();
 
-        return ResponseEntity.ok(responses);
+        return Response.success(responses);
     }
-
-
 
     @Override
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{imageId}")
-    public ResponseEntity<Response<Void>> deleteImage(
+    public Response<Void> deleteImage(
             @UserPrincipal User user,
             @PathVariable Long imageId) {
         log.info("이미지 삭제 요청 - 사용자 ID: {}, 이미지 ID: {}", user.getId(), imageId);
 
-
-            imageDeleteUseCase.deleteImageWithAuth(imageId, user.getId());
-
-            return ResponseEntity.ok(Response.success("삭제 성공"));
-
+        imageDeleteUseCase.deleteImageWithAuth(imageId, user.getId());
+        return Response.success("삭제 성공");
     }
 
     @Override
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping
-    public ResponseEntity<Response<Void>> deleteMultipleImages(
+    public Response<Void> deleteMultipleImages(
             @UserPrincipal User user,
             @RequestParam List<Long> imageIds
     ) {
         log.info("다중 이미지 삭제 요청 - 사용자 ID: {}, 이미지 개수: {}", user.getId(), imageIds.size());
 
         imageDeleteUseCase.deleteMultipleImages(imageIds, user.getId());
-        return ResponseEntity.ok(Response.success("삭제 성공"));
+        return Response.success("삭제 성공");
     }
-
-
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/my")
-    public ResponseEntity<Page<ImageResponse>> getMyImages(
+    public Response<Page<ImageResponse>> getMyImages(
             @UserPrincipal User user,
             Pageable pageable
     ) {
         log.info("내 이미지 목록 조회 요청 - 사용자 ID: {}", user.getId());
 
-        // 사용자별 이미지 조회 로직 (UseCase에 추가 필요)
         Page<Image> images = imageReadUseCase.getPagedImages(pageable);
-        // TODO: 실제로는 사용자별 필터링이 필요
         Page<ImageResponse> responses = images.map(ImageResponse::from);
 
-        return ResponseEntity.ok(responses);
+        return Response.success(responses);
     }
-
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/my/posts/{postId}")
-    public ResponseEntity<List<ImageResponse>> getMyImagesByPost(
+    public Response<List<ImageResponse>> getMyImagesByPost(
             @UserPrincipal User user,
             @PathVariable Long postId
     ) {
         log.info("내 게시물 이미지 목록 조회 요청 - 사용자 ID: {}, 게시물 ID: {}", user.getId(), postId);
 
         List<Image> images = imageReadUseCase.getSortedImagesByPost(postId);
-
         List<ImageResponse> responses = images.stream()
                 .map(ImageResponse::from)
                 .toList();
 
-        return ResponseEntity.ok(responses);
+        return Response.success(responses);
     }
 }

@@ -20,16 +20,6 @@ public class ImageReadUseCase {
     }
 
 
-    public boolean isImageExists(Long imageId) {
-        return getImageQueryService.imageExists(imageId);
-    }
-
-
-    public Collection<Image> getImagesByPost(Long postId) {
-        return getImageQueryService.getImagesBelongsPost(postId);
-    }
-
-
     public Page<Image> getPagedImages(Pageable pageable) {
         return getImageQueryService.getPagedImages(pageable);
     }
@@ -38,11 +28,5 @@ public class ImageReadUseCase {
     public List<Image> getSortedImagesByPost(Long postId) {
         return getImageQueryService.getSortedImagesByPost(postId);
     }
-
-
-    public List<Image> getImagesByMimeType(String mimeType) {
-        return getImageQueryService.getImagesByMimeType(mimeType);
-    }
-
 
 }

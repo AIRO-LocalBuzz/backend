@@ -28,14 +28,11 @@ public class DeleteImageCommandService {
         List<Long> existingIds = imageIds.stream()
                 .filter(imageRepository::existsById)
                 .toList();
-        if (existingIds.isEmpty()) {
-            throw new ImageNotFoundException(imageIds);
-        }else {
-            for (Long imageId : existingIds) {
-                getImagesAndCheckOwner(imageId, userId);
-            }
-            imageRepository.deleteAllById(existingIds);
+
+        for (Long imageId : existingIds) {
+            getImagesAndCheckOwner(imageId, userId);
         }
+        imageRepository.deleteAllById(existingIds);
     }
 
 
@@ -55,9 +52,6 @@ public class DeleteImageCommandService {
 
     private void getImagesAndCheckOwner(Long imageId, Long userId) {
         Image existingImage = imageRepository.findById(imageId);
-        if (existingImage == null) {
-            throw new ImageNotFoundException(imageId);
-        }
         // 권한 확인
         if (!existingImage.getUserId().equals(userId)) {
             throw new UnauthorizedException("이미지 삭제");

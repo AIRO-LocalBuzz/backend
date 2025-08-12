@@ -40,5 +40,10 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
     int incrementLikeCount(Long postId);
     int decrementLikeCount(Long postId);
 
+    // 좋아요 순으로 게시물 조회
+    Page<Post> findAllOrderByLikeCountDesc(Pageable pageable);
+
+    // 조회 순으로 게시물 조회
+    Page<Post> findAllOrderByViewCountDesc(Pageable pageable);
 
 }

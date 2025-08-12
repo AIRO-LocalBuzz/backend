@@ -24,15 +24,8 @@ public class ImageCreateUseCase {
     }
 
 
-    public Image uploadImageWithRetry(Image image) {
-        return createImageCommandService.handleWithRetry(image);
-    }
-
-
     public Image uploadImageWithLock(Image image) {
         return createImageCommandService.handleWithLock(image);
     }
-
-
 
 }

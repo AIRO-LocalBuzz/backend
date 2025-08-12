@@ -35,4 +35,16 @@ public class Thumbnail {
                 result.suggestedTitle()
         );
     }
+
+    public static Thumbnail createForTest(
+            Long id,
+            String mainImageUrl
+    ) {
+        Long postId = 1L; // Default postId for testing
+        String spotName = "Test Spot";
+        List<String> recommendedTags = List.of("test", "thumbnail");
+        List<String> emotions = List.of("happy", "excited");
+        String suggestedTitle = "Test Thumbnail Title";
+        return new Thumbnail(id, postId, spotName, mainImageUrl, recommendedTags, emotions, suggestedTitle);
+    }
 }

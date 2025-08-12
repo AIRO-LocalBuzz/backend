@@ -1,6 +1,7 @@
 package backend.airo.api.post;
 
 import backend.airo.api.annotation.UserPrincipal;
+import backend.airo.api.global.dto.Response;
 import backend.airo.api.global.swagger.PostControllerSwagger;
 import backend.airo.application.post.usecase.PostCreateUseCase;
 import backend.airo.application.post.usecase.PostDeleteUseCase;
@@ -11,16 +12,17 @@ import backend.airo.api.post.dto.*;
 import backend.airo.domain.user.User;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
 @Slf4j
+@Validated
 @RestController
 @RequestMapping("/v1/posts")
 @RequiredArgsConstructor
@@ -36,131 +38,104 @@ public class PostController implements PostControllerSwagger {
     @Override
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<PostResponse> createPost(
+    public Response<PostResponse> createPost(
             @Valid @RequestBody PostCreateRequest request,
             @UserPrincipal User user) {
         log.info("게시물 생성 요청 원본: {}", request);
-        log.info("세부 정보 - title: {}, userId: {}, categoryId: {}, locationId: {}",
-                request.title(),user.getId(), request.category());
 
         log.info("게시물 생성 요청: title={}, userId={}", request.title(), user.getId());
-
 
         Post createdPost = postCreateUseCase.createPost(request, user.getId());
         PostResponse response = PostResponse.fromDomain(createdPost);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
-
-    @Override
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/thumbnail")
-    public ResponseEntity<PostResponse> createPostAndThumbnail(
-            @Valid @RequestBody PostCreateRequest request,
-            @UserPrincipal User user) {
-        log.info("게시물+썸네일 생성 요청 원본: {}", request);
-        log.info("세부 정보 - title: {}, userId: {}, categoryId: {}, locationId: {}",
-                request.title(),user.getId(), request.category());
-
-        log.info("게시물+썸네일 생성 요청: title={}, userId={}", request.title(), user.getId());
-
-
-        Post createdPost = postCreateUseCase.createPostAndThumbnail(request, user.getId());
-        PostResponse response = PostResponse.fromDomain(createdPost);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return Response.success(response);
     }
 
 
     // ===== 게시물 조회 =====
     @Override
     @GetMapping("/{postId}")
-    public ResponseEntity<PostDetailResponse> getPost(
+    public Response<PostDetailResponse> getPost(
             @Parameter(description = "게시물 ID", required = true)
             @UserPrincipal User user,
-            @PathVariable Long postId) {
+            @PathVariable @Positive Long postId) {
 
+        PostDetailResponse response = postReadUseCase.getPostDetail(postId, user.getId());
 
-        PostDetailResponse response = postReadUseCase.getPostById(postId, user.getId());
-
-        return ResponseEntity.ok(response);
+        return Response.success(response);
     }
 
     @Override
     @GetMapping("thumbnail/{thumbnailId}")
-    public ResponseEntity<ThumbnailResponseDto> getThumbnail(
+    public Response<ThumbnailResponseDto> getThumbnail(
             @Parameter(description = "썸네일 ID", required = true)
             @UserPrincipal User user,
-            @PathVariable Long thumbnailId) {
-
+            @PathVariable @Positive Long thumbnailId) {
 
         ThumbnailResponseDto response = postReadUseCase.getThumbnailById(thumbnailId);
 
-        return ResponseEntity.ok(response);
+        return Response.success(response);
     }
-
-
 
     @Override
     @GetMapping
-    public ResponseEntity<PostListResponse> getPostList(
+    public Response<PostListResponse> getPostList(
             @Valid @ModelAttribute PostListRequest request) {
 
-        Page<Post> postPage = postReadUseCase.getRecentPostList(request);
+        Page<Post> postPage = postReadUseCase.getPostList(request);
         PostListResponse response = PostListResponse.fromDomain(postPage);
 
-        return ResponseEntity.ok(response);
+        return Response.success(response);
     }
-
 
     // ===== 게시물 수정 =====
     @Override
     @PutMapping("/{postId}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<PostResponse> updatePost(
+    public Response<PostResponse> updatePost(
             @Parameter(description = "게시물 ID", required = true)
-            @PathVariable Long postId,
+            @PathVariable @Positive Long postId,
             @Valid @RequestBody PostUpdateRequest request,
             @UserPrincipal User user) {
         Post updatedPost = postUpdateUseCase.updatePost(postId, user.getId(), request);
 
         PostResponse response = PostResponse.fromDomain(updatedPost);
 
-        return ResponseEntity.ok(response);
+        return Response.success(response);
     }
-
-
 
     // ===== 게시물 삭제 =====
     @Override
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(
+    public Response<Void> deletePost(
             @Parameter(description = "게시물 ID", required = true)
-            @PathVariable Long postId,
+            @PathVariable @Positive Long postId,
             @UserPrincipal User user) {
 
         postDeleteUseCase.deletePost(postId, user.getId());
 
-        return ResponseEntity.noContent().build();
+        return Response.success("삭제 성공");
     }
 
 
+
+
+//    @Override
+//    @PreAuthorize("isAuthenticated()")
+//    @PostMapping("/thumbnail")
+//    public Response<PostResponse> createPostAndThumbnail(
+//            @Valid @RequestBody PostCreateRequest request,
+//            @UserPrincipal User user) {
 //
-//    // ===== 게시물 좋아요 =====
+//        log.info("게시물+썸네일 생성 요청: title={}, userId={}", request.title(), user.getId());
 //
-//    @PostMapping("/{id}/like")
-//    public ResponseEntity<LikeResponse> likePost(
-//            @Parameter(description = "게시물 ID", required = true)
-//            @PathVariable Long id,
-//            HttpServletRequest request) {
+//        Post createdPost = postCreateUseCase.createPostAndThumbnail(request, user.getId());
+//        PostResponse response = PostResponse.fromDomain(createdPost);
 //
-//        Long userId = getCurrentUserId(request);
-//        boolean isLiked = postUseCase.likePost(id, userId);
-//
-//        LikeResponse response = new LikeResponse(isLiked, isLiked ? "좋아요 추가" : "좋아요 취소");
-//
-//        return ResponseEntity.ok(response);
+//        return Response.success(response);
 //    }
+
+
 
 //    // ===== 통계 API =====
 //

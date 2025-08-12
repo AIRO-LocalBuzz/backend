@@ -8,7 +8,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImageDeleteUseCase {
 
-    private final Class<?> sourceClass = ImageDeleteUseCase.class;
     private final DeleteImageCommandService deleteImageCommandService;
 
     public void deleteImageWithAuth(Long imageId, Long userId) {
@@ -18,7 +17,6 @@ public class ImageDeleteUseCase {
     public void deleteMultipleImages(List<Long> imageIds, Long userId) {
         deleteImageCommandService.deleteAllById(imageIds, userId);
     }
-
 
     public void deleteImagesByPostWithAuth(Long postId, Long userId) {
         deleteImageCommandService.deleteByPostId(postId, userId);

@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -31,40 +32,15 @@ public interface PostControllerSwagger {
             @ApiResponse(responseCode = "201",
                     description = "게시물 생성 성공",
                     content = @Content(schema = @Schema(implementation = PostResponse.class))),
-            @ApiResponse(responseCode = "400",
-                    description = "잘못된 요청 데이터 (POST_204: 제목 필수, POST_203: 내용 길이 초과, POST_301-306: 발행 조건 미충족)",
+            @ApiResponse(responseCode = "400 | 401",
+                    description = "잘못된 요청 데이터 | 권한 없음",
                     content = @Content(schema = @Schema(implementation = Response.class))),
-            @ApiResponse(responseCode = "403",
-                    description = "발행 권한 없음 (POST_101: 접근 권한 없음)",
-                    content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PreAuthorize("isAuthenticated()")
     @PostMapping
-   ResponseEntity<PostResponse> createPost(
+    Response<PostResponse> createPost(
             @Valid @RequestBody PostCreateRequest request,
             @UserPrincipal User user);
-
-
-
-    @Operation(summary = "썸네일과 함께 게시물 생성", description = "새로운 게시물과 썸네일을 생성합니다. (운영용-테스트금지")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201",
-                    description = "게시물 생성 성공",
-                    content = @Content(schema = @Schema(implementation = PostResponse.class))),
-            @ApiResponse(responseCode = "400",
-                    description = "잘못된 요청 데이터",
-                    content = @Content(schema = @Schema(implementation = Response.class))),
-            @ApiResponse(responseCode = "403",
-                    description = "발행 권한 없음",
-                    content = @Content(schema = @Schema(implementation = Response.class)))
-    })
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping("/thumbnail")
-    ResponseEntity<PostResponse> createPostAndThumbnail(
-            @Valid @RequestBody PostCreateRequest request,
-            @UserPrincipal User user);
-
-
 
 
 
@@ -73,27 +49,24 @@ public interface PostControllerSwagger {
             @ApiResponse(responseCode = "200",
                     description = "게시물 조회 성공",
                     content = @Content(schema = @Schema(implementation = PostDetailResponse.class))),
-            @ApiResponse(responseCode = "404",
-                    description = "게시물을 찾을 수 없음",
+            @ApiResponse(responseCode = "404 | 401",
+                    description = "게시물을 찾을 수 없음 | 권한 없음",
                     content = @Content(schema = @Schema(implementation = Response.class))),
-            @ApiResponse(responseCode = "403",
-                    description = "접근 권한 없음",
-                    content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @GetMapping("/{id}")
-    ResponseEntity<PostDetailResponse> getPost(
+    Response<PostDetailResponse> getPost(
             @Parameter(description = "게시물 ID", required = true)
             @UserPrincipal User user,
-            @PathVariable Long postId);
+            @PathVariable @Positive Long postId);
 
 
 
     @Operation(summary = "썸네일 조회", description = "썸네일 ID로 썸네일을 조회합니다.")
     @GetMapping("/{thumbnailId}")
-    ResponseEntity<ThumbnailResponseDto> getThumbnail(
+    Response<ThumbnailResponseDto> getThumbnail(
             @Parameter(description = "썸네일 ID", required = true)
             @UserPrincipal User user,
-            @PathVariable Long thumbnailId);
+            @PathVariable @Positive Long thumbnailId);
 
 
 
@@ -104,7 +77,7 @@ public interface PostControllerSwagger {
                     content = @Content(schema = @Schema(implementation = PostListResponse.class)))
     })
     @GetMapping
-    ResponseEntity<PostListResponse> getPostList(
+    Response<PostListResponse> getPostList(
             @Valid @ModelAttribute PostListRequest request);
 
 
@@ -115,20 +88,14 @@ public interface PostControllerSwagger {
             @ApiResponse(responseCode = "200",
                     description = "게시물 수정 성공",
                     content = @Content(schema = @Schema(implementation = PostResponse.class))),
-            @ApiResponse(responseCode = "400",
-                    description = "잘못된 요청 데이터",
+            @ApiResponse(responseCode = "400 | 401 | 404",
+                    description = "잘못된 요청 데이터 | 권한 없음 | 게시물을 찾을 수 없음",
                     content = @Content(schema = @Schema(implementation = Response.class))),
-            @ApiResponse(responseCode = "403",
-                    description = "수정 권한 없음",
-                    content = @Content(schema = @Schema(implementation = Response.class))),
-            @ApiResponse(responseCode = "404",
-                    description = "게시물을 찾을 수 없음",
-                    content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @PutMapping("/{id}")
-    ResponseEntity<PostResponse> updatePost(
+    Response<PostResponse> updatePost(
             @Parameter(description = "게시물 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable @Positive Long id,
             @Valid @RequestBody PostUpdateRequest request,
             @UserPrincipal User user);
 
@@ -137,18 +104,37 @@ public interface PostControllerSwagger {
     @Operation(summary = "게시물 삭제", description = "게시물을 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "게시물 삭제 성공"),
-            @ApiResponse(responseCode = "403",
-                    description = "삭제 권한 없음",
+            @ApiResponse(responseCode = "401 | 404",
+                    description = "권한 없음 | 게시물을 찾을 수 없음",
                     content = @Content(schema = @Schema(implementation = Response.class))),
-            @ApiResponse(responseCode = "404",
-                    description = "게시물을 찾을 수 없음",
-                    content = @Content(schema = @Schema(implementation = Response.class)))
     })
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> deletePost(
+    Response<Void> deletePost(
             @Parameter(description = "게시물 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable @Positive Long id,
             @UserPrincipal User user);
+
+
+
+
+
+
+//    @Operation(summary = "썸네일과 함께 게시물 생성", description = "새로운 게시물과 썸네일을 생성합니다. (운영용-테스트금지")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "201",
+//                    description = "게시물 생성 성공",
+//                    content = @Content(schema = @Schema(implementation = PostResponse.class))),
+//            @ApiResponse(responseCode = "400 | 401",
+//                    description = "잘못된 요청 데이터 | 권한 없음",
+//                    content = @Content(schema = @Schema(implementation = Response.class))),
+//    })
+//    @PreAuthorize("isAuthenticated()")
+//    @PostMapping("/thumbnail")
+//    Response<PostResponse> createPostAndThumbnail(
+//            @Valid @RequestBody PostCreateRequest request,
+//            @UserPrincipal User user);
+
+
 
 
 //

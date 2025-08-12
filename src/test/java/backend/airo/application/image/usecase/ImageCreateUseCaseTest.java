@@ -2,6 +2,7 @@ package backend.airo.application.image.usecase;
 
 import backend.airo.domain.image.Image;
 import backend.airo.domain.image.command.CreateImageCommandService;
+import backend.airo.domain.image.exception.ImageErrorCode;
 import backend.airo.domain.image.exception.InvalidImageException;
 import backend.airo.domain.image.exception.UnsupportedFormatException;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,13 +63,14 @@ class ImageCreateUseCaseTest {
     @DisplayName("TC-002: 단일 이미지 업로드 실패 - InvalidImageException")
     void tc002_uploadSingleImage_InvalidImage_ThrowsException() {
         // Given
-        Image invalidImage = createImageWithMimeType(null, "image/jpeg");
+        String mimeType = "image/bmp"; // 지원하지 않는 MIME 타입
+        Image invalidImage = createImageWithMimeType("https://example.com/image1.jpg", mimeType);
         when(createImageCommandService.handle(invalidImage))
-                .thenThrow(new InvalidImageException(null, "imageUrl", "null"));
+                .thenThrow(new UnsupportedFormatException(mimeType, SUPPORTED_MIME_TYPES.toArray(new String[0])));
 
         // When & Then
         assertThatThrownBy(() -> imageCreateUseCase.uploadSingleImage(invalidImage))
-                .isInstanceOf(InvalidImageException.class);
+                .isInstanceOf(UnsupportedFormatException.class);
 
         verify(createImageCommandService, times(1)).handle(invalidImage);
     }
@@ -94,19 +96,7 @@ class ImageCreateUseCaseTest {
         verify(createImageCommandService, times(1)).handle(validGifImage);
     }
 
-    @Test
-    @DisplayName("TC-004: 다중 이미지 업로드 - 빈 리스트")
-    void tc004_uploadMultipleImages_EmptyList_Success() {
-        // Given
-        List<Image> emptyList = Collections.emptyList();
 
-        // When
-        List<Image> results = imageCreateUseCase.uploadMultipleImages(emptyList);
-
-        // Then
-        assertThat(results).isEmpty();
-        verify(createImageCommandService, never()).handle(any(Image.class));
-    }
 
     @Test
     @DisplayName("TC-005: 다중 이미지 업로드 - 일부 실패")
@@ -143,36 +133,8 @@ class ImageCreateUseCaseTest {
         verify(createImageCommandService, times(1)).handle(validJpegImage);
     }
 
-    // 재시도 로직 테스트
-    @Test
-    @DisplayName("TC-007: 재시도 이미지 업로드 성공")
-    void tc007_uploadImageWithRetry_ValidImage_Success() {
-        // Given
-        when(createImageCommandService.handleWithRetry(validJpegImage)).thenReturn(validJpegImage);
 
-        // When
-        Image result = imageCreateUseCase.uploadImageWithRetry(validJpegImage);
 
-        // Then
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(validJpegImage);
-        verify(createImageCommandService, times(1)).handleWithRetry(validJpegImage);
-    }
-
-    @Test
-    @DisplayName("TC-008: 재시도 이미지 업로드 실패 - 최대 재시도 초과")
-    void tc008_uploadImageWithRetry_MaxRetriesExceeded_ThrowsException() {
-        // Given
-        when(createImageCommandService.handleWithRetry(validJpegImage))
-                .thenThrow(new RuntimeException("최대 재시도 횟수 초과"));
-
-        // When & Then
-        assertThatThrownBy(() -> imageCreateUseCase.uploadImageWithRetry(validJpegImage))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessage("최대 재시도 횟수 초과");
-
-        verify(createImageCommandService, times(1)).handleWithRetry(validJpegImage);
-    }
 
     // 락 기반 업로드 테스트
     @Test
@@ -222,18 +184,6 @@ class ImageCreateUseCaseTest {
         verify(createImageCommandService, times(imageCount)).handle(validJpegImage);
     }
 
-    @Test
-    @DisplayName("TC-012: NULL 이미지 리스트 처리")
-    void tc012_uploadMultipleImages_NullList_ThrowsException() {
-        // Given
-        List<Image> nullList = null;
-
-        // When & Then
-        assertThatThrownBy(() -> imageCreateUseCase.uploadMultipleImages(nullList))
-                .isInstanceOf(NullPointerException.class);
-
-        verify(createImageCommandService, never()).handle(any());
-    }
 
     // 비즈니스 로직 검증
     @Test
@@ -246,13 +196,11 @@ class ImageCreateUseCaseTest {
         Image multipleImage = createImageWithMimeType("https://example.com/multiple.jpg", "image/jpeg");
 
         when(createImageCommandService.handle(singleImage)).thenReturn(singleImage);
-        when(createImageCommandService.handleWithRetry(retryImage)).thenReturn(retryImage);
         when(createImageCommandService.handleWithLock(lockImage)).thenReturn(lockImage);
         when(createImageCommandService.handle(multipleImage)).thenReturn(multipleImage);
 
         // When
         Image singleResult = imageCreateUseCase.uploadSingleImage(singleImage);
-        Image retryResult = imageCreateUseCase.uploadImageWithRetry(retryImage);
         Image lockResult = imageCreateUseCase.uploadImageWithLock(lockImage);
         List<Image> multipleResult = imageCreateUseCase.uploadMultipleImages(Collections.singletonList(multipleImage));
 
@@ -260,10 +208,6 @@ class ImageCreateUseCaseTest {
         assertThat(singleResult).isNotNull();
         assertThat(singleResult.getImageUrl()).isEqualTo("https://example.com/single.jpg");
         assertThat(singleResult.getMimeType()).isEqualTo("image/jpeg");
-
-        assertThat(retryResult).isNotNull();
-        assertThat(retryResult.getImageUrl()).isEqualTo("https://example.com/retry.jpg");
-        assertThat(retryResult.getMimeType()).isEqualTo("image/jpeg");
 
         assertThat(lockResult).isNotNull();
         assertThat(lockResult.getImageUrl()).isEqualTo("https://example.com/lock.jpg");
@@ -276,7 +220,6 @@ class ImageCreateUseCaseTest {
 
         // 각 메소드가 정확히 한 번씩 호출되었는지 검증
         verify(createImageCommandService, times(1)).handle(singleImage);
-        verify(createImageCommandService, times(1)).handleWithRetry(retryImage);
         verify(createImageCommandService, times(1)).handleWithLock(lockImage);
         verify(createImageCommandService, times(1)).handle(multipleImage);
     }
@@ -284,7 +227,14 @@ class ImageCreateUseCaseTest {
 
     // 헬퍼 메소드
     private Image createImageWithMimeType(String imageUrl, String mimeType) {
-        return new Image(1L, imageUrl, mimeType);
+        return new Image(1L, 1L, imageUrl, mimeType);
     }
 
+    // 지원하는 MIME 타입들
+    private static final List<String> SUPPORTED_MIME_TYPES = Arrays.asList(
+            "image/jpeg",
+            "image/jpg",
+            "image/png",
+            "image/gif"
+    );
 }

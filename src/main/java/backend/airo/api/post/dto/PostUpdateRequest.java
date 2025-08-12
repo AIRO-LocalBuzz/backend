@@ -27,11 +27,11 @@ public record PostUpdateRequest(
         @Schema(description = "목적 태그", example = "HEALING")
         PostForWhatTag forWhatTag,
 
-        @Schema(description = "감정 태그", example = "EXCITED")
+        @Schema(description = "감정 태그", example = "[EXCITED, JOYFUL]")
         @Size(max = 5, message = "감정 태그는 최대 5개까지 추가 가능합니다")
         List<PostEmotionTag> emotionTags,
 
-        @Schema(description = "카테고리", example = "음식점")
+        @Schema(description = "카테고리", example = "RESTAURANT")
         PostCategory category,
 
         @Schema(description = "여행 날짜", example = "2024-08-15T10:30:00")
@@ -42,7 +42,7 @@ public record PostUpdateRequest(
         Location location,
 
         @Schema(description = "주소", example = "부산시 해운대구")
-        String adress,
+        String address,
 
         @Schema(description = "추천 게시물 여부", example = "false")
         Boolean isFeatured
@@ -52,7 +52,7 @@ public record PostUpdateRequest(
         public boolean hasChanges() {
                 return title != null || content != null || status != null ||
                         withWhoTag != null || forWhatTag != null || emotionTags != null ||
-                        travelDate != null || location != null || adress != null || isFeatured != null;
+                        travelDate != null || location != null || address != null || isFeatured != null;
         }
 
         public boolean isStatusChange() {
@@ -62,6 +62,6 @@ public record PostUpdateRequest(
         public boolean isMetadataOnly() {
                 return title == null && content == null &&
                         (withWhoTag != null || forWhatTag != null || emotionTags != null ||
-                                location != null || adress != null || isFeatured != null);
+                                location != null || address != null || isFeatured != null);
         }
 }

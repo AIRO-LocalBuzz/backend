@@ -1,5 +1,6 @@
 package backend.airo.domain.image;
 
+import backend.airo.api.image.dto.ImageCreateRequest;
 import backend.airo.domain.post.Post;
 import lombok.Builder;
 import lombok.Getter;
@@ -64,6 +65,10 @@ public class Image {
         this.mimeType = mimeType;
         this.sortOrder = 0;
         this.isCover = false; // 기본값 설정
+    }
+
+    public static Image createImage(ImageCreateRequest request, Long userId, Long postId, int sortOrder) {
+        return new Image(userId, postId, request.imageUrl(), request.mimeType(), sortOrder);
     }
 
 
