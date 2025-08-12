@@ -1,9 +1,9 @@
 package backend.airo.persistence.post.adapter;
 
 import backend.airo.domain.post.Post;
+import backend.airo.domain.post.exception.PostException;
 import backend.airo.domain.post.repository.PostRepository;
 import backend.airo.domain.post.enums.PostStatus;
-import backend.airo.domain.post.exception.PostNotFoundException;
 import backend.airo.persistence.post.entity.PostEntity;
 import backend.airo.persistence.post.repository.PostJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
-import static backend.airo.domain.post.exception.PostErrorCode.POST_NOT_FOUND;
 
 @Slf4j
 @Component
@@ -72,7 +70,7 @@ public class PostAdapter implements PostRepository {
     public Post findById(Long id) {
         log.debug("게시물 조회: ID={}", id);
         PostEntity postEntity = postJpaRepository.findById(id)
-                .orElseThrow(() -> new PostNotFoundException(id, POST_NOT_FOUND));
+                .orElseThrow(() -> PostException.notFound(id));
 
         return PostEntity.toDomain(postEntity);
     }

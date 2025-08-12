@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class AiroException extends RuntimeException {
+public abstract class AiroException extends RuntimeException {
 
     protected final BaseErrorCode errorCode;
     protected final String sourceLayer;

@@ -1,7 +1,6 @@
 package backend.airo.domain.post.command;
 
-import backend.airo.domain.post.exception.PostErrorCode;
-import backend.airo.domain.post.exception.PostNotFoundException;
+import backend.airo.domain.post.exception.PostException;
 import backend.airo.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,7 +13,7 @@ public class PostIncrementLikeCountCommand {
 
     public int handle(Long postId) {
         if (!postRepository.existsById(postId)) {
-            throw new PostNotFoundException(postId, PostErrorCode.POST_NOT_FOUND);
+            throw PostException.notFound(postId);
         }
         return postRepository.incrementLikeCount(postId);
     }

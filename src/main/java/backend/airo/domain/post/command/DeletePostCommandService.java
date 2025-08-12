@@ -1,7 +1,6 @@
 package backend.airo.domain.post.command;
 
-import backend.airo.domain.post.exception.PostErrorCode;
-import backend.airo.domain.post.exception.PostNotFoundException;
+import backend.airo.domain.post.exception.PostException;
 import backend.airo.domain.post.repository.PostRepository;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -21,7 +20,7 @@ public class DeletePostCommandService {
         log.info("게시물 삭제 요청 - postId: {}", postId);
 
         if (!postRepository.existsById(postId)) {
-            throw new PostNotFoundException(postId, PostErrorCode.POST_NOT_FOUND);
+            throw PostException.notFound(postId);
         }
 
         postRepository.deleteById(postId);

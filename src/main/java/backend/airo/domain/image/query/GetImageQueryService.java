@@ -2,8 +2,7 @@ package backend.airo.domain.image.query;
 
 import backend.airo.domain.image.Image;
 import backend.airo.domain.image.repository.ImageRepository;
-import backend.airo.domain.post.exception.PostErrorCode;
-import backend.airo.domain.post.exception.PostNotFoundException;
+import backend.airo.domain.post.exception.PostException;
 import backend.airo.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -33,7 +32,7 @@ public class GetImageQueryService {
 
     public List<Image> getSortedImagesByPost(Long postId) {
         if(!postRepository.existsById(postId)) {
-            throw new PostNotFoundException(postId, PostErrorCode.POST_NOT_FOUND);
+            throw PostException.notFound(postId);
         }
 
         return imageRepository.findByPostIdOrderBySortOrder(postId);

@@ -1,10 +1,7 @@
 package backend.airo.domain.image.command;
 
 import backend.airo.domain.image.Image;
-import backend.airo.domain.image.exception.ImageErrorCode;
-import backend.airo.domain.image.exception.ImageNotFoundException;
-import backend.airo.domain.image.exception.InvalidImageException;
-import backend.airo.domain.image.exception.UnauthorizedException;
+import backend.airo.domain.image.exception.ImageException;
 import backend.airo.domain.image.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -54,7 +51,7 @@ public class DeleteImageCommandService {
         Image existingImage = imageRepository.findById(imageId);
         // 권한 확인
         if (!existingImage.getUserId().equals(userId)) {
-            throw new UnauthorizedException("이미지 삭제");
+            throw ImageException.unauthorized("이미지 삭제");
         }
     }
 

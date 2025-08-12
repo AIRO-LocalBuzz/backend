@@ -6,15 +6,11 @@ import backend.airo.application.image.usecase.ImageCreateUseCase;
 import backend.airo.application.thumbnail.ThumbnailGenerationService;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.post.Post;
-import backend.airo.domain.post.exception.PostErrorCode;
-import backend.airo.domain.post.exception.PostValidationException;
 import backend.airo.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.IntStream;
 

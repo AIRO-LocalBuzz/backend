@@ -3,8 +3,7 @@ package backend.airo.domain.post.command;
 import backend.airo.api.post.dto.PostUpdateRequest;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.PostStatus;
-import backend.airo.domain.post.exception.PostPublishException;
-import backend.airo.domain.post.exception.PostStatusChangeException;
+import backend.airo.domain.post.exception.PostException;
 import backend.airo.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +45,7 @@ public class UpdatePostCommandService{
 
     private void validateStatusChange(Post post, PostStatus newStatus) {
         if (!isValidStatusTransition(post.getStatus(), newStatus)) {
-            throw new PostStatusChangeException(post.getId(), post.getStatus(), newStatus, POST_CANNOT_CHANGE_STATUS);
+            throw PostException.statusChange(post.getId(), post.getStatus(), newStatus, POST_CANNOT_CHANGE_STATUS);
         }
     }
 

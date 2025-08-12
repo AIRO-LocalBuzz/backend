@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Builder
 @RequiredArgsConstructor
 @Getter
-@Setter
 public class Image {
     private final Long id;
     private Long userId;
@@ -71,5 +70,61 @@ public class Image {
         return new Image(userId, postId, request.imageUrl(), request.mimeType(), sortOrder);
     }
 
+    public Image updateSortOrder(Integer newSortOrder) {
+        return new Image(
+                this.id,
+                this.userId,
+                this.postId,
+                this.originalFilename,
+                this.storedFilename,
+                this.imageUrl,
+                this.altText,
+                this.caption,
+                this.fileSize,
+                this.mimeType,
+                this.width,
+                this.height,
+                newSortOrder,
+                this.isCover
+        );
+    }
+
+    public Image updateCaption(String newCaption) {
+        return new Image(
+                this.id,
+                this.userId,
+                this.postId,
+                this.originalFilename,
+                this.storedFilename,
+                this.imageUrl,
+                this.altText,
+                newCaption,
+                this.fileSize,
+                this.mimeType,
+                this.width,
+                this.height,
+                this.sortOrder,
+                this.isCover
+        );
+    }
+
+    public Image updateAltText(String newAltText) {
+        return new Image(
+                this.id,
+                this.userId,
+                this.postId,
+                this.originalFilename,
+                this.storedFilename,
+                this.imageUrl,
+                newAltText,
+                this.caption,
+                this.fileSize,
+                this.mimeType,
+                this.width,
+                this.height,
+                this.sortOrder,
+                this.isCover
+        );
+    }
 
 }

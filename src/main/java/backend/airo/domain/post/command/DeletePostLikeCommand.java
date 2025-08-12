@@ -1,8 +1,6 @@
 package backend.airo.domain.post.command;
 
-import backend.airo.domain.post.exception.InvalidPostLikeException;
-import backend.airo.domain.post.exception.PostErrorCode;
-import backend.airo.domain.post.exception.PostNotFoundException;
+import backend.airo.domain.post.exception.PostException;
 import backend.airo.domain.post.repository.PostLikeRepository;
 import backend.airo.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,7 @@ public class DeletePostLikeCommand {
     public int handle(Long postId, Long userId) {
 
         if (!postRepository.existsById(postId)) {
-            throw new PostNotFoundException(postId, PostErrorCode.POST_NOT_FOUND);
+            throw PostException.notFound(postId);
         }
 
         return postLikeRepository.deleteByPostIdAndUserId(postId, userId);

@@ -1,13 +1,9 @@
 package backend.airo.domain.image.command;
 
 import backend.airo.domain.image.Image;
-import backend.airo.domain.image.exception.ImageErrorCode;
-import backend.airo.domain.image.exception.InvalidImageException;
-import backend.airo.domain.image.exception.UnsupportedFormatException;
+import backend.airo.domain.image.exception.ImageException;
 import backend.airo.domain.image.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -47,10 +43,8 @@ public class CreateImageCommandService {
 
 
     private void validateMimeType(String mimeType) {
-
         if (!SUPPORTED_MIME_TYPES.contains(mimeType.toLowerCase())) {
-            throw new UnsupportedFormatException(mimeType, SUPPORTED_MIME_TYPES.toArray(new String[0]));
+            throw ImageException.unsupportedFormat(mimeType, SUPPORTED_MIME_TYPES.toArray(new String[0]));
         }
     }
-
 }

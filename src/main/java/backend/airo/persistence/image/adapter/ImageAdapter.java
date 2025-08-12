@@ -1,7 +1,7 @@
 package backend.airo.persistence.image.adapter;
 
 import backend.airo.domain.image.Image;
-import backend.airo.domain.image.exception.ImageNotFoundException;
+import backend.airo.domain.image.exception.ImageException;
 import backend.airo.domain.image.repository.ImageRepository;
 import backend.airo.persistence.image.entity.ImageEntity;
 import backend.airo.persistence.image.repository.ImageJpaRepository;
@@ -44,7 +44,7 @@ public class ImageAdapter implements ImageRepository {
     @Override
     public Image findById(Long id) {
         ImageEntity imageEntity = imageJpaRepository.findById(id)
-                .orElseThrow(() -> new ImageNotFoundException(id));
+                .orElseThrow(() -> ImageException.notFound(id));
         return ImageEntity.toDomain(imageEntity);
     }
 
@@ -61,7 +61,7 @@ public class ImageAdapter implements ImageRepository {
     @Override
     public Collection<Image> findImagesAllByPostId(Long postId) {
         if (!imageJpaRepository.existsByPostId(postId)) {
-            throw new ImageNotFoundException(postId);
+            throw ImageException.notFound(postId);
         }
         Collection<ImageEntity> entities = imageJpaRepository.findByPostId(postId);
         return entities.stream()
@@ -118,7 +118,7 @@ public class ImageAdapter implements ImageRepository {
     @Override
     public void deleteById(Long id) {
         if (!imageJpaRepository.existsById(id)) {
-            throw new ImageNotFoundException(id);
+            throw ImageException.notFound(id);
         }
         imageJpaRepository.deleteById(id);
     }
@@ -131,7 +131,7 @@ public class ImageAdapter implements ImageRepository {
     @Override
     public void deleteByPostId(Long postId) {
         if (!imageJpaRepository.existsByPostId(postId)) {
-            throw new ImageNotFoundException(postId);
+            throw ImageException.notFound(postId);
         }
         imageJpaRepository.deleteByPostId(postId);
     }
