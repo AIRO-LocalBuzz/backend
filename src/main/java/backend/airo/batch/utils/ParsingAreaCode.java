@@ -20,8 +20,6 @@ public class ParsingAreaCode {
     );
 
     public static AreaName areaNameParsing(String roadAddr, String lotAddr) {
-        System.out.println("roadAddr :: " + roadAddr);
-        System.out.println("lotAddr :: " + lotAddr);
 
         String addr = (roadAddr != null && !roadAddr.isBlank()) ? roadAddr : lotAddr;
         if (addr == null || addr.isBlank()) return new AreaName("UNKNOWN", "UNKNOWN");
