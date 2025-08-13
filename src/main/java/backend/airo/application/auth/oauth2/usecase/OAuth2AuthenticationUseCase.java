@@ -28,10 +28,10 @@ public class OAuth2AuthenticationUseCase {
     private static final String OAUTH2_USER_PREFIX = "oauth2:temp:";
     private static final long REDIS_TTL_MINUTES = 30;
 
-    @Value("${app.oauth2.success-url:http://site-leejongwons-projects.vercel.app/auth/success}")
+    @Value("${app.oauth2.success-url:https://site-navy-six-67.vercel.app/auth/success}")
     private String successBaseUrl;
 
-    @Value("${app.oauth2.failure-url:http://site-leejongwons-projects.vercel.app/auth/nickname}")
+    @Value("${app.oauth2.failure-url:https://site-navy-six-67.vercel.app/auth/nickname}")
     private String failureUrl;
 
     public String handleAuthenticationSuccess(OAuth2User oauth2User, String accessToken) {
