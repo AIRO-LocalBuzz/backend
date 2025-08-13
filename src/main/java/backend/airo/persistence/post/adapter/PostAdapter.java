@@ -1,30 +1,21 @@
 package backend.airo.persistence.post.adapter;
 
 import backend.airo.domain.post.Post;
+import backend.airo.domain.post.exception.PostException;
 import backend.airo.domain.post.repository.PostRepository;
 import backend.airo.domain.post.enums.PostStatus;
-import backend.airo.domain.post.exception.PostNotFoundException;
 import backend.airo.persistence.post.entity.PostEntity;
 import backend.airo.persistence.post.repository.PostJpaRepository;
-import backend.airo.persistence.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
-import static backend.airo.domain.post.exception.PostErrorCode.POST_NOT_FOUND;
-
-/**
- * PostRepository 구현체
- * Infrastructure Layer에서 Domain Layer의 Repository 인터페이스를 구현
- */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -79,7 +70,7 @@ public class PostAdapter implements PostRepository {
     public Post findById(Long id) {
         log.debug("게시물 조회: ID={}", id);
         PostEntity postEntity = postJpaRepository.findById(id)
-                .orElseThrow(() -> new PostNotFoundException(id, POST_NOT_FOUND));
+                .orElseThrow(() -> PostException.notFound(id));
 
         return PostEntity.toDomain(postEntity);
     }
@@ -126,14 +117,25 @@ public class PostAdapter implements PostRepository {
     }
 
 
+    @Override
+    public Page<Post> findAllOrderByLikeCountDesc(Pageable pageable) {
+        Page<PostEntity> entities = postJpaRepository.findAllOrderByLikeCountDesc(pageable);
+        return entities.map(PostEntity::toDomain);
+    }
+
+    @Override
+    public Page<Post> findAllOrderByViewCountDesc(Pageable pageable) {
+        Page<PostEntity> entities = postJpaRepository.findAllOrderByViewCountDesc(pageable);
+        return entities.map(PostEntity::toDomain);
+    }
+
+
+
     // ===== Private Helper Methods =====
 
     private PostEntity updateExistingEntity(Post post) {
-        PostEntity existingEntity = postJpaRepository.findById(post.getId())
-                .orElseThrow(() -> new IllegalArgumentException("게시물을 찾을 수 없습니다: ID=" + post.getId()));
+        Optional<PostEntity> existingEntity = postJpaRepository.findById(post.getId());
 
-        // 엔티티 필드 업데이트 로직
-        // 실제로는 PostEntity에 update 메서드를 만들어서 처리하는 것이 좋음
         return PostEntity.toEntity(post);
     }
 }

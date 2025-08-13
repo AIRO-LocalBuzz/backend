@@ -10,7 +10,7 @@ public record AuthorInfo(
     public AuthorInfo (Long id, String nickname, String profileImageUrl) {
         this.id = id;
         this.nickname = nickname;
-        this.profileImageUrl = profileImageUrl != null ? profileImageUrl : "";
+        this.profileImageUrl = profileImageUrl;
 
     }
 }

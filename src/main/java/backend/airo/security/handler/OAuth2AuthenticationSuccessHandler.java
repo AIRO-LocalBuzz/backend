@@ -51,7 +51,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
 
         } catch (Exception e) {
             log.error("OAuth2 인증 성공 처리 중 오류 발생", e);
-            response.sendRedirect("http://localhost:3000/auth/failure");
+            response.sendRedirect("/auth/failure");
         }
     }
 }

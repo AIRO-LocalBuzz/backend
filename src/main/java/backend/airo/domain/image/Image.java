@@ -1,5 +1,6 @@
 package backend.airo.domain.image;
 
+import backend.airo.api.image.dto.ImageCreateRequest;
 import backend.airo.domain.post.Post;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,10 +9,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-
+@Builder
 @RequiredArgsConstructor
 @Getter
-@Setter
 public class Image {
     private final Long id;
     private Long userId;
@@ -56,12 +56,75 @@ public class Image {
         this.isCover = false; // 기본값 설정
     }
 
-    public Image (Long userId, String imageUrl, String mimeType) {
+    public Image (Long userId, Long postId, String imageUrl, String mimeType) {
         this.id = null;
         this.userId = userId;
+        this.postId = postId; // 게시물 ID가 없는 경우
         this.imageUrl = imageUrl;
         this.mimeType = mimeType;
+        this.sortOrder = 0;
         this.isCover = false; // 기본값 설정
+    }
+
+    public static Image createImage(ImageCreateRequest request, Long userId, Long postId, int sortOrder) {
+        return new Image(userId, postId, request.imageUrl(), request.mimeType(), sortOrder);
+    }
+
+    public Image updateSortOrder(Integer newSortOrder) {
+        return new Image(
+                this.id,
+                this.userId,
+                this.postId,
+                this.originalFilename,
+                this.storedFilename,
+                this.imageUrl,
+                this.altText,
+                this.caption,
+                this.fileSize,
+                this.mimeType,
+                this.width,
+                this.height,
+                newSortOrder,
+                this.isCover
+        );
+    }
+
+    public Image updateCaption(String newCaption) {
+        return new Image(
+                this.id,
+                this.userId,
+                this.postId,
+                this.originalFilename,
+                this.storedFilename,
+                this.imageUrl,
+                this.altText,
+                newCaption,
+                this.fileSize,
+                this.mimeType,
+                this.width,
+                this.height,
+                this.sortOrder,
+                this.isCover
+        );
+    }
+
+    public Image updateAltText(String newAltText) {
+        return new Image(
+                this.id,
+                this.userId,
+                this.postId,
+                this.originalFilename,
+                this.storedFilename,
+                this.imageUrl,
+                newAltText,
+                this.caption,
+                this.fileSize,
+                this.mimeType,
+                this.width,
+                this.height,
+                this.sortOrder,
+                this.isCover
+        );
     }
 
 }

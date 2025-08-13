@@ -37,4 +37,12 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
     @Query("update PostEntity p set p.likeCount = case when p.likeCount>0 then p.likeCount-1 else 0 end where p.id=:postId")
     int decrementLikeCount(Long postId);
 
+
+    // 좋아요 순으로 게시물 조회
+    @Query("select p from PostEntity p order by p.likeCount desc")
+    Page<PostEntity> findAllOrderByLikeCountDesc(Pageable pageable);
+
+    // 조회 순으로 게시물 조회
+    @Query("select p from PostEntity p order by p.viewCount desc")
+    Page<PostEntity> findAllOrderByViewCountDesc(Pageable pageable);
 }

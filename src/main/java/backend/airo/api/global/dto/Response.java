@@ -2,6 +2,7 @@ package backend.airo.api.global.dto;
 
 import backend.airo.common.exception.ErrorReason;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,13 +13,19 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Response<T> {
 
+    @Schema(description = "요청 경로", example = "/api/v1/resource")
     private String path;
 
+    @Schema(example = "400 BAD_REQUEST | 401 UNAUTHORIZED | 404 NOT_FOUND | 500 INTERNAL_SERVER_ERROR")
     private String responseCode;
+
+    @Schema(description = "응답 메시지", example = "요청이 성공적으로 처리되었습니다.")
     private String message;
 
+    @Schema(description = "응답 결과", example = "{...}")
     private T result;
 
+    @Schema(description = "응답 시간", example = "2023-10-01T12:00:00")
     private LocalDateTime timeStamp;
 
     private Response(String responseCode, T result) {

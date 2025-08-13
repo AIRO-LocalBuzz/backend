@@ -6,6 +6,7 @@ import backend.airo.api.auth.dto.AuthResponse;
 import backend.airo.api.auth.dto.AuthTokenRequest;
 import backend.airo.api.auth.dto.SignInRequest;
 import backend.airo.api.auth.dto.SocialLoginRequest;
+import backend.airo.api.global.swagger.AuthControllerSwagger;
 import backend.airo.application.auth.usecase.AuthTokenUseCase;
 import backend.airo.application.auth.usecase.RefreshTokenUseCase;
 import backend.airo.application.auth.usecase.SignInUseCase;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/auth")
 @RequiredArgsConstructor
 @Slf4j
-public class AuthController {
+public class AuthController implements AuthControllerSwagger {
     private final SocialLoginUseCase socialLoginUseCase;
     private final RefreshTokenUseCase refreshTokenUseCase;
     private final ValidateTokenQuery validateTokenQuery;

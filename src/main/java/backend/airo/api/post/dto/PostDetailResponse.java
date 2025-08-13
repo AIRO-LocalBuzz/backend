@@ -47,7 +47,7 @@ public record PostDetailResponse(
         Location location,
 
         @Schema(description = "주소", example = "부산시 해운대구")
-        String adress,
+        String address,
 
         @Schema(description = "조회수", example = "150")
         Integer viewCount,
@@ -85,7 +85,7 @@ public record PostDetailResponse(
                         post.getEmotionTags(),
                         post.getTravelDate(),
                         post.getLocation(),
-                        post.getAdress(),
+                        post.getAddress(),
                         post.getViewCount(),
                         post.getLikeCount(),
                         post.getCommentCount(),
