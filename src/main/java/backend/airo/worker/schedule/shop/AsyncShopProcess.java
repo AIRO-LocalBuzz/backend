@@ -18,7 +18,6 @@ public class AsyncShopProcess {
     private final DeleteAllShopCommand deleteAllShopCommand;
 
     @Async("apiTaskExecutor")
-    //추후에 Upsert방식을 고려
     public void getShopDataList() {
         deleteAllShopCommand.handle();
         List<MegaCode> regions = getMegaAllCodeQuery.handle();

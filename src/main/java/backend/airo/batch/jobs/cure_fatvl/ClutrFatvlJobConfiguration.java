@@ -26,6 +26,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
+import static backend.airo.batch.utils.ParsingAreaCode.areaNameParsing;
+
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
@@ -138,6 +140,7 @@ public class ClutrFatvlJobConfiguration {
                     try {
                         AreaName region = areaNameParsing(item.road(), item.lot());
                         Long megaCode = areaCodeCacheService.getMegaCode(region.mega());
+                        System.out.println("Area Region :: " + region.city() + " || code :: " + megaCode );
                         Long cityCode = areaCodeCacheService.getCityCode(megaCode, region.city());
                         return ClutrFatvl.create(item, megaCode, cityCode);
                     } catch (Exception e) {
@@ -159,30 +162,5 @@ public class ClutrFatvlJobConfiguration {
                 }
             }
         };
-    }
-
-
-    private AreaName areaNameParsing(String roadAddr, String lotAddr) {
-        String fullAddress = roadAddr;
-        if (fullAddress == null || fullAddress.isBlank()) {
-            fullAddress = lotAddr;
-        }
-
-        if (fullAddress == null || fullAddress.isBlank()) {
-            return new AreaName("UNKNOWN", "UNKNOWN");
-        }
-
-        String[] tokens = fullAddress.trim().split(" ");
-        String mega = tokens.length > 0 ? tokens[0] : "UNKNOWN";
-
-        StringBuilder cityBuilder = new StringBuilder();
-        for (int i = 1; i < Math.min(tokens.length, 4); i++) {
-            if (tokens[i].endsWith("시") || tokens[i].endsWith("군") || tokens[i].endsWith("구")) {
-                cityBuilder.append(tokens[i]).append(" ");
-            }
-        }
-
-        String city = cityBuilder.toString().trim();
-        return new AreaName(mega, city);
     }
 }

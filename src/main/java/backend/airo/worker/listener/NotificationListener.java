@@ -21,6 +21,7 @@ import java.time.ZoneId;
 public class NotificationListener implements JobExecutionListener {
 
     private final ServerStartupNotifier serverStartupNotifier;
+
     @Override
     public void afterJob(JobExecution jobExecution) {
         if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
