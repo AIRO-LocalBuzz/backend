@@ -3,7 +3,7 @@ package backend.airo.application.post.usecase;
 
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.command.DeletePostCommandService;
-import backend.airo.domain.post.exception.PostAccessDeniedException;
+import backend.airo.domain.post.exception.PostException;
 import backend.airo.domain.post.query.GetPostQueryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +32,11 @@ public class PostDeleteUseCase {
 
     }
 
+
+
     private void validatePostOwnership(Post post, Long requesterId) {
         if (!isPostOwner(post, requesterId)) {
-            throw new PostAccessDeniedException(post.getId(), requesterId, POST_ACCESS_DENIED);
+            throw PostException.accessDenied(post.getId(), requesterId);
         }
     }
 

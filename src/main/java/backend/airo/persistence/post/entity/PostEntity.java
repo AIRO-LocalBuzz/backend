@@ -78,15 +78,15 @@ public class PostEntity extends BaseEntity {
     @Embedded
     private Location location;
 
-    @Column(name = "adress")
-    private String adress;
+    @Column(name = "address")
+    private String address;
 
 
 
 
     public PostEntity(Long userId, String title, String content, String summary,
                       PostStatus status, PostWithWhoTag withWhoTag, PostForWhatTag forWhatTag,
-                      List<PostEmotionTag> emotionTags, PostCategory category, LocalDate travelDate, Location location, String adress, Boolean isFeatured, LocalDateTime publishedAt) {
+                      List<PostEmotionTag> emotionTags, PostCategory category, LocalDate travelDate, Location location, String address, Boolean isFeatured, LocalDateTime publishedAt) {
         super();
         this.userId = userId;
         this.title = title;
@@ -99,7 +99,7 @@ public class PostEntity extends BaseEntity {
         this.category = category != null ? category : PostCategory.RESTAURANT;
         this.travelDate = travelDate;
         this.location = location;
-        this.adress = adress;
+        this.address = address;
         this.isFeatured = isFeatured != null ? isFeatured : false;
         this.viewCount = 0;
         this.likeCount = 0;
@@ -122,7 +122,7 @@ public class PostEntity extends BaseEntity {
                 post.getCategory(),
                 post.getTravelDate(),
                 post.getLocation(),
-                post.getAdress(),
+                post.getAddress(),
                 post.getIsFeatured(),
                 post.getPublishedAt()
         );
@@ -143,7 +143,7 @@ public class PostEntity extends BaseEntity {
                 entity.getCategory(),
                 entity.getTravelDate(),
                 entity.getLocation(),
-                entity.getAdress(),
+                entity.getAddress(),
                 entity.getViewCount(),
                 entity.getLikeCount(),
                 entity.getCommentCount(),

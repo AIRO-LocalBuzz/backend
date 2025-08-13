@@ -90,7 +90,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         boolean shouldSkip = path.startsWith("/auth/") ||
                 path.startsWith("/swagger-ui/") ||
                 path.startsWith("/api/v1/init/") ||
-                path.startsWith("/v3/api-docs/");
+                path.startsWith("/v3/api-docs/") ||
+                path.startsWith("/api/login/oauth2/") ||
+                path.startsWith("/login/oauth2/");
 
         log.info("필터 실행 여부 체크 - URI: {}, 스킵: {}", path, shouldSkip);
         return shouldSkip;

@@ -1,5 +1,6 @@
 package backend.airo.security.config;
 
+import backend.airo.api.global.security.CustomAuthenticationEntryPoint;
 import backend.airo.application.auth.oauth2.CustomOAuth2UserService;
 import backend.airo.security.filter.JwtAuthenticationFilter;
 import backend.airo.security.filter.SwaggerBypassAuthenticationFilter;
@@ -38,6 +39,9 @@ public class SecurityConfig {
         http
                 .addFilterBefore(swaggerBypassAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(CsrfConfigurer::disable)
                 .httpBasic(HttpBasicConfigurer::disable)
@@ -51,6 +55,7 @@ public class SecurityConfig {
                                 "/webjars/**",
                                 "/api/auth/**",
                                 "/api/oauth2/**",
+                                "/api/login",
                                 "/api/login/oauth2/**",
                                 "/api/v1/test/**",
                                 "/api/actuator/health",
@@ -74,7 +79,9 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService)
                         )
                         .successHandler(oauth2AuthenticationSuccessHandler)  // 분리된 핸들러 사용
-                );
+                )
+
+        ;
 
         return http.build();
     }
@@ -82,7 +89,7 @@ public class SecurityConfig {
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080", "http://localhost:9001", "http://localhost:63342", "https://airo-buzz.shop", "http://localhost:5173", "http://localhost:5174", "http://localhost:5175"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080", "http://localhost:9001", "http://localhost:63342", "https://airo-buzz.shop", "http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "https://site-navy-six-67.vercel.app"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setAllowCredentials(true);

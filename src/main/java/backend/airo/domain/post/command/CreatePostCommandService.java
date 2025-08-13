@@ -6,17 +6,16 @@ import backend.airo.application.image.usecase.ImageCreateUseCase;
 import backend.airo.application.thumbnail.ThumbnailGenerationService;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.post.Post;
-import backend.airo.domain.post.enums.PostStatus;
 import backend.airo.domain.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.IntStream;
 
+import static backend.airo.domain.image.Image.createImage;
+import static backend.airo.domain.post.Post.createPost;
 
 @Slf4j
 @Component
@@ -25,98 +24,41 @@ public class CreatePostCommandService {
 
     private final PostRepository postRepository;
     private final ImageCreateUseCase imageCreateUseCase;
-    private final ApplicationEventPublisher eventPublisher;
     private final ThumbnailGenerationService thumbnailGenerationService;
 
     @Transactional
     public Post handle(PostCreateRequest request, Long userId) {
         log.info("게시물 생성 시작: title={}, userId={}, status={}",
-                request.title(), userId ,request.status());
+                request.title(), userId, request.status());
 
-        // 도메인 객체 생성
-        Post post = createPostFromCommand(request, userId);
-
-        log.debug("생성된 Post 도메인 객체: {}", post);
-
-        // 게시물 저장
+        Post post = createPost(request, userId);
         Post savedPost = postRepository.save(post);
+
+        processImages(request.images(), userId, savedPost.getId());
+
         log.info("게시물 저장 완료: id={}, title={}", savedPost.getId(), savedPost.getTitle());
-
-        processPostImages(userId, savedPost.getId(), request);
-
         return savedPost;
     }
 
-
-    @Transactional// 비동기 실행을 위한 Executor 지정
+    @Transactional
     public Post handleWithThumbnail(PostCreateRequest request, Long userId) {
-        log.info("게시물 생성 시작: title={}, userId={}, status={}",
-                request.title(), userId ,request.status());
 
-        // 도메인 객체 생성
-        Post post = createPostFromCommand(request, userId);
-
-        log.debug("생성된 Post 도메인 객체: {}", post);
-
-        // 게시물 저장
-        Post savedPost = postRepository.save(post);
-        log.info("게시물 저장 완료: id={}, title={}", savedPost.getId(), savedPost.getTitle());
-
-        processPostImages(userId, savedPost.getId(), request);
-
-//         AI썸네일 생성 비동기 호출
+        Post savedPost = handle(request, userId);
         thumbnailGenerationService.generateThumbnailAsync(savedPost);
 
         return savedPost;
     }
 
 
-    private void processPostImages(Long userId,Long postId, PostCreateRequest request) {
-        List<ImageCreateRequest> imageRequests = request.images();
+    private void processImages(List<ImageCreateRequest> imageRequests, Long userId, Long postId) {
 
-        log.debug("이미지 요청 리스트 개수: {}, userId: {}", imageRequests.size(), userId);
-
-        List<Image> images = new java.util.ArrayList<>();
-
-        for (int i = 0; i < imageRequests.size(); i++) {
-            ImageCreateRequest imageRequest = imageRequests.get(i);
-            Image image = new Image(userId, postId, imageRequest.imageUrl(), imageRequest.mimeType(), i+1);
-            log.debug("처리중인 Image: postId={}, imageUrl={}, sortOrder={}", image.getPostId(), image.getImageUrl(), i+1);
-            images.add(image);
-        }
+        List<Image> images = IntStream.range(0, imageRequests.size())
+                .mapToObj(i -> createImage(imageRequests.get(i), userId, postId, i + 1))
+                .toList();
 
         List<Image> savedImages = imageCreateUseCase.uploadMultipleImages(images);
-        log.debug("게시물 이미지 저장 완료: postId={}, 저장된 이미지 개수={}", postId, savedImages.size());
+        log.debug("이미지 저장 완료: postId={}, 저장된 이미지 개수={}", postId, savedImages.size());
     }
 
 
-
-    private Post createPostFromCommand(PostCreateRequest request, Long userId) {
-//        LocalDateTime now = LocalDateTime.now();
-//        LocalDateTime publishedAt = PostStatus.PUBLISHED.equals(request.status()) ? now : null;
-
-        Post post = new Post(
-                null, // ID는 저장 시 생성
-                userId,
-                request.title(),
-                request.content(),
-                null, // summary는 나중에 AI로 생성
-                request.status(),
-                request.withWhoTag(),
-                request.forWhatTag(),
-                request.emotionTags(),
-                request.category(),
-                request.travelDate(),
-                null,
-                request.adress(),
-                0, // 초기 조회수
-                0, // 초기 좋아요 수
-                0, // 초기 댓글 수
-                request.isFeatured(),
-                LocalDateTime.now()
-        );
-
-        log.info("createPostFromCommand 결과 - publishedAt: {}", post.getPublishedAt());
-        return post;
-    }
 }

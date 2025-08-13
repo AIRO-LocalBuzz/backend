@@ -1,7 +1,7 @@
 package backend.airo.api.resolver;
 
 import backend.airo.api.annotation.UserPrincipal;
-import backend.airo.domain.image.exception.UnauthorizedException;
+import backend.airo.domain.image.exception.ImageException;
 import backend.airo.domain.user.User;
 import backend.airo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class UserPrincipalArgumentResolver implements HandlerMethodArgumentResol
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new UnauthorizedException("인증되지 않은 사용자입니다.");
+            throw ImageException.unauthorized("인증되지 않은 사용자입니다.");
         }
 
         Object principal = authentication.getPrincipal();
@@ -40,6 +40,6 @@ public class UserPrincipalArgumentResolver implements HandlerMethodArgumentResol
             return userRepository.findById(((User) principal).getId());
         }
 
-        throw new UnauthorizedException("잘못된 인증 정보입니다.");
+        throw ImageException.unauthorized("잘못된 인증 정보입니다.");
     }
 }

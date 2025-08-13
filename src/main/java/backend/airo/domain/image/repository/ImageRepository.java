@@ -28,4 +28,5 @@ public interface ImageRepository extends AggregateSupport<Image, Long> {
     // Business Logic
     String generateThumbnail(String originalImageUrl);
 
+    boolean existsByPostId(Long postId);
 }

@@ -18,7 +18,7 @@ public abstract class AiroException extends RuntimeException {
         if (sourceLayer == null) {
             return errorCode.getErrorReason().message();
         } else {
-            return String.format("%s - %s", sourceLayer, errorCode.getErrorReason().message());
+            return String.format("%s-%s", sourceLayer, errorCode.getErrorReason().message());
         }
     }
 

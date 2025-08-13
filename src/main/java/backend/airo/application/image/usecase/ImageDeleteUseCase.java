@@ -8,32 +8,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImageDeleteUseCase {
 
-
     private final DeleteImageCommandService deleteImageCommandService;
 
-
-    public boolean deleteSingleImage(Long imageId) {
-        return deleteImageCommandService.deleteById(imageId);
+    public void deleteImageWithAuth(Long imageId, Long userId) {
+        deleteImageCommandService.deleteById(imageId, userId);
     }
 
-
-    public boolean deleteImageWithAuth(Long imageId, Long currentUserId) {
-        return deleteImageCommandService.deleteById(imageId, currentUserId);
+    public void deleteMultipleImages(List<Long> imageIds, Long userId) {
+        deleteImageCommandService.deleteAllById(imageIds, userId);
     }
 
-    public void deleteMultipleImages(List<Long> imageIds) {
-        deleteImageCommandService.deleteAllById(imageIds);
+    public void deleteImagesByPostWithAuth(Long postId, Long userId) {
+        deleteImageCommandService.deleteByPostId(postId, userId);
     }
-
-
-    public void deleteImagesByPost(Long postId) {
-        deleteImageCommandService.deleteByPostId(postId);
-    }
-
-
-    public void deleteImagesByPostWithAuth(Long postId, Long currentUserId) {
-        deleteImageCommandService.deleteByPostId(postId, currentUserId);
-    }
-
 
 }
