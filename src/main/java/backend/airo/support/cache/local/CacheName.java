@@ -1,6 +1,5 @@
 package backend.airo.support.cache.local;
 
-import backend.airo.domain.area_code.MegaCode;
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.domain.rural_ex.RuralEx;
 import backend.airo.domain.shop.Shop;

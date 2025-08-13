@@ -1,6 +1,6 @@
 package backend.airo.worker.schedule.shop;
 
-import backend.airo.support.TimeCatch;
+import backend.airo.support.time.TimeCatch;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

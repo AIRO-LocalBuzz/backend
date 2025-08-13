@@ -7,6 +7,7 @@ import backend.airo.cache.area_code.AreaCodeCacheService;
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.persistence.clutrfatvl.repository.ClutrFatvlBulkRepository;
 import backend.airo.worker.listener.ClutrFatvlJobListener;
+import backend.airo.worker.listener.NotificationListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.*;
@@ -40,11 +41,12 @@ public class ClutrFatvlJobConfiguration {
 
     // === Job ===
     @Bean(name = JOB_NAME)
-    public Job clutrFatvlJob(Step clutrFatvlStep, ClutrFatvlJobListener listener) {
+    public Job clutrFatvlJob(Step clutrFatvlStep, ClutrFatvlJobListener listener, NotificationListener notificationListener) {
         return new JobBuilder(JOB_NAME, repo)
                 .start(clutrFatvlStep)
                 .incrementer(new RunIdIncrementer())
                 .listener(listener)
+                .listener(notificationListener)
                 .build();
     }
 
@@ -160,7 +162,6 @@ public class ClutrFatvlJobConfiguration {
     }
 
 
-    //TODO Redis 캐시로 옮기면 해당 로직으로 변경 예정
     private AreaName areaNameParsing(String roadAddr, String lotAddr) {
         String fullAddress = roadAddr;
         if (fullAddress == null || fullAddress.isBlank()) {

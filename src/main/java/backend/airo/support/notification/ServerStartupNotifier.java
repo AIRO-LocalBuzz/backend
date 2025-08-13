@@ -1,4 +1,4 @@
-package backend.airo.support;
+package backend.airo.support.notification;
 
 
 import backend.airo.infra.discord.adapter.DiscordAdapter;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Component
@@ -29,15 +30,14 @@ public class ServerStartupNotifier {
         discordAdapter.sendMessageToChannelServerStart(hostname, "production", System.getProperty("java.version"), String.valueOf(context.getWebServer().getPort()));
     }
 
-    public void collectClutrFatvlDataSuccessWithNotification (int size, LocalDate start, LocalDate end){
-        if (checkProfile(environment)) return;
-
-        discordAdapter.sendMessageToChannelCollectClutrFatvlDataSuccess(size, start, end);
+    public void collectClutrFatvlDataSuccessWithNotification (long totalRead, long totalWrite, long totalSkip, LocalDate start, LocalDate end, double tookSec){
+//        if (checkProfile(environment)) return;
+        discordAdapter.sendMessageToChannelCollectClutrFatvlDataSuccess(totalRead, totalWrite, totalSkip, start, end, tookSec);
     }
 
-    public void collectClutrFatvlDataFailWithNotification(){
+    public void collectClutrFatvlDataFailWithNotification(String message){
         if (checkProfile(environment)) return;
-        discordAdapter.sendMessageToChannelCollectClutrFatvlDataFail();
+        discordAdapter.sendMessageToChannelCollectClutrFatvlDataFail(message);
     }
 
     private static boolean checkProfile(Environment environment) {

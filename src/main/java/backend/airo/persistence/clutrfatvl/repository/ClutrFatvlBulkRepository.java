@@ -29,29 +29,30 @@ public class ClutrFatvlBulkRepository implements ClutrFatvlBulkRepositoryPort {
             @Override
             public void setValues(@NotNull PreparedStatement ps, int i) throws SQLException {
                 ClutrFatvlEntity item = clutrFatvlEntities.get(i);
-                ps.setString(1, item.getId());
-                ps.setString(2, item.getFstvlNm());
-                ps.setString(3, item.getOpar());
-                ps.setString(4, item.getFstvlCo());
-                ps.setObject(5, item.getPeriod().start());
-                ps.setObject(6, item.getPeriod().end());
-                ps.setDouble(7, item.getLocation().lat());
-                ps.setDouble(8, item.getLocation().lon());
-                ps.setString(9, item.getAddress().road());
-                ps.setString(10, item.getAddress().lot());
-                ps.setString(11, item.getAddress().megaCodeId());
-                ps.setString(12, item.getAddress().ctprvnCodeId());
-                ps.setString(13, item.getMnnstNm());
-                ps.setString(14, item.getAuspcInsttNm());
-                ps.setString(15, item.getSuprtInsttNm());
-                ps.setString(16, item.getPhoneNumber());
-                ps.setString(17, item.getHomepageUrl());
-                ps.setString(18, item.getRelateInfo());
-                ps.setObject(19, item.getReferenceDate());
-                ps.setString(20, item.getInsttCode());
-                ps.setString(21, item.getInsttNm());
-                ps.setObject(22, java.time.LocalDateTime.now());
+                ps.setString(1, item.getBizKey());
+                ps.setString(2, item.getId());
+                ps.setString(3, item.getFstvlNm());
+                ps.setString(4, item.getOpar());
+                ps.setString(5, item.getFstvlCo());
+                ps.setObject(6, item.getPeriod().start());
+                ps.setObject(7, item.getPeriod().end());
+                ps.setDouble(8, item.getLocation().lat());
+                ps.setDouble(9, item.getLocation().lon());
+                ps.setString(10, item.getAddress().road());
+                ps.setString(11, item.getAddress().lot());
+                ps.setString(12, item.getAddress().megaCodeId());
+                ps.setString(13, item.getAddress().ctprvnCodeId());
+                ps.setString(14, item.getMnnstNm());
+                ps.setString(15, item.getAuspcInsttNm());
+                ps.setString(16, item.getSuprtInsttNm());
+                ps.setString(17, item.getPhoneNumber());
+                ps.setString(18, item.getHomepageUrl());
+                ps.setString(19, item.getRelateInfo());
+                ps.setObject(20, item.getReferenceDate());
+                ps.setString(21, item.getInsttCode());
+                ps.setString(22, item.getInsttNm());
                 ps.setObject(23, java.time.LocalDateTime.now());
+                ps.setObject(24, java.time.LocalDateTime.now());
             }
 
             @Override
@@ -66,6 +67,7 @@ public class ClutrFatvlBulkRepository implements ClutrFatvlBulkRepositoryPort {
     private static String makeBulkSql() {
         return """
             INSERT INTO clutr_fatvl (
+                biz_key,
                 id, fstvl_nm, opar, fstvl_co,
                 start_date, end_date,
                 latitude, longitude,
@@ -76,7 +78,9 @@ public class ClutrFatvlBulkRepository implements ClutrFatvlBulkRepositoryPort {
                 reference_date, instt_code, instt_nm,
                 created_at, updated_at
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+                updated_at = CURRENT_TIMESTAMP
         """;
     }
 }

@@ -4,8 +4,6 @@ import backend.airo.cache.area_code.AreaCodeCacheService;
 import backend.airo.domain.area_code.MegaCode;
 import backend.airo.domain.area_code.repository.MegaRepository;
 import backend.airo.worker.schedule.area_code.AreaCodeService;
-import backend.airo.worker.schedule.rural_ex.RuralExService;
-import backend.airo.worker.schedule.shop.ShopService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -21,8 +19,6 @@ public class Init {
 
     private final AreaCodeService areaCodeService;
     private final AreaCodeCacheService areaCodeCacheService;
-    private final ShopService shopService;
-    private final RuralExService ruralExService;
 
     private final MegaRepository megaRepository;
 
@@ -32,13 +28,12 @@ public class Init {
         if (megaCodes.isEmpty()) {
             areaCodeService.collectCodeOf();
         }
-
         try {
-            log.info("Redis cache hit!!");
             areaCodeCacheService.getCityAllList();
             areaCodeCacheService.getMegaAllList();
+            log.info("Redis cache hit");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            log.error("Redis cache miss :: {}", e.getMessage());
         }
     }
 }

@@ -17,7 +17,8 @@ import java.util.UUID;
 @Getter
 @ToString
 @Table(
-        name = "clutr_fatvl"
+        name = "clutr_fatvl",
+        uniqueConstraints = @UniqueConstraint(name = "uk_clutr_bizkey", columnNames = "biz_key")
 )
 
 public class ClutrFatvlEntity extends BaseEntity {
@@ -58,13 +59,17 @@ public class ClutrFatvlEntity extends BaseEntity {
 
     private String insttNm;
 
+    @Column(name="biz_key", nullable=false, updatable=false, length=64, unique=true)
+    private String bizKey;
+
     @Builder
     public ClutrFatvlEntity(
             String id, String fstvlNm, String opar, String fstvlCo,
             FestivalPeriod period, GeoPoint location, Address address,
             String mnnstNm, String auspcInsttNm, String suprtInsttNm,
             String phoneNumber, String homepageUrl, String relateInfo,
-            LocalDate referenceDate, String insttCode, String insttNm) {
+            LocalDate referenceDate, String insttCode, String insttNm,
+            String bizKey) {
         this.id = id;
         this.fstvlNm = fstvlNm;
         this.opar = opar;
@@ -81,6 +86,7 @@ public class ClutrFatvlEntity extends BaseEntity {
         this.referenceDate = referenceDate;
         this.insttCode = insttCode;
         this.insttNm = insttNm;
+        this.bizKey = bizKey;
     }
 
     public static ClutrFatvlEntity toEntity(ClutrFatvl dto) {
@@ -101,6 +107,7 @@ public class ClutrFatvlEntity extends BaseEntity {
                 .referenceDate(dto.getReferenceDate())
                 .insttCode(dto.getInsttCode())
                 .insttNm(dto.getInsttNm())
+                .bizKey(computeBizKey(dto.getFstvlNm(), dto.getInsttCode(), dto.getPeriod()))
                 .build();
     }
 
@@ -150,6 +157,30 @@ public class ClutrFatvlEntity extends BaseEntity {
 
     private static String generateId() {
         return UUID.randomUUID().toString();
+    }
+
+    private static String computeBizKey(String fstvlNm, String insttCode, FestivalPeriod festivalPeriod) {
+        String normName = normalize(fstvlNm);
+        String normInst = insttCode == null ? "" : insttCode.trim();
+        String parsingStart = festivalPeriod != null && festivalPeriod.start() != null ? festivalPeriod.start().toString() : "";
+        return sha256(normName + "|" + parsingStart + "|" + normInst);
+    }
+
+    private static String normalize(String s) {
+        if (s == null) return "";
+        return java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFKC)
+                .toLowerCase().trim()
+                .replaceAll("\\s+", " ");
+    }
+
+    private static String sha256(String val) {
+        try {
+            var md = java.security.MessageDigest.getInstance("SHA-256");
+            byte[] d = md.digest(val.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder(d.length*2);
+            for (byte b : d) sb.append(String.format("%02x", b));
+            return sb.toString();
+        } catch (Exception e) { throw new IllegalStateException(e); }
     }
 
 }

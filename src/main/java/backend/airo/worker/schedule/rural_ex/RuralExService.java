@@ -3,7 +3,7 @@ package backend.airo.worker.schedule.rural_ex;
 import backend.airo.domain.rural_ex.RuralEx;
 import backend.airo.domain.rural_ex.command.CreateAllRuralExCommand;
 import backend.airo.domain.rural_ex.port.RuralDataPort;
-import backend.airo.support.TimeCatch;
+import backend.airo.support.time.TimeCatch;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
