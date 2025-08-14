@@ -2,7 +2,7 @@ package backend.airo.domain.post.command;
 
 import backend.airo.api.image.dto.ImageCreateRequest;
 import backend.airo.api.post.dto.PostCreateRequest;
-import backend.airo.application.image.usecase.ImageCreateUseCase;
+import backend.airo.application.image.usecase.ImageUseCase;
 import backend.airo.application.thumbnail.ThumbnailGenerationService;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.post.Post;
@@ -23,7 +23,7 @@ import static backend.airo.domain.post.Post.createPost;
 public class CreatePostCommandService {
 
     private final PostRepository postRepository;
-    private final ImageCreateUseCase imageCreateUseCase;
+    private final ImageUseCase imageUseCase;
     private final ThumbnailGenerationService thumbnailGenerationService;
 
     @Transactional
@@ -56,7 +56,7 @@ public class CreatePostCommandService {
                 .mapToObj(i -> createImage(imageRequests.get(i), userId, postId, i + 1))
                 .toList();
 
-        List<Image> savedImages = imageCreateUseCase.uploadMultipleImages(images);
+        List<Image> savedImages = imageUseCase.uploadMultipleImages(images);
         log.debug("이미지 저장 완료: postId={}, 저장된 이미지 개수={}", postId, savedImages.size());
     }
 

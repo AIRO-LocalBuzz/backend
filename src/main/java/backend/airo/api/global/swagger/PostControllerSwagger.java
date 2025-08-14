@@ -4,6 +4,7 @@ package backend.airo.api.global.swagger;
 import backend.airo.api.annotation.UserPrincipal;
 import backend.airo.api.global.dto.Response;
 import backend.airo.api.post.dto.*;
+import backend.airo.domain.post.Post;
 import backend.airo.domain.user.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -79,6 +81,18 @@ public interface PostControllerSwagger {
     @GetMapping
     Response<PostListResponse> getPostList(
             @Valid @ModelAttribute PostListRequest request);
+
+
+
+    @Operation(summary = "게시물 스크롤 조회", description = "최신순 스크롤 게시물 목록을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "게시물 목록 조회 성공",
+                    content = @Content(schema = @Schema(implementation = PostListResponse.class)))
+    })
+    @GetMapping
+    Response<PostSliceResponse> getPostSlice(
+            @Valid @ModelAttribute PostSliceRequest request);
 
 
 

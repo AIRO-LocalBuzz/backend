@@ -3,8 +3,12 @@ package backend.airo.persistence.post.repository;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.PostStatus;
 import backend.airo.persistence.post.entity.PostEntity;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -45,4 +49,12 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
     // 조회 순으로 게시물 조회
     @Query("select p from PostEntity p order by p.viewCount desc")
     Page<PostEntity> findAllOrderByViewCountDesc(Pageable pageable);
+
+    Slice<PostEntity> findByStatusOrderByIdDesc(PostStatus status, Pageable pageable);
+
+    Slice<PostEntity> findByStatusAndIdLessThanOrderByIdDesc(
+            PostStatus status,
+            Long id,
+            Pageable pageable
+    );
 }

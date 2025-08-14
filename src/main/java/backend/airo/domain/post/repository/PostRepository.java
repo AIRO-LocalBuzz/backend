@@ -4,8 +4,13 @@ import backend.airo.domain.AggregateSupport;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.dto.PostSearchCriteria;
 import backend.airo.domain.post.enums.PostStatus;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -46,4 +51,5 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
     // 조회 순으로 게시물 조회
     Page<Post> findAllOrderByViewCountDesc(Pageable pageable);
 
+    Slice<Post> findSliceAfterCursor(@Positive(message = "마지막 게시물 ID는 양수여야 합니다") Long aLong, @Min(value = 1, message = "사이즈는 1 이상이어야 합니다") @Max(value = 100, message = "사이즈는 100 이하여야 합니다") int size);
 }

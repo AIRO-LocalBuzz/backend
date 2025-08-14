@@ -9,7 +9,9 @@ import backend.airo.persistence.post.repository.PostJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
@@ -129,6 +131,28 @@ public class PostAdapter implements PostRepository {
         return entities.map(PostEntity::toDomain);
     }
 
+
+    @Override
+    public Slice<Post> findSliceAfterCursor(Long lastPostId, int size) {
+        log.debug("커서 기반 게시물 조회: lastPostId={}, size={}", lastPostId, size);
+
+        Pageable pageable = PageRequest.of(0, size);
+        Slice<PostEntity> entities;
+
+        if (lastPostId == null) {
+            // 첫 번째 요청: 최신 게시물부터 조회
+            entities = postJpaRepository.findByStatusOrderByIdDesc(PostStatus.PUBLISHED, pageable);
+        } else {
+            // 다음 요청: lastPostId보다 작은 ID의 게시물 조회 (최신순)
+            entities = postJpaRepository.findByStatusAndIdLessThanOrderByIdDesc(
+                    PostStatus.PUBLISHED, lastPostId, pageable);
+        }
+
+        log.debug("커서 기반 조회 결과: {} 건, hasNext: {}",
+                entities.getNumberOfElements(), entities.hasNext());
+
+        return entities.map(PostEntity::toDomain);
+    }
 
 
     // ===== Private Helper Methods =====
