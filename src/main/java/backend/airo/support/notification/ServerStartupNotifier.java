@@ -31,7 +31,7 @@ public class ServerStartupNotifier {
     }
 
     public void collectClutrFatvlDataSuccessWithNotification (long totalRead, long totalWrite, long totalSkip, LocalDate start, LocalDate end, double tookSec){
-//        if (checkProfile(environment)) return;
+        if (checkProfile(environment)) return;
         discordAdapter.sendMessageToChannelCollectClutrFatvlDataSuccess(totalRead, totalWrite, totalSkip, start, end, tookSec);
     }
 
