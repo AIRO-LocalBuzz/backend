@@ -4,6 +4,7 @@ import backend.airo.domain.auth.oauth2.command.GenerateTempCodeCommand;
 import backend.airo.domain.auth.oauth2.query.FindOAuth2UserQuery;
 import backend.airo.domain.user.User;
 import backend.airo.domain.user.enums.ProviderType;
+import backend.airo.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,12 +35,16 @@ public class OAuth2AuthenticationUseCase {
     @Value("${app.oauth2.failure-url:https://site-navy-six-67.vercel.app/auth/nickname}")
     private String failureUrl;
 
-    public String handleAuthenticationSuccess(OAuth2User oauth2User, String accessToken) {
+    private String localSuccessBaseUrl = "http://localhost:5173/auth/success";
+
+    private String localFailureUrl = "http://localhost:5173/auth/nickname";
+
+    public String handleAuthenticationSuccess(OAuth2User oauth2User, String accessToken, boolean isLocalClient) {
         // 1. OAuth2 정보 추출
         String providerId = oauth2User.getAttribute("provider_id");
         ProviderType providerType = oauth2User.getAttribute("provider_type");
 
-        log.info("Provider ID: {}, Provider Type: {}", providerId, providerType);
+        log.info("Provider ID: {}, Provider Type: {}, Local Client: {}", providerId, providerType, isLocalClient);
 
         // 2. 사용자 조회
         Optional<User> userOptional = findOAuth2UserQuery.findByProviderIdAndType(providerId, providerType);
@@ -51,14 +56,18 @@ public class OAuth2AuthenticationUseCase {
             // 3. 토큰 저장
             generateTempCodeCommand.generate(user.getId(), accessToken);
 
-            // 4. 성공 URL 반환
-            return successBaseUrl + "?token=" + accessToken;
+            // 4. 환경에 따른 성공 URL 반환
+            String baseUrl = isLocalClient ? localSuccessBaseUrl : successBaseUrl;
+            return baseUrl + "?token=" + accessToken;
 
         } else {
-            log.warn("사용자를 찾을 수 없음 - Provider ID: {}, Provider Type: {}", providerId, providerType);
+            log.warn("사용자를 찾을 수 없음 - 새로운유저 생성  Provider ID: {}, Provider Type: {}", providerId, providerType);
             // OAuth2User 속성들을 Redis에 저장
             saveOAuth2UserToRedis(accessToken, oauth2User);
-            return failureUrl + "?token=" + accessToken;
+
+            // 환경에 따른 실패 URL 반환
+            String baseUrl = isLocalClient ? localFailureUrl : failureUrl;
+            return baseUrl + "?token=" + accessToken;
         }
     }
 
