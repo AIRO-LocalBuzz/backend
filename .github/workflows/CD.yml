@@ -23,7 +23,7 @@ jobs:
       JWT_EXPIRATION: ${{ secrets.JWT_EXPIRATION }}
       FIRE_BASE_ADMIN_KEY_PATH: ${{ secrets.FIRE_BASE_ADMIN_KEY_PATH }}
       FIRE_BASE_ADMIN_RASS_KEY_PATH: ${{ secrets.FIRE_BASE_ADMIN_RASS_KEY_PATH }}
-      OPEN_API_KET: ${{ secrets.OPEN_API_KET }}
+      OPEN_API_KET: ${{ secrets.OPEN_API_KET }}              # ← 오타, 아래 참고
       DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
       DISCORD_BOT_CHANNEL_ID: ${{ secrets.DISCORD_BOT_CHANNEL_ID }}
       BATCH_SIZE: ${{ secrets.BATCH_SIZE }}
@@ -54,6 +54,17 @@ jobs:
           BATCH_SIZE=$BATCH_SIZE
           EOF
 
+      - name: 서버 디렉토리 초기화
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            rm -rf ~/airo
+            mkdir -p ~/airo
+
       - name: 현재 코드 및 파일들을 서버로 전송
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -61,11 +72,10 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          source: |
-            .env
-            docker-compose.yml
-            backend/**
+          source: "."
           target: "~/airo"
+          overwrite: true
+          debug: true
 
       - name: SSH를 통한 배포 시작 [ docker compose 실행 ]
         uses: appleboy/ssh-action@v1.0.3
@@ -76,12 +86,10 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           command_timeout: '60m'
           script: |
+            set -e
             cd ~/airo
             docker compose down --volumes --remove-orphans || true
-
-            # 빌더/이미지 캐시 정리 (한 번은 강력 권장)
             docker builder prune -af || true
             docker image prune -af --filter "until=24h" || true
-            
             docker compose build --no-cache
             docker compose up -d
