@@ -1,5 +1,6 @@
 package backend.airo.application.clure_fatvl.usecase;
 
+import backend.airo.cache.clutr_fatvl.ClutrFatvlCacheService;
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.domain.clure_fatvl.query.GetClutrFatvlListQuery;
 import backend.airo.domain.clure_fatvl.query.GetClutrFatvlQuery;
@@ -12,11 +13,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ClutrFatvlUseCase {
 
-    private final GetClutrFatvlQuery getClutrFatvlQuery;
     private final GetClutrFatvlListQuery getClutrFatvlListQuery;
+    private final ClutrFatvlCacheService clutrFatvlCacheService;
 
     public ClutrFatvl getClutrFatvlInfo(Long clutrFatvlId) {
-        return getClutrFatvlQuery.handle(clutrFatvlId);
+        return clutrFatvlCacheService.getClutrFatvl(clutrFatvlId);
     }
 
     public Page<ClutrFatvl> getClutrFatvlList(String megaName, String cityName, Pageable pageable) {

@@ -22,9 +22,7 @@ public class PostLikeUserCase {
     @Transactional
     public void upsertPostLike(Long postId, Long userId) {
         int postLike = postLikeUpsertLikeCommand.handle(postId, userId);
-        System.out.println("postLike :: " + postLike);
         if (postLike == 1) {
-            System.out.println("postIncrementLikeCountCommand 실행 됨.");
             int postIncrementLike = postIncrementLikeCountCommand.handle(postId);
             if (postIncrementLike != 1) {
                 //예외 처리

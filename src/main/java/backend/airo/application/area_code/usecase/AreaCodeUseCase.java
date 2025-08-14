@@ -1,9 +1,9 @@
 package backend.airo.application.area_code.usecase;
 
+import backend.airo.cache.area_code.AreaCodeCacheService;
 import backend.airo.domain.area_code.CityCode;
 import backend.airo.domain.area_code.MegaCode;
-import backend.airo.domain.area_code.query.GetCityAllCodeQuery;
-import backend.airo.domain.area_code.query.GetMegaAllCodeQuery;
+import backend.airo.domain.area_code.query.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,16 +13,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AreaCodeUseCase {
 
-    private final GetMegaAllCodeQuery getMegaAllCodeQuery;
-    private final GetCityAllCodeQuery getCityAllCodeQuery;
+    private final AreaCodeCacheService areaCodeCacheService;
 
 
     public List<MegaCode> getMegaCodeList() {
-        return getMegaAllCodeQuery.handle();
+        return areaCodeCacheService.getMegaAllList();
     }
 
     public List<CityCode> getCityCodeList() {
-        return getCityAllCodeQuery.handle();
+        return areaCodeCacheService.getCityAllList();
     }
 
 }

@@ -1,19 +1,21 @@
 package backend.airo.domain.clure_fatvl;
 
+import backend.airo.application.clure_fatvl.dto.OpenApiClutrFatvlInfo;
 import backend.airo.domain.clure_fatvl.vo.Address;
 import backend.airo.domain.clure_fatvl.vo.FestivalPeriod;
 import backend.airo.domain.clure_fatvl.vo.GeoPoint;
-import backend.airo.infra.open_api.clure_fatvl.vo.ClutrFatvlInfo;
 import jakarta.persistence.Embedded;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Getter
+@ToString
 public class ClutrFatvl {
 
-    private Long id;
+    private final String id;
 
     private final String fstvlNm;
 
@@ -50,7 +52,7 @@ public class ClutrFatvl {
 
     @Builder
     public ClutrFatvl(
-            Long id, String fstvlNm, String opar, String fstvlCo,
+            String id, String fstvlNm, String opar, String fstvlCo,
             FestivalPeriod period, GeoPoint location, Address address,
             String mnnstNm, String auspcInsttNm, String suprtInsttNm,
             String phoneNumber, String homepageUrl, String relateInfo,
@@ -73,14 +75,14 @@ public class ClutrFatvl {
         this.insttNm = insttNm;
     }
 
-    public static ClutrFatvl create(ClutrFatvlInfo dto, String megaCodeId, String ctprvnCodeId) {
+    public static ClutrFatvl create(OpenApiClutrFatvlInfo dto, Long megaCode, Long cityCode) {
         return ClutrFatvl.builder()
                 .fstvlNm(dto.fstvlNm())
                 .opar(dto.opar())
                 .fstvlCo(dto.fstvlCo())
-                .period(new FestivalPeriod(dto.fstvlStartDate(), dto.fstvlEndDate()))
-                .location(new GeoPoint(dto.latitude(), dto.longitude()))
-                .address(new Address(dto.rdnmadr(), dto.lnmadr(), megaCodeId, ctprvnCodeId))
+                .period(new FestivalPeriod(dto.start(), dto.end()))
+                .location(new GeoPoint(dto.lat(), dto.lon()))
+                .address(new Address(dto.road(), dto.lot(), String.valueOf(megaCode), String.valueOf(cityCode)))
                 .mnnstNm(dto.mnnstNm())
                 .auspcInsttNm(dto.auspcInsttNm())
                 .suprtInsttNm(dto.suprtInsttNm())
@@ -92,5 +94,7 @@ public class ClutrFatvl {
                 .insttNm(dto.insttNm())
                 .build();
     }
+
+
 }
 

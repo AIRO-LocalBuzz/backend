@@ -9,9 +9,12 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 public class CollectClutrFatvlDataSuccessMessage  implements DiscordEmbeddable {
-    private final int size;
+    private final Long totalRead;
+    private final Long totalWrite;
+    private final Long totalSkip;
     private final LocalDate start;
     private final LocalDate end;
+    private final Double tookSec;
 
     @Override
     public String getTitle() {
@@ -26,7 +29,10 @@ public class CollectClutrFatvlDataSuccessMessage  implements DiscordEmbeddable {
     @Override
     public Map<String, String> getFields() {
         Map<String, String> fields = new LinkedHashMap<>();
-        fields.put("수집 데이터 수", "**EA:** `" + size + "`");
+        fields.put("수집 데이터", "**EA:** `" + totalRead + "`");
+        fields.put("저장된 데이터", "**EA:** `" + totalWrite + "`");
+        fields.put("스킵된 데이터", "**EA:** `" + totalSkip + "`");
+        fields.put("데이터 수집 처리 시간 ", "**::** `" + tookSec + "`");
         fields.put("행사 수집 기간", "**START:** `" + start + "`\n**END:** `" + end + "`");
         return fields;
     }

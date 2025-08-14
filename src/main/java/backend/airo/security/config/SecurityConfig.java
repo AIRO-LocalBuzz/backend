@@ -67,7 +67,8 @@ public class SecurityConfig {
                                 "/v1/shop/**",
                                 "/v1/auth/exchange-token",
                                 "/v1/auth/social-login",
-                                "/v1/init/**"
+                                "/v1/init/**",
+                                "/actuator/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

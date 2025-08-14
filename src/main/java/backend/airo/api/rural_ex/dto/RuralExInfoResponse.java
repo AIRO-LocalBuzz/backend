@@ -19,15 +19,15 @@ public record RuralExInfoResponse(
 
     public static RuralExInfoResponse create(RuralEx ruralEx) {
         return RuralExInfoResponse.builder()
-                .id(ruralEx.getId())
-                .vilageName(ruralEx.getExprnVilageNm())
-                .experienceType(ruralEx.getExprnSe())
-                .experienceName(ruralEx.getExprnCn())
-                .region(addMegaNameCityName(ruralEx.getCtprvnNm(), ruralEx.getSignguNm()))
-                .manager(ruralEx.getRprsntvNm())
-                .managerPhoneNumber(ruralEx.getPhoneNumber())
-                .roadAddr(ruralEx.getRuralExAddress().rdnmadr())
-                .lotAddr(ruralEx.getRuralExAddress().lnmadr())
+                .id(ruralEx.id())
+                .vilageName(ruralEx.exprnVilageNm())
+                .experienceType(ruralEx.exprnSe())
+                .experienceName(ruralEx.exprnCn())
+                .region(addMegaNameCityName(ruralEx.ctprvnNm(), ruralEx.signguNm()))
+                .manager(ruralEx.rprsntvNm())
+                .managerPhoneNumber(ruralEx.phoneNumber())
+                .roadAddr(ruralEx.ruralExAddress().rdnmadr())
+                .lotAddr(ruralEx.ruralExAddress().lnmadr())
                 .build();
     }
 

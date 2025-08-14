@@ -36,6 +36,11 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: never
   data:
     redis:
       host: redis
@@ -55,6 +60,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        jdbc:
+          batch_size: ${BATCH_SIZE}
+          order_inserts: true
+          order_updates: true
+          batch_versioned_data: true
     generate-ddl: true
 
 springdoc:

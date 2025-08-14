@@ -39,6 +39,7 @@ services:
       OPEN_API_KET: ${OPEN_API_KET}
       DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN}
       DISCORD_BOT_CHANNEL_ID: ${DISCORD_BOT_CHANNEL_ID}
+      BATCH_SIZE: ${BATCH_SIZE}
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     restart: always

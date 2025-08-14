@@ -40,7 +40,11 @@ dependencies {
 
 	// Redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	implementation 'io.lettuce:lettuce-core'
+
+	//Spring Actuactor
+	implementation "org.springframework.boot:spring-boot-starter-actuator"
 
 	// Documentation
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
@@ -68,6 +72,7 @@ dependencies {
 	// HTTP Client for KakaoTalk API
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+	// 개발 편의성
 	compileOnly 'org.projectlombok:lombok'
 //	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -91,6 +96,9 @@ dependencies {
 	// OpenFeign for HTTP client communication
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.3'
 	implementation 'org.springframework.cloud:spring-cloud-commons:4.1.4'
+
+	// Spring Batch
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
 
 	// Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

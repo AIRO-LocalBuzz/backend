@@ -19,8 +19,6 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class DiscordAdapter{
 
-    private static final Logger logger = LoggerFactory.getLogger(DiscordAdapter.class);
-
     private final JDA jda;
     @Value("${discord.bot.channel_id}")
     private String channelId;
@@ -33,18 +31,18 @@ public class DiscordAdapter{
         textChannel.sendMessageEmbeds(buildEmbedReportMessage).queue();
     }
 
-    public void sendMessageToChannelCollectClutrFatvlDataSuccess(int size, LocalDate start, LocalDate end) {
+    public void sendMessageToChannelCollectClutrFatvlDataSuccess(long totalRead, long totalWrite, long totalSkip, LocalDate start, LocalDate end, double tookSec) {
         TextChannel textChannel = jda.getTextChannelById(channelId);
         MessageEmbed buildEmbedReportMessage = DiscordMessageConverter.buildReportMessage(
-                new CollectClutrFatvlDataSuccessMessage(size, start, end)
+                new CollectClutrFatvlDataSuccessMessage(totalRead, totalWrite, totalSkip, start, end, tookSec)
         );
         textChannel.sendMessageEmbeds(buildEmbedReportMessage).queue();
     }
 
-    public void sendMessageToChannelCollectClutrFatvlDataFail() {
+    public void sendMessageToChannelCollectClutrFatvlDataFail(String message) {
         TextChannel textChannel = jda.getTextChannelById(channelId);
         MessageEmbed buildEmbedReportMessage = DiscordMessageConverter.buildReportMessage(
-                new CollectClutrFatvlDataFailMessage()
+                new CollectClutrFatvlDataFailMessage(message)
         );
         textChannel.sendMessageEmbeds(buildEmbedReportMessage).queue();
     }

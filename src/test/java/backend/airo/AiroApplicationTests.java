@@ -7,7 +7,7 @@ import backend.airo.infra.open_api.clure_fatvl.client.OpenApiClureFatvlFeignClie
 import backend.airo.infra.open_api.rural_ex.client.OpenApiRuralExFeignClient;
 import backend.airo.infra.open_api.shop.client.OpenApiShopFeignClient;
 import backend.airo.security.config.FirebaseConfig;
-import backend.airo.support.ServerStartupNotifier;
+import backend.airo.support.notification.ServerStartupNotifier;
 import net.dv8tion.jda.api.JDA;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

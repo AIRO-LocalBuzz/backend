@@ -15,7 +15,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @Slf4j
 @RestControllerAdvice
-@RequiredArgsConstructor
 public class GlobalControllerErrorHandler {
 
     @ExceptionHandler(AiroException.class)

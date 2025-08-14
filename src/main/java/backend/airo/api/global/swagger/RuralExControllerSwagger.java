@@ -27,8 +27,8 @@ public interface RuralExControllerSwagger {
             content = @Content(schema = @Schema(implementation = RuralExListResponse.class))
     )
     Response<PageResponse<RuralExListResponse>> getClureFatvlList(
-            @RequestParam() String megaCode,
-            @RequestParam() String cityCode,
+            @RequestParam() Long megaCode,
+            @RequestParam() Long cityCode,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     );

@@ -14,10 +14,10 @@ public record RuralExListResponse(
 
     public static RuralExListResponse create(RuralEx ruralEx) {
         return RuralExListResponse.builder()
-                .id(ruralEx.getId())
-                .vilageName(ruralEx.getExprnVilageNm())
-                .experienceType(ruralEx.getExprnSe())
-                .region(addMegaNameCityName(ruralEx.getCtprvnNm(), ruralEx.getSignguNm()))
+                .id(ruralEx.id())
+                .vilageName(ruralEx.exprnVilageNm())
+                .experienceType(ruralEx.exprnSe())
+                .region(addMegaNameCityName(ruralEx.ctprvnNm(), ruralEx.signguNm()))
                 .build();
     }
 

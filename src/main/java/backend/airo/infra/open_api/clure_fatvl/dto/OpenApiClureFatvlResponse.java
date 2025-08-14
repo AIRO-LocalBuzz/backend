@@ -38,4 +38,12 @@ public record OpenApiClureFatvlResponse<T>(
     public List<T> items() {
         return response().body().items();
     }
+
+    public Body<T> body() {
+        return response().body();
+    }
+
+    public Header header() {
+        return response.header();
+    }
 }

@@ -7,7 +7,7 @@ import lombok.Builder;
 
 @Builder
 public record ClutrFatvInfoResponse(
-        Long id,
+        String id,
 
         // 축제/행사 이름
         String fstvlNm,
