@@ -21,16 +21,15 @@
 FROM gradle:8.7.0-jdk21 AS builder
 WORKDIR /app
 
-# 1) 의존성 레이어
-COPY --chown=gradle:gradle settings.gradle* build.gradle* gradle gradlew ./
-RUN chmod +x gradlew
-RUN ./gradlew --version
+# 1) 의존성 캐시 레이어 (kts/groovy/props 모두 커버)
+COPY settings.gradle* build.gradle* gradle.properties* ./
+RUN gradle --no-daemon --version
 
 # 2) 소스만 복사
-COPY --chown=gradle:gradle src ./src
+COPY src ./src
 
-# 3) 항상 깨끗하게 bootJar 생성
-RUN ./gradlew clean bootJar -x test --no-daemon
+# 3) 클린 빌드 (Spring Boot면 bootJar 권장)
+RUN gradle clean bootJar -x test --no-daemon
 
 # ---- runtime ----
 FROM eclipse-temurin:21-jre
