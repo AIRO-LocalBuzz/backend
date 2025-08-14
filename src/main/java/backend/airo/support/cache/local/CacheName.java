@@ -1,10 +1,13 @@
 package backend.airo.support.cache.local;
 
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
+import backend.airo.domain.post.Post;
 import backend.airo.domain.rural_ex.RuralEx;
 import backend.airo.domain.shop.Shop;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
 import java.time.Duration;
 import java.util.List;
@@ -32,10 +35,11 @@ public enum CacheName {
     RURAL_EX_LIST("RURAL_EX_LIST", TimeUnit.DAYS, 180, 100, List.class),
     RURAL_EX_INFO("RURAL_EX_INFO", TimeUnit.MINUTES, 5, 1000, RuralEx.class),
 
+    POST_DETAIL("POST_DETAIL_CACHE", TimeUnit.MINUTES, 10, 1000, Post.class),
+    POST_LIST("POST_LIST_CACHE", TimeUnit.MINUTES, 5, 500, Page.class),
+    POST_SLICE("POST_SLICE_CACHE", TimeUnit.MINUTES, 5, 500, Slice.class);
 
 
-
-    ;
 
     private final String name;
     private final TimeUnit timeUnit;
@@ -63,5 +67,9 @@ public enum CacheName {
 
     public static final String RURAL_EX_LIST_CACHE = "RURAL_EX_LIST";
     public static final String RURAL_EX_INFO_CACHE = "RURAL_EX_INFO";
+
+    public static final String POST_DETAIL_CACHE = "POST_DETAIL";
+    public static final String POST_LIST_CACHE = "POST_LIST";
+    public static final String POST_SLICE_CACHE = "POST_SLICE";
 
 }

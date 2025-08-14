@@ -1,6 +1,7 @@
 package backend.airo.application.post.usecase;
 
 import backend.airo.api.post.dto.*;
+import backend.airo.cache.post.PostCacheService;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.image.query.GetImageQueryService;
 import backend.airo.domain.point.command.UpsertPointCommand;
@@ -45,6 +46,8 @@ public class PostUseCase {
     private final UpdatePostCommandService updatePostCommandService;
     private final DeletePostCommandService deletePostCommandService;
 
+    private final PostCacheService postCacheService;
+
     @Transactional
     public Post createPost(PostCreateRequest request, Long userId) {
         Post savedPost;
@@ -59,6 +62,8 @@ public class PostUseCase {
                 upsertPointCommand.handle(userId, 100L);
             }
         }
+
+        postCacheService.evictPostListCaches();
 
         return savedPost;
     }
