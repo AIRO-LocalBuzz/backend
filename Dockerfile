@@ -29,11 +29,11 @@ RUN ./gradlew --version
 RUN rm -rf /app/src
 COPY src ./src
 
-# 항상 깨끗하게 빌드
 RUN ./gradlew clean build -x test
 
+# ---- runtime ----
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-COPY --from=build /app/build/libs/*.jar AIRO-0.0.1-SNAPSHOT.jar
+COPY --from=builder /app/build/libs/*.jar AIRO-0.0.1-SNAPSHOT.jar
 
 ENTRYPOINT ["java", "-jar", "AIRO-0.0.1-SNAPSHOT.jar"]
