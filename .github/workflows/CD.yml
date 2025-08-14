@@ -61,7 +61,10 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          source: "."
+          source: |
+            .env
+            docker-compose.yml
+            backend/**
           target: "~/airo"
 
       - name: SSH를 통한 배포 시작 [ docker compose 실행 ]
@@ -74,6 +77,11 @@ jobs:
           command_timeout: '60m'
           script: |
             cd ~/airo
-            docker compose down --volumes --remove-orphans
-            docker image prune -af --filter "until=24h"
-            docker compose up --build -d
+            docker compose down --volumes --remove-orphans || true
+
+            # 빌더/이미지 캐시 정리 (한 번은 강력 권장)
+            docker builder prune -af || true
+            docker image prune -af --filter "until=24h" || true
+            
+            docker compose build --no-cache
+            docker compose up -d

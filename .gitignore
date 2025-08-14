@@ -41,5 +41,7 @@ application-*.yml
 
 docker-compose-dev.yml
 
+backupFile.txt
+
 LocalBuzzFirebaseAdminKey.json
 src/main/resources/static/

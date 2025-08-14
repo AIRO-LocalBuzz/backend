@@ -26,11 +26,8 @@ COPY settings.gradle* build.gradle* gradle.properties* ./
 RUN gradle --no-daemon --version
 
 # 2) 소스만 복사
+RUN rm -rf /app/src
 COPY src ./src
-
-RUN find /app/src -name "ServerStartupNotifier.java" -print || true
-RUN grep -R --line-number "sendMessageToChannelCollectClutrFatvlDataSuccess(" /app/src || true
-RUN grep -R --line-number "sendMessageToChannelCollectClutrFatvlDataFail(" /app/src || true
 
 # 3) 클린 빌드 (Spring Boot면 bootJar 권장)
 RUN gradle clean bootJar -x test --no-daemon
