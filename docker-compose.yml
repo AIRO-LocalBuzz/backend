@@ -16,8 +16,8 @@ services:
 
   backend:
     build:
-      context: ./backend
-      dockerfile: ./backend/Dockerfile
+      context: .
+      dockerfile: Dockerfile
     container_name: AIRO
     env_file:
       - .env
