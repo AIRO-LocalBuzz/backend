@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 게시물 목록 조회 요청 DTO
@@ -25,5 +26,10 @@ public record PostListRequest(
         if (size == null) size = 20;
         if (sortBy == null) sortBy = "publishedAt";
         if (status == null) status = PostStatus.PUBLISHED;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(page, size, keyword, status);
     }
 }

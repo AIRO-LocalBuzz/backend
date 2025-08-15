@@ -3,10 +3,8 @@ package backend.airo.api.post;
 import backend.airo.api.annotation.UserPrincipal;
 import backend.airo.api.global.dto.Response;
 import backend.airo.api.global.swagger.PostControllerSwagger;
-import backend.airo.application.post.usecase.PostCreateUseCase;
-import backend.airo.application.post.usecase.PostDeleteUseCase;
-import backend.airo.application.post.usecase.PostReadUseCase;
-import backend.airo.application.post.usecase.PostUpdateUseCase;
+import backend.airo.application.post.usecase.PostCacheUseCase;
+import backend.airo.application.post.usecase.PostUseCase;
 import backend.airo.domain.post.Post;
 import backend.airo.api.post.dto.*;
 import backend.airo.domain.user.User;
@@ -16,6 +14,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,10 +27,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PostController implements PostControllerSwagger {
 
-    private final PostCreateUseCase postCreateUseCase;
-    private final PostReadUseCase postReadUseCase;
-    private final PostUpdateUseCase postUpdateUseCase;
-    private final PostDeleteUseCase postDeleteUseCase;
+    private final PostCacheUseCase postUseCase;
 
     // ===== 게시물 생성 =====
 
@@ -45,7 +41,7 @@ public class PostController implements PostControllerSwagger {
 
         log.info("게시물 생성 요청: title={}, userId={}", request.title(), user.getId());
 
-        Post createdPost = postCreateUseCase.createPost(request, user.getId());
+        Post createdPost = postUseCase.createPost(request, user.getId());
         PostResponse response = PostResponse.fromDomain(createdPost);
 
         return Response.success(response);
@@ -60,7 +56,7 @@ public class PostController implements PostControllerSwagger {
             @UserPrincipal User user,
             @PathVariable @Positive Long postId) {
 
-        PostDetailResponse response = postReadUseCase.getPostDetail(postId, user.getId());
+        PostDetailResponse response = postUseCase.getPostDetail(postId, user.getId());
 
         return Response.success(response);
     }
@@ -72,21 +68,39 @@ public class PostController implements PostControllerSwagger {
             @UserPrincipal User user,
             @PathVariable @Positive Long thumbnailId) {
 
-        ThumbnailResponseDto response = postReadUseCase.getThumbnailById(thumbnailId);
+        ThumbnailResponseDto response = postUseCase.getThumbnailById(thumbnailId);
 
         return Response.success(response);
     }
+
+    // ===== 게시물 List조회 =====
 
     @Override
     @GetMapping
     public Response<PostListResponse> getPostList(
             @Valid @ModelAttribute PostListRequest request) {
 
-        Page<Post> postPage = postReadUseCase.getPostList(request);
+        Page<Post> postPage = postUseCase.getPostList(request);
         PostListResponse response = PostListResponse.fromDomain(postPage);
 
         return Response.success(response);
     }
+
+    @Override
+    @GetMapping("/scroll")
+    public Response<PostSliceResponse> getPostSlice(
+            @Valid @ModelAttribute PostSliceRequest request) {
+
+        log.debug("무한스크롤 조회 요청: size={}, lastPostId={}",
+                request.size(), request.lastPostId());
+
+        Slice<PostSummaryResponse> postSlice = postUseCase.getPostSlice(request);
+        PostSliceResponse response = PostSliceResponse.fromDomain(postSlice);
+
+        return Response.success(response);
+    }
+
+
 
     // ===== 게시물 수정 =====
     @Override
@@ -97,7 +111,7 @@ public class PostController implements PostControllerSwagger {
             @PathVariable @Positive Long postId,
             @Valid @RequestBody PostUpdateRequest request,
             @UserPrincipal User user) {
-        Post updatedPost = postUpdateUseCase.updatePost(postId, user.getId(), request);
+        Post updatedPost = postUseCase.updatePost(postId, user.getId(), request);
 
         PostResponse response = PostResponse.fromDomain(updatedPost);
 
@@ -112,7 +126,7 @@ public class PostController implements PostControllerSwagger {
             @PathVariable @Positive Long postId,
             @UserPrincipal User user) {
 
-        postDeleteUseCase.deletePost(postId, user.getId());
+        postUseCase.deletePost(postId, user.getId());
 
         return Response.success("삭제 성공");
     }

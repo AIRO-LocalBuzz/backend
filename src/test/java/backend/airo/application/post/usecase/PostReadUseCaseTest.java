@@ -45,7 +45,7 @@ class PostReadUseCaseTest {
     @Mock private GetImageQueryService getImageQueryService;
     @Mock private GetPostListQueryService getPostListQueryService;
 
-    @InjectMocks private PostReadUseCase postReadUseCase;
+    @InjectMocks private PostUseCase postUseCase;
 
     private Post mockPost;
     private User mockUser;
@@ -83,7 +83,7 @@ class PostReadUseCaseTest {
         given(getUserQueryService.handle(100L)).willReturn(mockUser);
         given(getImageQueryService.getImagesBelongsPost(postId)).willReturn(mockImages);
 
-        PostDetailResponse response = postReadUseCase.getPostDetail(postId, requesterId);
+        PostDetailResponse response = postUseCase.getPostDetail(postId, requesterId);
 
         verify(mockPost, times(1)).incrementViewCount();
         assertThat(response).isNotNull();
@@ -102,7 +102,7 @@ class PostReadUseCaseTest {
         given(getUserQueryService.handle(100L)).willReturn(mockUser);
         given(getImageQueryService.getImagesBelongsPost(postId)).willReturn(mockImages);
 
-        PostDetailResponse response = postReadUseCase.getPostDetail(postId, requesterId);
+        PostDetailResponse response = postUseCase.getPostDetail(postId, requesterId);
 
         verify(mockPost, never()).incrementViewCount();
         assertThat(response).isNotNull();
@@ -119,7 +119,7 @@ class PostReadUseCaseTest {
         given(getUserQueryService.handle(100L)).willReturn(mockUser);
         given(getImageQueryService.getImagesBelongsPost(postId)).willReturn(mockImages);
 
-        PostDetailResponse response = postReadUseCase.getPostDetail(postId, requesterId);
+        PostDetailResponse response = postUseCase.getPostDetail(postId, requesterId);
 
         verify(mockPost, times(1)).incrementViewCount();
         assertThat(response).isNotNull();
@@ -134,7 +134,7 @@ class PostReadUseCaseTest {
         given(getPostQueryService.handle(postId))
                 .willThrow(new RuntimeException("게시물을 찾을 수 없습니다"));
 
-        assertThatThrownBy(() -> postReadUseCase.getPostDetail(postId, requesterId))
+        assertThatThrownBy(() -> postUseCase.getPostDetail(postId, requesterId))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("게시물을 찾을 수 없습니다");
     }
@@ -154,7 +154,7 @@ class PostReadUseCaseTest {
         Page<Post> expectedPage = new PageImpl<>(posts, PageRequest.of(0, 10), posts.size());
         given(getPostListQueryService.handle(request)).willReturn(expectedPage);
 
-        Page<Post> result = postReadUseCase.getPostList(request);
+        Page<Post> result = postUseCase.getPostList(request);
 
         assertThat(result).isNotNull();
         assertThat(result.getTotalElements()).isEqualTo(2);
@@ -169,7 +169,7 @@ class PostReadUseCaseTest {
         Page<Post> emptyPage = new PageImpl<>(Collections.emptyList(), PageRequest.of(0, 10), 0);
         given(getPostListQueryService.handle(request)).willReturn(emptyPage);
 
-        Page<Post> result = postReadUseCase.getPostList(request);
+        Page<Post> result = postUseCase.getPostList(request);
 
         assertThat(result).isNotNull();
         assertThat(result.getContent()).isEmpty();
@@ -190,7 +190,7 @@ class PostReadUseCaseTest {
         given(getUserQueryService.handle(100L)).willReturn(mockUser);
         given(getImageQueryService.getImagesBelongsPost(postId)).willReturn(Collections.emptyList());
 
-        PostDetailResponse response = postReadUseCase.getPostDetail(postId, requesterId);
+        PostDetailResponse response = postUseCase.getPostDetail(postId, requesterId);
         // 작성자 요청 시 조회수 증가는 일어나지 않으므로 이를 통해 소유자 여부 확인
         verify(mockPost, never()).incrementViewCount();
         AuthorInfo author = response.author();
@@ -207,7 +207,7 @@ class PostReadUseCaseTest {
         given(getUserQueryService.handle(100L)).willReturn(mockUser);
         given(getImageQueryService.getImagesBelongsPost(postId)).willReturn(Collections.emptyList());
 
-        PostDetailResponse response = postReadUseCase.getPostDetail(postId, requesterId);
+        PostDetailResponse response = postUseCase.getPostDetail(postId, requesterId);
         AuthorInfo author = response.author();
         assertThat(author.id()).isEqualTo(mockUser.getId());
         assertThat(author.nickname()).isEqualTo(mockUser.getName());
@@ -222,7 +222,7 @@ class PostReadUseCaseTest {
         Long thumbnailId = 1L;
         given(getPostQueryService.handleThumbnail(thumbnailId)).willReturn(mockThumbnail);
 
-        ThumbnailResponseDto dto = postReadUseCase.getThumbnailById(thumbnailId);
+        ThumbnailResponseDto dto = postUseCase.getThumbnailById(thumbnailId);
 
         assertThat(dto).isNotNull();
         assertThat(dto.getMainImageUrl()).isEqualTo("썸네일.jpg");

@@ -6,10 +6,7 @@ import backend.airo.api.global.swagger.ImageControllerSwagger;
 import backend.airo.api.image.dto.ImageCreateRequest;
 import backend.airo.api.image.dto.ImageReorderRequest;
 import backend.airo.api.image.dto.ImageResponse;
-import backend.airo.application.image.usecase.ImageCreateUseCase;
-import backend.airo.application.image.usecase.ImageDeleteUseCase;
-import backend.airo.application.image.usecase.ImageReadUseCase;
-import backend.airo.application.image.usecase.ImageUpdateUseCase;
+import backend.airo.application.image.usecase.ImageUseCase;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.user.User;
 import jakarta.validation.Valid;
@@ -32,10 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ImageController implements ImageControllerSwagger {
 
-    private final ImageReadUseCase imageReadUseCase;
-    private final ImageCreateUseCase imageCreateUseCase;
-    private final ImageUpdateUseCase imageUpdateUseCase;
-    private final ImageDeleteUseCase imageDeleteUseCase;
+    private final ImageUseCase imageUseCase;
 
     @Override
     @PostMapping
@@ -46,7 +40,7 @@ public class ImageController implements ImageControllerSwagger {
 
         log.info("단일 이미지 업로드 요청 - 사용자 ID: {}, 이미지 URL: {}", user.getId(), request.imageUrl());
 
-        Image image = imageCreateUseCase.uploadSingleImage(request.toImage(user.getId()));
+        Image image = imageUseCase.uploadSingleImage(request.toImage(user.getId()));
         ImageResponse response = ImageResponse.from(image);
         return Response.success(response);
     }
@@ -64,7 +58,7 @@ public class ImageController implements ImageControllerSwagger {
                 .map(request -> request.toImage(user.getId()))
                 .toList();
 
-        List<Image> uploadedImages = imageCreateUseCase.uploadMultipleImages(images);
+        List<Image> uploadedImages = imageUseCase.uploadMultipleImages(images);
         List<ImageResponse> responses = uploadedImages.stream()
                 .map(ImageResponse::from)
                 .toList();
@@ -77,7 +71,7 @@ public class ImageController implements ImageControllerSwagger {
     public Response<ImageResponse> getImage(@PathVariable @Min(1) Long imageId) {
         log.info("이미지 조회 요청 - 이미지 ID: {}", imageId);
 
-        Image image = imageReadUseCase.getSingleImage(imageId);
+        Image image = imageUseCase.getSingleImage(imageId);
         ImageResponse response = ImageResponse.from(image);
 
         return Response.success(response);
@@ -88,7 +82,7 @@ public class ImageController implements ImageControllerSwagger {
     public Response<List<ImageResponse>> getImagesByPost(@PathVariable Long postId) {
         log.info("게시물별 이미지 목록 조회 요청 - 게시물 ID: {}", postId);
 
-        List<Image> images = imageReadUseCase.getSortedImagesByPost(postId);
+        List<Image> images = imageUseCase.getSortedImagesByPost(postId);
         List<ImageResponse> responses = images.stream()
                 .map(ImageResponse::from)
                 .toList();
@@ -101,7 +95,7 @@ public class ImageController implements ImageControllerSwagger {
     public Response<Page<ImageResponse>> getImages(Pageable pageable) {
         log.info("이미지 목록 조회 요청 - 페이지: {}, 크기: {}", pageable.getPageNumber(), pageable.getPageSize());
 
-        Page<Image> images = imageReadUseCase.getPagedImages(pageable);
+        Page<Image> images = imageUseCase.getPagedImages(pageable);
         Page<ImageResponse> responses = images.map(ImageResponse::from);
 
         return Response.success(responses);
@@ -116,7 +110,7 @@ public class ImageController implements ImageControllerSwagger {
     ) {
         log.info("이미지 순서 재정렬 요청 - 사용자 ID: {}, 이미지 개수: {}", user.getId(), request.imageIds().size());
 
-        List<Image> reorderedImages = imageUpdateUseCase.reorderImages(request.imageIds());
+        List<Image> reorderedImages = imageUseCase.reorderImages(request.imageIds());
         List<ImageResponse> responses = reorderedImages.stream()
                 .map(ImageResponse::from)
                 .toList();
@@ -132,7 +126,7 @@ public class ImageController implements ImageControllerSwagger {
             @PathVariable Long imageId) {
         log.info("이미지 삭제 요청 - 사용자 ID: {}, 이미지 ID: {}", user.getId(), imageId);
 
-        imageDeleteUseCase.deleteImageWithAuth(imageId, user.getId());
+        imageUseCase.deleteImageWithAuth(imageId, user.getId());
         return Response.success("삭제 성공");
     }
 
@@ -145,7 +139,7 @@ public class ImageController implements ImageControllerSwagger {
     ) {
         log.info("다중 이미지 삭제 요청 - 사용자 ID: {}, 이미지 개수: {}", user.getId(), imageIds.size());
 
-        imageDeleteUseCase.deleteMultipleImages(imageIds, user.getId());
+        imageUseCase.deleteMultipleImages(imageIds, user.getId());
         return Response.success("삭제 성공");
     }
 
@@ -157,7 +151,7 @@ public class ImageController implements ImageControllerSwagger {
     ) {
         log.info("내 이미지 목록 조회 요청 - 사용자 ID: {}", user.getId());
 
-        Page<Image> images = imageReadUseCase.getPagedImages(pageable);
+        Page<Image> images = imageUseCase.getPagedImages(pageable);
         Page<ImageResponse> responses = images.map(ImageResponse::from);
 
         return Response.success(responses);
@@ -171,7 +165,7 @@ public class ImageController implements ImageControllerSwagger {
     ) {
         log.info("내 게시물 이미지 목록 조회 요청 - 사용자 ID: {}, 게시물 ID: {}", user.getId(), postId);
 
-        List<Image> images = imageReadUseCase.getSortedImagesByPost(postId);
+        List<Image> images = imageUseCase.getSortedImagesByPost(postId);
         List<ImageResponse> responses = images.stream()
                 .map(ImageResponse::from)
                 .toList();

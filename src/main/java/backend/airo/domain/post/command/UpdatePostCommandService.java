@@ -9,12 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import static backend.airo.domain.post.Post.updatePostFromCommand;
 import static backend.airo.domain.post.exception.PostErrorCode.POST_CANNOT_CHANGE_STATUS;
-import static backend.airo.domain.post.exception.PostErrorCode.POST_PUBLISH_INVALID_CONDITION;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,12 +21,10 @@ public class UpdatePostCommandService{
 
     public Post handle(PostUpdateRequest request, Post existingPost){
 
-        // 수정 사항이 없으면 기존 게시물 반환
         if (!request.hasChanges()) {
             return existingPost;
         }
 
-        // 상태 변경 검증
         if (request.isStatusChange()) {
             validateStatusChange(existingPost, request.status());
         }
@@ -52,9 +46,9 @@ public class UpdatePostCommandService{
 
     private boolean isValidStatusTransition(PostStatus currentStatus, PostStatus newStatus) {
         return switch (currentStatus) {
-            case DRAFT -> newStatus == PostStatus.PUBLISHED;
-            case PUBLISHED -> newStatus == PostStatus.ARCHIVED || newStatus == PostStatus.DRAFT;
-            case ARCHIVED -> newStatus == PostStatus.PUBLISHED || newStatus == PostStatus.DRAFT;
+            case DRAFT -> newStatus == PostStatus.PUBLISHED || newStatus == PostStatus.DRAFT;
+            case PUBLISHED -> newStatus == PostStatus.ARCHIVED || newStatus == PostStatus.DRAFT || newStatus == PostStatus.PUBLISHED;
+            case ARCHIVED -> newStatus == PostStatus.PUBLISHED || newStatus == PostStatus.DRAFT || newStatus == PostStatus.ARCHIVED;
         };
     }
 
