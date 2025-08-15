@@ -92,6 +92,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 path.startsWith("/api/v1/init/") ||
                 path.startsWith("/v3/api-docs/") ||
                 path.startsWith("/api/login/oauth2/") ||
+                path.startsWith("/api/login") ||
+                path.startsWith("/api/auth/oauth2/") ||
+                path.startsWith("/api/auth/oauth2/authorization/kakao") ||
                 path.startsWith("/login/oauth2/");
 
         log.info("필터 실행 여부 체크 - URI: {}, 스킵: {}", path, shouldSkip);

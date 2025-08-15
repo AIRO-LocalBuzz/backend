@@ -18,6 +18,16 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
+
+        String requestURI = request.getRequestURI();
+
+        // OAuth2 authorization 요청은 그대로 통과
+        if (requestURI.startsWith("/api/oauth2/authorization/")) {
+            // OAuth2 authorization 요청을 Spring Security의 OAuth2 처리기로 전달
+            response.sendRedirect(requestURI + "?" + request.getQueryString());
+            return;
+        }
+
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

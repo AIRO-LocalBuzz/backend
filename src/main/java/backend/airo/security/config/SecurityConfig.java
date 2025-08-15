@@ -53,6 +53,7 @@ public class SecurityConfig {
                                 "/api-docs/**",
                                 "/swagger-resources/**",
                                 "/webjars/**",
+                                "/api/auth/oauth2/**",
                                 "/api/auth/**",
                                 "/api/oauth2/**",
                                 "/api/login",
@@ -72,6 +73,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
+
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2Login(oauth2 -> oauth2
