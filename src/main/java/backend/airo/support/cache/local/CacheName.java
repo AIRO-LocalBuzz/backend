@@ -1,5 +1,6 @@
 package backend.airo.support.cache.local;
 
+import backend.airo.api.post.dto.PostSummaryResponse;
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.rural_ex.RuralEx;
@@ -35,9 +36,10 @@ public enum CacheName {
     RURAL_EX_LIST("RURAL_EX_LIST", TimeUnit.DAYS, 180, 100, List.class),
     RURAL_EX_INFO("RURAL_EX_INFO", TimeUnit.MINUTES, 5, 1000, RuralEx.class),
 
-    POST_DETAIL("POST_DETAIL_CACHE", TimeUnit.MINUTES, 10, 1000, Post.class),
-    POST_LIST("POST_LIST_CACHE", TimeUnit.MINUTES, 5, 500, Page.class),
-    POST_SLICE("POST_SLICE_CACHE", TimeUnit.MINUTES, 5, 500, Slice.class);
+    POST_DETAIL("POST_DETAIL", TimeUnit.MINUTES, 10, 1000, Post.class),
+    POST_LIST("POST_LIST", TimeUnit.MINUTES, 5, 500, Page.class),
+    POST_SLICE("POST_SLICE", TimeUnit.MINUTES, 5, 500, Slice.class),
+    POST_SUMMARY("POST_SUMMARY",TimeUnit.MINUTES, 5, 500, PostSummaryResponse .class);
 
 
 
@@ -71,5 +73,7 @@ public enum CacheName {
     public static final String POST_DETAIL_CACHE = "POST_DETAIL";
     public static final String POST_LIST_CACHE = "POST_LIST";
     public static final String POST_SLICE_CACHE = "POST_SLICE";
+    public static final String POST_SUMMARY_CACHE = "POST_SUMMARY";
+
 
 }

@@ -11,16 +11,29 @@ public record PostSliceResponse(
         int size,
         Long lastPostId
 ) {
-    public static PostSliceResponse fromDomain(Slice<Post> slice) {
-        List<PostSummaryResponse> posts = slice.getContent().stream()
-                .map(PostSummaryResponse::fromDomain)
-                .toList();
+//    public static PostSliceResponse fromDomain(Slice<Post> slice) {
+//        List<PostSummaryResponse> posts = slice.getContent().stream()
+//                .map(PostSummaryResponse::fromDomain)
+//                .toList();
+//
+//        Long lastPostId = posts.isEmpty() ? null :
+//                posts.get(posts.size() - 1).id();
+//
+//        return new PostSliceResponse(
+//                posts,
+//                slice.hasNext(),
+//                slice.getSize(),
+//                lastPostId
+//        );
+//    }
 
-        Long lastPostId = posts.isEmpty() ? null :
-                posts.get(posts.size() - 1).id();
+
+    public static PostSliceResponse fromDomain(Slice<PostSummaryResponse> slice) {
+        Long lastPostId = slice.getContent().isEmpty() ? null :
+                slice.getContent().get(slice.getContent().size() - 1).id();
 
         return new PostSliceResponse(
-                posts,
+                slice.getContent(),
                 slice.hasNext(),
                 slice.getSize(),
                 lastPostId

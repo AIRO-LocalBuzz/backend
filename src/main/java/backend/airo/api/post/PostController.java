@@ -3,6 +3,7 @@ package backend.airo.api.post;
 import backend.airo.api.annotation.UserPrincipal;
 import backend.airo.api.global.dto.Response;
 import backend.airo.api.global.swagger.PostControllerSwagger;
+import backend.airo.application.post.usecase.PostCacheUseCase;
 import backend.airo.application.post.usecase.PostUseCase;
 import backend.airo.domain.post.Post;
 import backend.airo.api.post.dto.*;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PostController implements PostControllerSwagger {
 
-    private final PostUseCase postUseCase;
+    private final PostCacheUseCase postUseCase;
 
     // ===== 게시물 생성 =====
 
@@ -93,7 +94,7 @@ public class PostController implements PostControllerSwagger {
         log.debug("무한스크롤 조회 요청: size={}, lastPostId={}",
                 request.size(), request.lastPostId());
 
-        Slice<Post> postSlice = postUseCase.getPostSlice(request);
+        Slice<PostSummaryResponse> postSlice = postUseCase.getPostSlice(request);
         PostSliceResponse response = PostSliceResponse.fromDomain(postSlice);
 
         return Response.success(response);

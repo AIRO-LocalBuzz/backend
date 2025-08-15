@@ -4,6 +4,7 @@ import backend.airo.support.cache.MeteredCacheManager;
 import backend.airo.support.cache.local.CacheName;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +27,7 @@ public class RedisCacheConfig {
     private final RedisSerializerConfig redisSerializerConfig;
 
     @Bean("redisCacheManager")
-    public CacheManager redisCacheManager(RedisConnectionFactory connectionFactory) {
+    public RedisCacheManager redisCacheManager(RedisConnectionFactory connectionFactory) {
         return RedisCacheManager.builder(connectionFactory)
                 .cacheDefaults(redisCacheConfiguration(Duration.ofMinutes(1)))
                 .withInitialCacheConfigurations(customConfigurationMap())
@@ -34,8 +35,8 @@ public class RedisCacheConfig {
     }
 
     @Bean @Primary
-    public CacheManager cacheManager(RedisCacheManager redis, MeterRegistry registry) {
-        return new MeteredCacheManager(redis, registry);
+    public CacheManager cacheManager(@Qualifier("redisCacheManager") RedisCacheManager redisCacheManager, MeterRegistry registry) {
+        return new MeteredCacheManager(redisCacheManager, registry);
     }
 
     private RedisCacheConfiguration redisCacheConfiguration(Duration ttl) {

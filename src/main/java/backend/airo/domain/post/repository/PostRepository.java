@@ -1,8 +1,8 @@
 package backend.airo.domain.post.repository;
 
+import backend.airo.api.post.dto.PostSummaryResponse;
 import backend.airo.domain.AggregateSupport;
 import backend.airo.domain.post.Post;
-import backend.airo.domain.post.dto.PostSearchCriteria;
 import backend.airo.domain.post.enums.PostStatus;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -11,10 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Post 도메인 Repository 인터페이스
@@ -52,4 +48,10 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
     Page<Post> findAllOrderByViewCountDesc(Pageable pageable);
 
     Slice<Post> findSliceAfterCursor(@Positive(message = "마지막 게시물 ID는 양수여야 합니다") Long aLong, @Min(value = 1, message = "사이즈는 1 이상이어야 합니다") @Max(value = 100, message = "사이즈는 100 이하여야 합니다") int size);
+
+    PostSummaryResponse findPostSummaryById(Long postId);
+
+    Long findMaxPostId();
+
+    boolean existsByIdLessThan(Long postId);
 }

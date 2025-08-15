@@ -1,6 +1,8 @@
 package backend.airo.persistence.post.adapter;
 
+import backend.airo.api.post.dto.PostSummaryResponse;
 import backend.airo.domain.post.Post;
+import backend.airo.domain.post.enums.PostEmotionTag;
 import backend.airo.domain.post.exception.PostException;
 import backend.airo.domain.post.repository.PostRepository;
 import backend.airo.domain.post.enums.PostStatus;
@@ -14,9 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+
+import java.util.*;
 
 @Slf4j
 @Component
@@ -70,7 +71,7 @@ public class PostAdapter implements PostRepository {
 
     @Override
     public Post findById(Long id) {
-        log.debug("게시물 조회: ID={}", id);
+        log.debug("게시물 DB조회: ID={}", id);
         PostEntity postEntity = postJpaRepository.findById(id)
                 .orElseThrow(() -> PostException.notFound(id));
 
@@ -155,10 +156,52 @@ public class PostAdapter implements PostRepository {
     }
 
 
+    @Override
+    public PostSummaryResponse findPostSummaryById(Long postId) {
+        log.debug("게시물 요약 정보 조회: ID={}", postId);
+
+        // 1. 기본 정보 조회
+        Optional<PostSummaryResponse> baseResponseOpt = postJpaRepository.findPostSummaryWithoutEmotionTags(postId);
+        if (baseResponseOpt.isEmpty()) {
+            log.debug("게시물이 존재하지 않음: ID={}", postId);
+            return null;
+        }
+
+        PostSummaryResponse baseResponse = baseResponseOpt.get();
+
+        // 2. emotionTags 조회
+        Set<PostEmotionTag> emotionTags = postJpaRepository.findEmotionTagsByPostId(postId)
+                .orElse(Collections.emptySet()); // 감정 태그가 없을 수도 있으므로 빈 Set 사용
+
+        // 3. 합치기
+        return new PostSummaryResponse(
+                baseResponse.id(),
+                baseResponse.title(),
+                baseResponse.content(),
+                baseResponse.status(),
+                baseResponse.viewCount(),
+                new ArrayList<>(emotionTags), // Set을 List로 변환
+                baseResponse.userId()
+        );
+    }
+
+
+    @Override
+    public Long findMaxPostId() {
+        return postJpaRepository.findMaxPostId()
+                .orElseThrow(() -> PostException.notFound(9999L));
+    }
+
+    @Override
+    public boolean existsByIdLessThan(Long id) {
+        return postJpaRepository.existsByIdLessThan(id);
+    }
+
     // ===== Private Helper Methods =====
 
     private PostEntity updateExistingEntity(Post post) {
-        Optional<PostEntity> existingEntity = postJpaRepository.findById(post.getId());
+        PostEntity existingEntity = postJpaRepository.findById(post.getId())
+                .orElseThrow(() -> PostException.notFound(post.getId()));
 
         return PostEntity.toEntity(post);
     }

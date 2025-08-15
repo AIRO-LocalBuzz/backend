@@ -2,13 +2,14 @@ package backend.airo.application.post.usecase;
 
 import backend.airo.api.post.dto.*;
 import backend.airo.cache.post.PostCacheService;
+import backend.airo.cache.post.dto.PostSliceCacheDto;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.image.query.GetImageQueryService;
 import backend.airo.domain.point.command.UpsertPointCommand;
 import backend.airo.domain.point_history.command.CreatePointHistoryCommand;
 import backend.airo.domain.point_history.vo.PointType;
-import backend.airo.domain.post.command.CreatePostCommandService;
 import backend.airo.domain.post.Post;
+import backend.airo.domain.post.command.CreatePostCommandService;
 import backend.airo.domain.post.command.DeletePostCommandService;
 import backend.airo.domain.post.command.UpdatePostCommandService;
 import backend.airo.domain.post.enums.PostStatus;
@@ -22,6 +23,7 @@ import backend.airo.domain.user.query.GetUserQuery;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,17 +36,20 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class PostUseCase {
+public class PostCacheUseCase {
 
     private final CreatePostCommandService createPostCommandService;
+    private final UpdatePostCommandService updatePostCommandService;
+    private final DeletePostCommandService deletePostCommandService;
     private final UpsertPointCommand upsertPointCommand;
     private final CreatePointHistoryCommand createPointHistoryCommand;
+
     private final GetPostQueryService getPostQueryService;
     private final GetUserQuery getUserQueryService;
     private final GetImageQueryService getImageQueryService;
-    private final GetPostListQueryService getPostListQueryService;
-    private final UpdatePostCommandService updatePostCommandService;
-    private final DeletePostCommandService deletePostCommandService;
+
+    private final PostCacheService postCacheService;
+
 
 
     @Transactional
@@ -62,20 +67,30 @@ public class PostUseCase {
             }
         }
 
+        postCacheService.evictPostListCaches();
+
         return savedPost;
     }
 
 
+
     public PostDetailResponse getPostDetail(Long postId, Long requesterId) {
         log.debug("게시물 조회: id={}, requesterId={}", postId, requesterId);
-        Post post = getPostQueryService.handle(postId);
+
+        Post post;
+        try {
+            post = postCacheService.getPost(postId).toPost();
+        } catch (Exception e) {
+            log.warn("캐시에서 게시물 조회 실패, DB에서 직접 조회: postId={}, error={}",
+                    postId, e.getMessage());
+            post = getPostQueryService.handle(postId);
+        }
 
         if(!isPostOwner(post, requesterId)) {
             post.incrementViewCount();
         }
 
         AuthorInfo authorInfo = getAuthorInfo(post.getUserId());
-
         List<Image> imageList = new ArrayList<>(
                 getImageQueryService.getImagesBelongsPost(postId)
         );
@@ -84,29 +99,29 @@ public class PostUseCase {
     }
 
 
+
     public ThumbnailResponseDto getThumbnailById(Long thumbnailId) {
         Thumbnail Thumbnail = getPostQueryService.handleThumbnail(thumbnailId);
         return ThumbnailResponseDto.fromDomain(Thumbnail);
     }
 
 
+
     public Page<Post> getPostList(PostListRequest request) {
         log.debug("게시물 목록 조회: page={}, size={}", request.page(), request.size());
-        return getPostListQueryService.handle(request);
+        return postCacheService.getPostList(request);
     }
 
-    public Slice<Post> getPostSlice(PostSliceRequest request) {
+
+
+    public Slice<PostSummaryResponse> getPostSlice(PostSliceRequest request) {
         log.debug("게시물 무한스크롤 조회: size={}, lastPostId={}",
                 request.size(), request.lastPostId());
-        return getPostListQueryService.handleSlice(request);
-    }
 
 
-    // private method
+        PostSliceCacheDto cachedSlice = getLatestCachedPostSummary(request);
 
-    private AuthorInfo getAuthorInfo(Long autherId) {
-        User author = getUserQueryService.handle(autherId);
-        return new AuthorInfo(author.getId(), author.getName(), author.getProfileImageUrl());
+        return cachedSlice.toSlice(Pageable.ofSize(request.size()));
     }
 
 
@@ -119,7 +134,13 @@ public class PostUseCase {
 
         validatePostOwnership(existingPost, requesterId);
 
-        return updatePostCommandService.handle(request, existingPost);
+        Post updatedPost = updatePostCommandService.handle(request, existingPost);
+
+        // 수정 시 관련 캐시 무효화
+        postCacheService.evictPostCaches(postId);
+        postCacheService.evictPostListCaches();
+
+        return updatedPost;
     }
 
 
@@ -133,9 +154,19 @@ public class PostUseCase {
 
         deletePostCommandService.handle(postId);
 
+        postCacheService.evictPostCaches(postId);
+        postCacheService.evictPostListCaches();
+
     }
 
 
+
+    // private method
+
+    private AuthorInfo getAuthorInfo(Long autherId) {
+        User author = getUserQueryService.handle(autherId);
+        return new AuthorInfo(author.getId(), author.getName(), author.getProfileImageUrl());
+    }
 
     private void validatePostOwnership(Post post, Long requesterId) {
         if (!isPostOwner(post, requesterId)) {
@@ -148,4 +179,40 @@ public class PostUseCase {
     }
 
 
+    private PostSliceCacheDto getLatestCachedPostSummary(PostSliceRequest request) {
+        log.info("최신 캐시된 게시물 요약 조회: {}", request);
+        Long maxPostId = getPostQueryService.getMaxPostId();
+        long startId = request.lastPostId()> maxPostId? maxPostId : request.lastPostId()-1;
+        log.info("최대 게시물 ID: {}, 시작 ID: {}", maxPostId, startId);
+            List<PostSummaryResponse> cachedSummaries = new ArrayList<>();
+
+            for (long id = startId; id > startId- request.size() && id > 0 ; id--) {
+                PostSummaryResponse cached = postCacheService.getPostSummary(id);
+                if (!isNullSummary(cached)) {
+                    cachedSummaries.add(cached);
+                }
+            }
+
+
+        boolean hasNext = false;
+        if (!cachedSummaries.isEmpty()) {
+            Long lastReturnedId = cachedSummaries.get(cachedSummaries.size() - 1).id();
+            // DB에서 lastReturnedId보다 작은 ID가 존재하는지 확인
+            hasNext = getPostQueryService.existsPostWithIdLessThan(lastReturnedId);
+        }
+            log.info("캐시+DB 조회 완료: {}개, hasNext={}", cachedSummaries.size(), hasNext);
+
+            return new PostSliceCacheDto(
+                    cachedSummaries,
+                    hasNext,
+                    request.size(),
+                    cachedSummaries.size()
+            );
+
+    }
+
+
+    private boolean isNullSummary(PostSummaryResponse summary) {
+        return summary.id() == null || summary.title() == null;
+    }
 }

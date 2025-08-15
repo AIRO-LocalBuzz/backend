@@ -84,10 +84,11 @@ public class PostEntity extends BaseEntity {
 
 
 
-    public PostEntity(Long userId, String title, String content, String summary,
+    public PostEntity(Long postId, Long userId, String title, String content, String summary,
                       PostStatus status, PostWithWhoTag withWhoTag, PostForWhatTag forWhatTag,
                       List<PostEmotionTag> emotionTags, PostCategory category, LocalDate travelDate, Location location, String address, Boolean isFeatured, LocalDateTime publishedAt) {
         super();
+        this.id = postId;
         this.userId = userId;
         this.title = title;
         this.content = content;
@@ -104,13 +105,13 @@ public class PostEntity extends BaseEntity {
         this.viewCount = 0;
         this.likeCount = 0;
         this.commentCount = 0;
-        this.isFeatured = false;
         this.publishedAt = publishedAt != null ? publishedAt : LocalDateTime.now();
     }
 
 
     public static PostEntity toEntity(Post post) {
         return new PostEntity(
+                post.getId(),
                 post.getUserId(),
                 post.getTitle(),
                 post.getContent(),

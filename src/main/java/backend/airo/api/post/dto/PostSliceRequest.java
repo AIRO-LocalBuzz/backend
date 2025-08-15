@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
 
+import java.util.Objects;
+
 public record PostSliceRequest(
         @Min(value = 1, message = "사이즈는 1 이상이어야 합니다")
         @Max(value = 100, message = "사이즈는 100 이하여야 합니다")
@@ -14,5 +16,10 @@ public record PostSliceRequest(
 ) {
     public PostSliceRequest {
         if (size <= 0) size = 20; // 기본값
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(size, lastPostId);
     }
 }

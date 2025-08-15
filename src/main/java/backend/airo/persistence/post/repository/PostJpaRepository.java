@@ -1,11 +1,9 @@
 package backend.airo.persistence.post.repository;
 
-import backend.airo.domain.post.Post;
+import backend.airo.api.post.dto.PostSummaryResponse;
+import backend.airo.domain.post.enums.PostEmotionTag;
 import backend.airo.domain.post.enums.PostStatus;
 import backend.airo.persistence.post.entity.PostEntity;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Positive;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -15,9 +13,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Post JPA Repository
@@ -57,4 +54,19 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
             Long id,
             Pageable pageable
     );
+
+
+    @Query("SELECT p.emotionTags FROM PostEntity p WHERE p.id = :postId")
+    Optional<Set<PostEmotionTag>> findEmotionTagsByPostId(@Param("postId") Long postId);
+
+    @Query("SELECT new backend.airo.api.post.dto.PostSummaryResponse(" +
+            "p.id, p.title, p.content, p.status, p.viewCount, p.userId) " +
+            "FROM PostEntity p WHERE p.id = :postId")
+    Optional<PostSummaryResponse> findPostSummaryWithoutEmotionTags(@Param("postId") Long postId);
+
+    @Query("SELECT MAX(p.id) FROM PostEntity p WHERE p.status = 'PUBLISHED'")
+    Optional<Long> findMaxPostId();
+
+    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM PostEntity p WHERE p.id < :postId AND p.status = 'PUBLISHED'")
+    boolean existsByIdLessThan(@Param("postId") Long postId);
 }
