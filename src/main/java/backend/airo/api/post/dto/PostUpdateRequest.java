@@ -27,7 +27,7 @@ public record PostUpdateRequest(
         @Schema(description = "목적 태그", example = "HEALING")
         PostForWhatTag forWhatTag,
 
-        @Schema(description = "감정 태그", example = "[EXCITED, JOYFUL]")
+        @Schema(description = "감정 태그", example = "[\"EXCITED\", \"JOYFUL\"]")
         @Size(max = 5, message = "감정 태그는 최대 5개까지 추가 가능합니다")
         List<PostEmotionTag> emotionTags,
 

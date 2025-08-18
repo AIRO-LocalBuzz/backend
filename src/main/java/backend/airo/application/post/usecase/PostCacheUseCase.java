@@ -79,7 +79,7 @@ public class PostCacheUseCase {
 
         Post post;
         try {
-            post = postCacheService.getPost(postId).toPost();
+            post = postCacheService.getPost(postId);
         } catch (Exception e) {
             log.warn("캐시에서 게시물 조회 실패, DB에서 직접 조회: postId={}, error={}",
                     postId, e.getMessage());

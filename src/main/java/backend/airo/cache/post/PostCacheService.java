@@ -31,10 +31,9 @@ public class PostCacheService {
             key = "#postId",
             sync = true
     )
-    public PostCacheDto getPost(Long postId) {
+    public Post getPost(Long postId) {
         log.debug("캐시 미스 - DB에서 게시물 조회: postId={}", postId);
-        Post post = getPostQueryService.handle(postId);
-        return PostCacheDto.from(post);
+        return getPostQueryService.handle(postId);
     }
 
     @Cacheable(
