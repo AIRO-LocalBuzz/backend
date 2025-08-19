@@ -1,8 +1,7 @@
 package backend.airo.domain.image.command;
 
 import backend.airo.domain.image.Image;
-import backend.airo.domain.image.exception.ImageNotFoundException;
-import backend.airo.domain.image.exception.InvalidImageException;
+import backend.airo.domain.image.exception.ImageException;
 import backend.airo.domain.image.repository.ImageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -66,7 +65,7 @@ class UpdateImageCommandServiceTest {
 
         // When & Then
         assertThatThrownBy(() -> updateImageCommandService.updateSortOrder(nullImageId, newSortOrder))
-                .isInstanceOf(InvalidImageException.class);
+                .isInstanceOf(ImageException.class);
 
         verify(imageRepository, never()).findById(any());
     }
@@ -108,7 +107,7 @@ class UpdateImageCommandServiceTest {
 
         // When & Then
         assertThatThrownBy(() -> updateImageCommandService.updateSortOrder(nonExistentId, 5))
-                .isInstanceOf(ImageNotFoundException.class);
+                .isInstanceOf(ImageException.class);
 
         verify(imageRepository).findById(nonExistentId);
         verify(imageRepository, never()).save(any());
@@ -142,7 +141,7 @@ class UpdateImageCommandServiceTest {
 
         // When & Then
         assertThatThrownBy(() -> updateImageCommandService.updateCaption(nullImageId, newCaption))
-                .isInstanceOf(InvalidImageException.class);
+                .isInstanceOf(ImageException.class);
 
         verify(imageRepository, never()).findById(any());
     }
@@ -193,7 +192,7 @@ class UpdateImageCommandServiceTest {
 
         // When & Then
         assertThatThrownBy(() -> updateImageCommandService.updateAltText(nullImageId, newAltText))
-                .isInstanceOf(InvalidImageException.class);
+                .isInstanceOf(ImageException.class);
 
         verify(imageRepository, never()).findById(any());
     }
@@ -261,7 +260,7 @@ class UpdateImageCommandServiceTest {
 
         // When & Then
         assertThatThrownBy(() -> updateImageCommandService.reorderImages(imageIds))
-                .isInstanceOf(ImageNotFoundException.class);
+                .isInstanceOf(ImageException.class);
 
         verify(imageRepository).findAllById(imageIds);
         verify(imageRepository, never()).saveAll(any());
@@ -332,7 +331,7 @@ class UpdateImageCommandServiceTest {
 
         // When & Then
         assertThatThrownBy(() -> updateImageCommandService.updateMultipleImages(images))
-                .isInstanceOf(ImageNotFoundException.class);
+                .isInstanceOf(ImageException.class);
 
         verify(imageRepository, times(2)).existsById(any());
         verify(imageRepository, never()).saveAll(any());

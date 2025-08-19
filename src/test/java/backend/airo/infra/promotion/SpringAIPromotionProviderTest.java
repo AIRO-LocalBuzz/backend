@@ -1,7 +1,8 @@
-package backend.airo.infra.thumbnail;
+package backend.airo.infra.promotion;
 
-import backend.airo.domain.thumbnail.ThumbnailRequest;
+import backend.airo.domain.promotion.PromotionRequest;
 import backend.airo.domain.promotion.PromotionResult;
+import backend.airo.infra.thumbnail.SpringAIPromotionProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +20,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SpringAIThumbnailProviderTest {
+class SpringAIPromotionProviderTest {
 
     @Mock
     private ChatClient openAiClient;
@@ -28,7 +29,7 @@ class SpringAIThumbnailProviderTest {
     private ChatClient ollamaClient;
 
     private ObjectMapper objectMapper;
-    private SpringAIThumbnailProvider provider;
+    private SpringAIPromotionProvider provider;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -36,10 +37,10 @@ class SpringAIThumbnailProviderTest {
         provider = createProviderWithMocks();
     }
 
-    private SpringAIThumbnailProvider createProviderWithMocks() throws Exception {
-        SpringAIThumbnailProvider provider = new SpringAIThumbnailProvider(null, null);
+    private SpringAIPromotionProvider createProviderWithMocks() throws Exception {
+        SpringAIPromotionProvider provider = new SpringAIPromotionProvider(null, null);
 
-        Field openAiField = SpringAIThumbnailProvider.class.getDeclaredField("openAiClient");
+        Field openAiField = SpringAIPromotionProvider.class.getDeclaredField("openAiClient");
         openAiField.setAccessible(true);
         openAiField.set(provider, openAiClient);
 
@@ -47,7 +48,7 @@ class SpringAIThumbnailProviderTest {
 //        ollamaField.setAccessible(true);
 //        ollamaField.set(provider, ollamaClient);
 
-        Field mapperField = SpringAIThumbnailProvider.class.getDeclaredField("objectMapper");
+        Field mapperField = SpringAIPromotionProvider.class.getDeclaredField("objectMapper");
         mapperField.setAccessible(true);
         mapperField.set(provider, objectMapper);
 
@@ -58,7 +59,7 @@ class SpringAIThumbnailProviderTest {
     @DisplayName("OpenAI 성공 시 결과를 반환한다")
     void shouldReturnResultWhenOpenAISucceeds() {
         // given
-        ThumbnailRequest request = createTestRequest();
+        PromotionRequest request = createTestRequest();
         String jsonResponse = """
             {
               "spotName": "테스트 장소",
@@ -72,7 +73,7 @@ class SpringAIThumbnailProviderTest {
         when(openAiClient.call(anyString())).thenReturn(jsonResponse);
 
         // when
-        PromotionResult result = provider.generateThumbnail(request);
+        PromotionResult result = provider.generatePromotion(request);
 
         // then
         assertThat(result.spotName()).isEqualTo("테스트 장소");
@@ -113,21 +114,21 @@ class SpringAIThumbnailProviderTest {
     @DisplayName("모든 LLM 실패 시 기본값을 반환한다")
     void shouldReturnFallbackWhenAllLLMsFail() {
         // given
-        ThumbnailRequest request = createTestRequest();
+        PromotionRequest request = createTestRequest();
 
         when(openAiClient.call(anyString())).thenThrow(new RuntimeException("OpenAI 오류"));
 //        when(ollamaClient.call(anyString())).thenThrow(new RuntimeException("Ollama 오류"));
 
         // when
-        PromotionResult result = provider.generateThumbnail(request);
+        PromotionResult result = provider.generatePromotion(request);
 
         // then
         assertThat(result.mainImageUrl()).isEqualTo("image1.jpg");
         assertThat(result.suggestedTitle()).isEqualTo("테스트 제목");
     }
 
-    private ThumbnailRequest createTestRequest() {
-        return new ThumbnailRequest(
+    private PromotionRequest createTestRequest() {
+        return new PromotionRequest(
                 "테스트 내용",
                 "테스트 제목",
                 List.of("태그1", "태그2"),

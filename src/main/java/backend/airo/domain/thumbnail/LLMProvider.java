@@ -5,5 +5,5 @@ import backend.airo.domain.promotion.PromotionRequest;
 import backend.airo.domain.promotion.PromotionResult;
 
 public interface LLMProvider {
-    PromotionResult generatePromition(PromotionRequest request);
+    PromotionResult generatePromotion(PromotionRequest request);
 }

@@ -33,7 +33,7 @@ public class PromotionGenerationService {
 
                 List<String> imageUrls = imageRepository.findImageUrlsByPostId(post.getId());
                 PromotionRequest request = PromotionRequest.from(post, imageUrls);
-                PromotionResult result = llmProvider.generatePromition(request);
+                PromotionResult result = llmProvider.generatePromotion(request);
 
                 savePromotion(post.getId(), result);
 

@@ -1,7 +1,7 @@
 package backend.airo.infra.thumbnail.config;
 
 import backend.airo.domain.thumbnail.LLMProvider;
-import backend.airo.infra.thumbnail.SpringAIThumbnailProvider;
+import backend.airo.infra.thumbnail.SpringAIPromotionProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.ai.chat.ChatClient;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,6 +23,6 @@ public class AIConfig {
             @Qualifier("openAiChatClient") ChatClient openAiClient,
             ObjectMapper objectMapper) {
 
-        return new SpringAIThumbnailProvider(openAiClient, objectMapper);
+        return new SpringAIPromotionProvider(openAiClient, objectMapper);
     }
 }

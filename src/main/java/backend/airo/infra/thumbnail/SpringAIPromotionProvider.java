@@ -25,7 +25,7 @@ public class SpringAIPromotionProvider implements LLMProvider {
     private final ObjectMapper objectMapper;
 
     @Override
-    public PromotionResult generatePromition(PromotionRequest request) {
+    public PromotionResult generatePromotion(PromotionRequest request) {
         List<ChatClient> clients = List.of(openAiClient);
 
         for (ChatClient client : clients) {
