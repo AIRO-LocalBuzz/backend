@@ -4,6 +4,7 @@ import backend.airo.api.post.dto.PostCreateRequest;
 import backend.airo.api.post.dto.PostUpdateRequest;
 import backend.airo.domain.post.enums.*;
 import backend.airo.domain.post.vo.Location;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Builder
 @RequiredArgsConstructor
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 public class Post {
     private final Long id;
     private Long userId;
