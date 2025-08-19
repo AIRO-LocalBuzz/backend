@@ -2,7 +2,7 @@ package backend.airo.api.post.dto;
 
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.PostStatus;
-import backend.airo.domain.thumbnail.ThumbnailResult;
+import backend.airo.domain.promotion.PromotionResult;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDateTime;
@@ -37,7 +37,7 @@ public record PostThumbnailResponse(
             String suggestedTitle
     ) {}
 
-    public static PostThumbnailResponse fromDomain(Post post, ThumbnailResult thumbnail) {
+    public static PostThumbnailResponse fromDomain(Post post, PromotionResult thumbnail) {
         ThumbnailInfo thumbnailInfo = thumbnail != null ?
                 new ThumbnailInfo(
                         thumbnail.spotName(),

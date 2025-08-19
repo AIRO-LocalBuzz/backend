@@ -8,4 +8,5 @@ public record ThumbnailResult(
         List<String> recommendedTags,
         List<String> emotions,
         String suggestedTitle
-) {}
+) {
+}

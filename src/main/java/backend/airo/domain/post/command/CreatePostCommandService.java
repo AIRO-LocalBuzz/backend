@@ -3,7 +3,7 @@ package backend.airo.domain.post.command;
 import backend.airo.api.image.dto.ImageCreateRequest;
 import backend.airo.api.post.dto.PostCreateRequest;
 import backend.airo.application.image.usecase.ImageUseCase;
-import backend.airo.application.thumbnail.ThumbnailGenerationService;
+import backend.airo.application.promotion.PromotionGenerationService;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.repository.PostRepository;
@@ -24,7 +24,7 @@ public class CreatePostCommandService {
 
     private final PostRepository postRepository;
     private final ImageUseCase imageUseCase;
-    private final ThumbnailGenerationService thumbnailGenerationService;
+    private final PromotionGenerationService thumbnailGenerationService;
 
     @Transactional
     public Post handle(PostCreateRequest request, Long userId) {
@@ -40,14 +40,6 @@ public class CreatePostCommandService {
         return savedPost;
     }
 
-    @Transactional
-    public Post handleWithThumbnail(PostCreateRequest request, Long userId) {
-
-        Post savedPost = handle(request, userId);
-        thumbnailGenerationService.generateThumbnailAsync(savedPost);
-
-        return savedPost;
-    }
 
 
     private void processImages(List<ImageCreateRequest> imageRequests, Long userId, Long postId) {

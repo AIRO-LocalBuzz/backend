@@ -1,5 +1,6 @@
 package backend.airo.domain.thumbnail;
 
+import backend.airo.domain.promotion.PromotionResult;
 import lombok.Getter;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Thumbnail {
         this.suggestedTitle = suggestedTitle;
     }
 
-    public static Thumbnail create(Long postId, ThumbnailResult result) {
+    public static Thumbnail create(Long postId, PromotionResult result) {
         return new Thumbnail(
                 null,
                 postId,

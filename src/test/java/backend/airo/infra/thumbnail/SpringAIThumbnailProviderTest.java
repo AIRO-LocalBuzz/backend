@@ -1,7 +1,7 @@
 package backend.airo.infra.thumbnail;
 
 import backend.airo.domain.thumbnail.ThumbnailRequest;
-import backend.airo.domain.thumbnail.ThumbnailResult;
+import backend.airo.domain.promotion.PromotionResult;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -72,7 +72,7 @@ class SpringAIThumbnailProviderTest {
         when(openAiClient.call(anyString())).thenReturn(jsonResponse);
 
         // when
-        ThumbnailResult result = provider.generateThumbnail(request);
+        PromotionResult result = provider.generateThumbnail(request);
 
         // then
         assertThat(result.spotName()).isEqualTo("테스트 장소");
@@ -119,7 +119,7 @@ class SpringAIThumbnailProviderTest {
 //        when(ollamaClient.call(anyString())).thenThrow(new RuntimeException("Ollama 오류"));
 
         // when
-        ThumbnailResult result = provider.generateThumbnail(request);
+        PromotionResult result = provider.generateThumbnail(request);
 
         // then
         assertThat(result.mainImageUrl()).isEqualTo("image1.jpg");
