@@ -43,7 +43,7 @@ public class PostCacheUseCase {
     private final DeletePostCommandService deletePostCommandService;
     private final UpsertPointCommand upsertPointCommand;
     private final CreatePointHistoryCommand createPointHistoryCommand;
-
+    private final GetPostListQueryService getPostListQueryService;
     private final GetPostQueryService getPostQueryService;
     private final GetUserQuery getUserQueryService;
     private final GetImageQueryService getImageQueryService;
@@ -160,6 +160,11 @@ public class PostCacheUseCase {
     }
 
 
+    public PostListResponse getMyPostList(PostListRequest request, Long userId) {
+         Page<Post> posts = getPostListQueryService.handleMyPosts(request, userId);
+        PostListResponse postListResponse = PostListResponse.fromDomain(posts);
+         return postListResponse;
+    }
 
     // private method
 
