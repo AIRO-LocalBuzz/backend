@@ -1,11 +1,13 @@
 package backend.airo.support.cache.config;
 
+import backend.airo.support.cache.resolver.RecordTypeResolver;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,9 +30,14 @@ public class RedisSerializerConfig{
                 .allowIfBaseType(Object.class)
                 .build();
 
+        RecordTypeResolver typeResolver = new RecordTypeResolver(ObjectMapper.DefaultTyping.NON_FINAL, mapper.getPolymorphicTypeValidator());
+        StdTypeResolverBuilder initializedResolver = typeResolver.init(JsonTypeInfo.Id.CLASS, null);
+        initializedResolver = initializedResolver.inclusion(JsonTypeInfo.As.PROPERTY);
+
+        mapper.setDefaultTyping(initializedResolver);
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        mapper.activateDefaultTyping(ptv, ObjectMapper.DefaultTyping.EVERYTHING, JsonTypeInfo.As.PROPERTY);
+        mapper.setPolymorphicTypeValidator(ptv);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         return new GenericJackson2JsonRedisSerializer(mapper);
