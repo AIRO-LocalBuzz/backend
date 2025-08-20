@@ -13,4 +13,6 @@ public interface UserRepository extends AggregateSupport<User, Long> {
 
     Optional<User> findByEmail(String email);
 
+    // User와 연관된 모든 데이터를 함께 삭제
+    void deleteUserWithRelatedData(Long userId);
 }

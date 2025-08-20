@@ -40,4 +40,15 @@ public interface UserControllerSwagger {
             @UserPrincipal User user,
             @RequestBody UpdateUserInfoRequest updateUserInfoRequest
     );
+
+    @Operation(summary = "사용자 탈퇴", description = "사용자 탈퇴 API - 계정과 관련된 모든 데이터가 삭제됩니다")
+    @ApiResponse(
+            responseCode = "200",
+            description = "사용자 탈퇴 성공"
+    )
+    @ApiResponse(
+            responseCode = "401",
+            description = "인증되지 않은 사용자"
+    )
+    Response<Void> deleteUser(@UserPrincipal User user);
 }
