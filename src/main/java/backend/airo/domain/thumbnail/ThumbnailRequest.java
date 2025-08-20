@@ -13,11 +13,11 @@ public record ThumbnailRequest(
 ) {
     public static ThumbnailRequest from(Post post, List<String> imageUrls) {
         return new ThumbnailRequest(
-                post.getContent(),
-                post.getTitle(),
-                post.getEmotionTags().stream().map(Enum::name).toList(),
-                post.getCategory().name(),
-                post.getLocation() != null ? post.getLocation().toString() : null,
+                post.content(),
+                post.title(),
+                post.emotionTags().stream().map(Enum::name).toList(),
+                post.category().name(),
+                post.location() != null ? post.location().toString() : null,
                 imageUrls
         );
     }
