@@ -73,11 +73,12 @@ public class PostCacheUseCase {
 
 
     public PostDetailResponse getPostDetail(Long postId, Long requesterId) {
-        log.debug("게시물 조회: id={}, requesterId={}", postId, requesterId);
+        log.info("게시물 조회: id={}, requesterId={}", postId, requesterId);
 
         Post post = postCacheService.getPost(postId);
-        if(post.isPostOwner(requesterId)) {
+        if(!post.isPostOwner(requesterId)) {
             updatePostViewCountCommand.handle(postId);
+            postCacheService.evictPostCaches(postId);
 //            post.incrementViewCount();
         }
 
