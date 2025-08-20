@@ -41,4 +41,11 @@ public class UserController implements UserControllerSwagger {
         );
         return Response.success(UserResponse.create(updateUser));
     }
+
+    @DeleteMapping()
+    @PreAuthorize("isAuthenticated()")
+    public Response<Void> deleteUser(@UserPrincipal User user) {
+        userUseCase.deleteUser(user.getId());
+        return Response.success(null);
+    }
 }

@@ -28,6 +28,7 @@ public interface ImageJpaRepository extends JpaRepository<ImageEntity, Long> {
 
     // Delete
     void deleteByPostId(Long postId);
+    void deleteByUserId(Long userId);
 
 
     boolean existsByPostId(Long postId);

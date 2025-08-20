@@ -69,4 +69,6 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
 
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM PostEntity p WHERE p.id < :postId AND p.status = 'PUBLISHED'")
     boolean existsByIdLessThan(@Param("postId") Long postId);
+
+    void deleteByUserId(Long userId);
 }
