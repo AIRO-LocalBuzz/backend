@@ -23,6 +23,12 @@ public class GetPostListQueryService {
         return retrievePosts(request.sortBy(), pageable, request.status());
     }
 
+    public Page<Post> handleMyPosts(PostListRequest request, Long userId) {
+        Pageable pageable = buildPageable(request);
+        return postRepository.findByUserId(userId, pageable);
+    }
+
+
     public Slice<Post> handleSlice(PostSliceRequest request) {
         log.debug("무한스크롤 게시물 조회: lastPostId={}, size={}",
                 request.lastPostId(), request.size());
@@ -30,6 +36,7 @@ public class GetPostListQueryService {
         // 커서 기반 페이징: lastPostId 이후의 데이터만 조회
         return postRepository.findSliceAfterCursor(request.lastPostId(), request.size());
     }
+
 
 
     private Pageable buildPageable(PostListRequest request) {

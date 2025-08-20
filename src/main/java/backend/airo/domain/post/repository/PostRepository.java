@@ -54,4 +54,9 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
     Long findMaxPostId();
 
     boolean existsByIdLessThan(Long postId);
+
+    Page<Post> findByUserId(
+            Long userId,
+            Pageable pageable
+    );
 }

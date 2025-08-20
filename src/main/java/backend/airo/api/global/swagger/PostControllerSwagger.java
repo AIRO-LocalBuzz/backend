@@ -96,6 +96,18 @@ public interface PostControllerSwagger {
 
 
 
+    @Operation(summary = "내 게시물 조회", description = "사용자 나의 게시물 목록을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "게시물 목록 조회 성공",
+                    content = @Content(schema = @Schema(implementation = PostListResponse.class)))
+    })
+    @GetMapping
+    Response<PostListResponse> getMyPost(
+            @Valid @ModelAttribute PostListRequest request,
+            @UserPrincipal User user);
+
+
 
     @Operation(summary = "게시물 수정", description = "기존 게시물을 수정합니다.")
     @ApiResponses(value = {

@@ -71,4 +71,10 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
     boolean existsByIdLessThan(@Param("postId") Long postId);
 
     void deleteByUserId(Long userId);
+
+
+    Page<PostEntity> findByUserId(
+            Long userId,
+            Pageable pageable
+    );
 }

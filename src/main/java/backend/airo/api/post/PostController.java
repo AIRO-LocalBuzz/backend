@@ -19,6 +19,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Slf4j
 @Validated
@@ -96,6 +98,18 @@ public class PostController implements PostControllerSwagger {
 
         Slice<PostSummaryResponse> postSlice = postUseCase.getPostSlice(request);
         PostSliceResponse response = PostSliceResponse.fromDomain(postSlice);
+
+        return Response.success(response);
+    }
+
+
+    @Override
+    @GetMapping("/my")
+    public Response<PostListResponse> getMyPost(
+            @Valid @ModelAttribute PostListRequest request,
+            @UserPrincipal User user) {
+
+        PostListResponse response = postUseCase.getMyPostList(request, user.getId());
 
         return Response.success(response);
     }

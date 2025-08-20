@@ -34,13 +34,13 @@ public class PostEntity extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String summary;
 
+    @Column(columnDefinition = "TEXT")
+    private String businessName;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PostStatus status = PostStatus.DRAFT;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PostWithWhoTag withWhoTag = PostWithWhoTag.ALLONE;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
@@ -84,8 +84,8 @@ public class PostEntity extends BaseEntity {
 
 
 
-    public PostEntity(Long postId, Long userId, String title, String content, String summary,
-                      PostStatus status, PostWithWhoTag withWhoTag, PostForWhatTag forWhatTag,
+    public PostEntity(Long postId, Long userId, String title, String content, String summary, String businessName,
+                      PostStatus status, PostForWhatTag forWhatTag,
                       List<PostEmotionTag> emotionTags, PostCategory category, LocalDate travelDate, Location location, String address, Boolean isFeatured, LocalDateTime publishedAt) {
         super();
         this.id = postId;
@@ -93,8 +93,8 @@ public class PostEntity extends BaseEntity {
         this.title = title;
         this.content = content;
         this.summary = summary;
+        this.businessName = businessName;
         this.status = status != null ? status : PostStatus.DRAFT;
-        this.withWhoTag = withWhoTag != null ? withWhoTag : PostWithWhoTag.ALLONE;
         this.forWhatTag = forWhatTag != null ? forWhatTag : PostForWhatTag.HEALING;
         this.emotionTags = emotionTags;
         this.category = category != null ? category : PostCategory.RESTAURANT;
@@ -116,8 +116,8 @@ public class PostEntity extends BaseEntity {
                 post.getTitle(),
                 post.getContent(),
                 post.getSummary(),
+                post.getBusinessName(),
                 post.getStatus(),
-                post.getWithWhoTag(),
                 post.getForWhatTag(),
                 post.getEmotionTags(),
                 post.getCategory(),
@@ -137,8 +137,8 @@ public class PostEntity extends BaseEntity {
                 entity.getTitle(),
                 entity.getContent(),
                 entity.getSummary(),
+                entity.getBusinessName(),
                 entity.getStatus(),
-                entity.getWithWhoTag(),
                 entity.getForWhatTag(),
                 entity.getEmotionTags(),
                 entity.getCategory(),

@@ -28,11 +28,11 @@ public record PostDetailResponse(
         @Schema(description = "게시물 요약", example = "부산에서의 즐거운 여행...")
         String summary,
 
+        @Schema(description = "사업장 이름", example = "짱구 분식")
+        String businessName,
+
         @Schema(description = "게시물 상태", example = "PUBLISHED")
         PostStatus status,
-
-        @Schema(description = "누구와 태그", example = "FRIEND")
-        PostWithWhoTag withWhoTag,
 
         @Schema(description = "목적 태그", example = "HEALING")
         PostForWhatTag forWhatTag,
@@ -79,8 +79,8 @@ public record PostDetailResponse(
                         post.getTitle(),
                         post.getContent(),
                         post.getSummary(),
+                        post.getBusinessName(),
                         post.getStatus(),
-                        post.getWithWhoTag(),
                         post.getForWhatTag(),
                         post.getEmotionTags(),
                         post.getTravelDate(),

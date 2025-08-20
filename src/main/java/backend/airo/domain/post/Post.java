@@ -23,8 +23,8 @@ public class Post {
     private String title;
     private String content;
     private String summary;
+    private String businessName;
     private PostStatus status;
-    private PostWithWhoTag withWhoTag;
     private PostForWhatTag forWhatTag;
     private List<PostEmotionTag> emotionTags;
     private PostCategory category;
@@ -37,8 +37,8 @@ public class Post {
     private Boolean isFeatured = false;
     private LocalDateTime publishedAt;
 
-    public Post(Long id, Long userId, String title, String content, String summary,
-                PostStatus status, PostWithWhoTag withWhoTag, PostForWhatTag forWhatTag,
+    public Post(Long id, Long userId, String title, String content, String summary, String businessName,
+                PostStatus status, PostForWhatTag forWhatTag,
                 List<PostEmotionTag> emotionTags, PostCategory category, LocalDate travelDate, Location location,
                 String address, Integer viewCount, Integer likeCount, Integer commentCount,
                 Boolean isFeatured, LocalDateTime publishedAt) {
@@ -47,8 +47,8 @@ public class Post {
         this.title = title;
         this.content = content;
         this.summary = summary;
+        this.businessName = businessName;
         this.status = status;
-        this.withWhoTag = withWhoTag;
         this.forWhatTag = forWhatTag;
         this.emotionTags = emotionTags;
         this.category = category;
@@ -78,8 +78,8 @@ public class Post {
                 title,
                 content,
                 null, // summary
+                "gootshp",
                 PostStatus.PUBLISHED,
-                PostWithWhoTag.ALLONE,
                 PostForWhatTag.HEALING,
                 emotionTags,
                 category,
@@ -101,13 +101,13 @@ public class Post {
                 request.title(),
                 request.content(),
                 null, // AI로 생성될 요약
+                request.businessName(),
                 request.status(),
-                request.withWhoTag(),
                 request.forWhatTag(),
                 request.emotionTags(),
                 request.category(),
                 request.travelDate(),
-                null, // 발행일은 별도 로직으로 처리
+                request.location(),
                 request.address(),
                 0, // 초기 조회수
                 0, // 초기 좋아요 수
@@ -124,8 +124,8 @@ public class Post {
                 request.title() != null ? request.title() : existingPost.getTitle(),
                 request.content() != null ? request.content() : existingPost.getContent(),
                 existingPost.getSummary(),
+                existingPost.getBusinessName(),
                 request.status() != null ? request.status() : existingPost.getStatus(),
-                request.withWhoTag() != null ? request.withWhoTag() : existingPost.getWithWhoTag(),
                 request.forWhatTag() != null ? request.forWhatTag() : existingPost.getForWhatTag(),
                 request.emotionTags() != null ? request.emotionTags() : existingPost.getEmotionTags(),
                 existingPost.getCategory(),
