@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -131,6 +132,8 @@ public class PostEntity extends BaseEntity {
 
 
     public static Post toDomain(PostEntity entity) {
+        List<PostEmotionTag> collect = entity.getEmotionTags().stream()
+                .toList();
         return new Post(
                 entity.getId(),
                 entity.getUserId(),
@@ -140,7 +143,7 @@ public class PostEntity extends BaseEntity {
                 entity.getStatus(),
                 entity.getWithWhoTag(),
                 entity.getForWhatTag(),
-                entity.getEmotionTags(),
+                collect,
                 entity.getCategory(),
                 entity.getTravelDate(),
                 entity.getLocation(),
