@@ -79,7 +79,6 @@ public class PostCacheUseCase {
         if(!post.isPostOwner(requesterId)) {
             updatePostViewCountCommand.handle(postId);
             postCacheService.evictPostCaches(postId);
-//            post.incrementViewCount();
         }
 
         AuthorInfo authorInfo = getAuthorInfo(post.userId());
