@@ -26,6 +26,7 @@ public record UserResponse(
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
+                .nickname(user.getNickname())
                 .phoneNumber(user.getPhoneNumber())
                 .birthDate(user.getBirthDate())
                 .providerType(user.getProviderType())
