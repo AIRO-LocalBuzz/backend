@@ -27,12 +27,13 @@ public class PromotionEntity {
         @Column(name = "main_image_url", columnDefinition = "TEXT")
         private String mainImageUrl;
 
-        @ElementCollection
+        @ElementCollection(fetch = FetchType.EAGER)
         @CollectionTable(name = "promotion_recommended_tags", joinColumns = @JoinColumn(name = "promotion_id"))
         @Column(name = "tag")
         private List<String> recommendedTags;
 
-        @ElementCollection
+
+        @ElementCollection(fetch = FetchType.EAGER)
         @CollectionTable(name = "promotion_emotions", joinColumns = @JoinColumn(name = "promotion_id"))
         @Column(name = "emotion")
         private List<String> emotions;

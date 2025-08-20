@@ -100,6 +100,14 @@ dependencies {
 	// Spring Batch
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
 
+	// Playwright for HTML to PNG conversion
+	implementation 'com.microsoft.playwright:playwright:1.40.0'
+
+
+	// Image processing utilities
+	implementation 'org.apache.commons:commons-imaging:1.0.0-alpha5'
+
+
 	// Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
@@ -110,3 +118,4 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+

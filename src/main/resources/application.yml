@@ -91,6 +91,7 @@ springdoc:
         - backend.airo.api.auth
         - backend.airo.api.image
         - backend.airo.api.post
+        - backend.airo.api.promotion
         - backend.airo.api.rural_ex
         - backend.airo.api.point
         - backend.airo.api.point_history
@@ -99,6 +100,8 @@ springdoc:
       packages-to-scan: backend.airo.api.user
     - group: 'Post API'
       packages-to-scan: backend.airo.api.post
+    - group: 'Promotion API'
+      packages-to-scan: backend.airo.api.promotion
     - group: 'Review API'
       packages-to-scan: backend.airo.api.review
     - group: 'Content API'

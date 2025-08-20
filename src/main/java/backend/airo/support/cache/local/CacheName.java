@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 
+import java.awt.image.BufferedImage;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +18,12 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Getter
 public enum CacheName {
+
+    // 이미지 다운로드 및 썸네일 생성 캐시
+    DOWNLOADED_IMAGES("DOWNLOADED_IMAGES", TimeUnit.HOURS, 6, 200, BufferedImage.class),
+    PROMOTION_THUMBNAILS("PROMOTION_THUMBNAILS", TimeUnit.HOURS, 24, 100, byte[].class),
+    PROMOTION_DETAIL("PROMOTION_DETAIL", TimeUnit.HOURS, 24, 100, Post.class),
+
 
     //지역, 지역구
     MEGA_AREA_ALL("MEGA_AREA_ALL", TimeUnit.DAYS, 180, 1000, List.class),
@@ -53,6 +60,10 @@ public enum CacheName {
     public Duration getDuration() {
         return Duration.ofNanos(timeUnit.toNanos(expireAfterWrite));
     }
+
+    public static final String DOWNLOADED_IMAGES_CACHE = "DOWNLOADED_IMAGES";
+    public static final String PROMOTION_THUMBNAILS_CACHE = "PROMOTION_THUMBNAILS";
+    public static final String PROMOTION_DETAIL_CACHE = "PROMOTION_DETAIL";
 
     public static final String MEGA_AREA_ALL_CACHE = "MEGA_AREA_ALL";
     public static final String CITY_AREA_ALL_CACHE = "CITY_AREA_ALL";
