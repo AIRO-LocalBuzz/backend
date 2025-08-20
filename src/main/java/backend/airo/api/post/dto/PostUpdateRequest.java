@@ -21,8 +21,6 @@ public record PostUpdateRequest(
         @Schema(description = "게시물 상태", example = "PUBLISHED")
         PostStatus status,
 
-        @Schema(description = "누구와 태그", example = "FRIEND")
-        PostWithWhoTag withWhoTag,
 
         @Schema(description = "목적 태그", example = "HEALING")
         PostForWhatTag forWhatTag,
@@ -50,8 +48,7 @@ public record PostUpdateRequest(
 ) {
 
         public boolean hasChanges() {
-                return title != null || content != null || status != null ||
-                        withWhoTag != null || forWhatTag != null || emotionTags != null ||
+                return title != null || content != null || status != null || forWhatTag != null || emotionTags != null ||
                         travelDate != null || location != null || address != null || isFeatured != null;
         }
 
@@ -61,7 +58,7 @@ public record PostUpdateRequest(
 
         public boolean isMetadataOnly() {
                 return title == null && content == null &&
-                        (withWhoTag != null || forWhatTag != null || emotionTags != null ||
+                        (forWhatTag != null || emotionTags != null ||
                                 location != null || address != null || isFeatured != null);
         }
 }
