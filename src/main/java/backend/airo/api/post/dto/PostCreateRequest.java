@@ -2,6 +2,7 @@ package backend.airo.api.post.dto;
 
 import backend.airo.api.image.dto.ImageCreateRequest;
 import backend.airo.domain.post.enums.*;
+import backend.airo.domain.post.vo.Location;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -25,9 +26,10 @@ public record PostCreateRequest(
         @NotNull(message = "게시물 상태는 필수입니다") // @NotBlank → @NotNull
         PostStatus status,
 
-        @Schema(description = "누구와 태그", example = "FRIEND")
-        @NotNull(message = "withWhoTag는 필수입니다") // @NotBlank → @NotNull
-        PostWithWhoTag withWhoTag,
+        @Schema(description = "사업장 이름", example = "부산 맛집")
+        @Size(max = 100, message = "사업장 이름은 100자를 초과할 수 없습니다") // 길이 제한 추가 권장
+        @NotNull(message = "상호명은 필수입니다")
+        String businessName,
 
         @Schema(description = "목적 태그", example = "HEALING")
         @NotNull(message = "forWhatTag는 필수입니다") // 필수라면 @NotNull 추가
@@ -48,6 +50,10 @@ public record PostCreateRequest(
         @PastOrPresent(message = "여행 날짜는 현재 또는 과거여야 합니다")
         LocalDate travelDate,
 
+        @Schema(description = "위치 정보", example = "{ \"latitude\": 35.1796, \"longitude\": 129.0756 }")
+        @Valid // Location 객체 검증을 위해 추가
+        Location location,
+
         @Schema(description = "주소", example = "부산시 해운대구")
         @Size(max = 500, message = "주소는 500자를 초과할 수 없습니다") // 길이 제한 추가 권장
         String address,
@@ -60,41 +66,6 @@ public record PostCreateRequest(
         @Schema(description = "추천 게시물 여부", example = "false")
         Boolean isFeatured
 ) {
-
-        public static PostCreateRequest forDraft(String title, String content) {
-                return new PostCreateRequest(
-                        title, content, PostStatus.DRAFT,
-                        null, null, null, null, null, null,
-                        List.of(), false
-                );
-        }
-
-        public static PostCreateRequest forPublish(String title, String content,
-                                                   PostWithWhoTag withWhoTag, PostForWhatTag forWhatTag,
-                                                   PostCategory category) {
-                return new PostCreateRequest(
-                        title, content, PostStatus.PUBLISHED,
-                        withWhoTag, forWhatTag, null, category, null, null,
-                        List.of(), false
-                );
-        }
-
-        public boolean canPublish() {
-                return status == PostStatus.PUBLISHED
-                        && title != null && !title.trim().isEmpty()
-                        && content != null && !content.trim().isEmpty()
-                        && withWhoTag != null
-                        && emotionTags != null
-                        && category != null;
-        }
-
-        public boolean hasImages() {
-                return images != null && !images.isEmpty();
-        }
-
-        public boolean hasEmotionTags() {
-                return emotionTags != null && !emotionTags.isEmpty();
-        }
 
 
 }

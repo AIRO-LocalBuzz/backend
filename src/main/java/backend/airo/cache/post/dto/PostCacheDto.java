@@ -23,8 +23,8 @@ public class PostCacheDto {
     private String title;
     private String content;
     private String summary;
+    private String businessName;
     private PostStatus status;
-    private PostWithWhoTag withWhoTag;
     private PostForWhatTag forWhatTag;
     private PostCategory category;
     private LocalDate travelDate;
@@ -44,8 +44,8 @@ public class PostCacheDto {
                 post.getTitle(),
                 post.getContent(),
                 post.getSummary(),
+                post.getBusinessName(),
                 post.getStatus(),
-                post.getWithWhoTag(),
                 post.getForWhatTag(),
                 post.getCategory(),
                 post.getTravelDate(),
@@ -64,7 +64,7 @@ public class PostCacheDto {
     public Post toPost() {
         return new Post(
                 id, userId, title, content, summary,
-                status, withWhoTag, forWhatTag,
+                businessName,status, forWhatTag,
                 emotionTags, category, travelDate, location,
                 address, viewCount, likeCount, commentCount,
                 isFeatured, publishedAt

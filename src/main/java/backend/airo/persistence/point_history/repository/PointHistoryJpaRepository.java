@@ -12,4 +12,6 @@ public interface PointHistoryJpaRepository extends JpaRepository<PointHistoryEnt
 
     @Query("SELECT COALESCE(SUM(p.point), 0) FROM PointHistoryEntity p WHERE p.userId = :userId")
     Long getPointScoreByUserId(Long userId);
+
+    void deleteByUserId(Long userId);
 }

@@ -17,4 +17,6 @@ public interface PointJpaRepository extends JpaRepository<PointEntity, Long> {
     void upsertIncrement(@Param("userId") Long userId, @Param("delta") long delta);
 
     PointEntity findByUserId(Long userId);
+
+    void deleteByUserId(Long userId);
 }
