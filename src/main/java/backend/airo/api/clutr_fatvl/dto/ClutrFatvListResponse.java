@@ -23,15 +23,15 @@ public record ClutrFatvListResponse(
 
     public static ClutrFatvListResponse create(ClutrFatvl clutrFatvl, String megaName, String cityName) {
         return ClutrFatvListResponse.builder()
-                .id(clutrFatvl.getId())
-                .name(clutrFatvl.getFstvlNm())
-                .startDate(clutrFatvl.getPeriod().start())
-                .endDate(clutrFatvl.getPeriod().end())
+                .id(clutrFatvl.id())
+                .name(clutrFatvl.fstvlNm())
+                .startDate(clutrFatvl.period().start())
+                .endDate(clutrFatvl.period().end())
                 .region(addMegaNameCityName(megaName, cityName))
-                .place(clutrFatvl.getOpar())
-                .progressCheck(clutrFatvl.getPeriod().progressCheck())
-                .periodCheck(clutrFatvl.getPeriod().periodCheck())
-                .ended(clutrFatvl.getPeriod().ended())
+                .place(clutrFatvl.opar())
+                .progressCheck(clutrFatvl.period().progressCheck())
+                .periodCheck(clutrFatvl.period().periodCheck())
+                .ended(clutrFatvl.period().ended())
                 .build();
     }
 

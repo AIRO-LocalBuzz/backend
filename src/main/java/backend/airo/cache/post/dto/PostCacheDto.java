@@ -39,25 +39,25 @@ public class PostCacheDto {
 
     public static PostCacheDto from(Post post) {
         return new PostCacheDto(
-                post.getId(),
-                post.getUserId(),
-                post.getTitle(),
-                post.getContent(),
-                post.getSummary(),
-                post.getStatus(),
-                post.getWithWhoTag(),
-                post.getForWhatTag(),
-                post.getCategory(),
-                post.getTravelDate(),
-                post.getLocation(),
-                post.getAddress(),
-                post.getViewCount(),
-                post.getLikeCount(),
-                post.getCommentCount(),
-                post.getIsFeatured(),
-                post.getPublishedAt(),
-                post.getEmotionTags() != null ?
-                        new ArrayList<>(post.getEmotionTags()) : new ArrayList<>()
+                post.id(),
+                post.userId(),
+                post.title(),
+                post.content(),
+                post.summary(),
+                post.status(),
+                post.withWhoTag(),
+                post.forWhatTag(),
+                post.category(),
+                post.travelDate(),
+                post.location(),
+                post.address(),
+                post.viewCount(),
+                post.likeCount(),
+                post.commentCount(),
+                post.isFeatured(),
+                post.publishedAt(),
+                post.emotionTags() != null ?
+                        new ArrayList<>(post.emotionTags()) : new ArrayList<>()
         );
     }
 

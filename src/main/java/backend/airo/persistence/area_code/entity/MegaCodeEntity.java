@@ -23,7 +23,7 @@ public class MegaCodeEntity {
     }
 
     public static MegaCodeEntity toEntity(MegaCode megaCode) {
-        return new MegaCodeEntity(megaCode.getCtprvnCd(), megaCode.getCtprvnNm());
+        return new MegaCodeEntity(megaCode.ctprvnCd(), megaCode.ctprvnNm());
     }
 
     public static MegaCode toDomain(MegaCodeEntity megaCodeEntity) {

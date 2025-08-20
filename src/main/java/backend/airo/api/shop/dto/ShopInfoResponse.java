@@ -17,12 +17,12 @@ public record ShopInfoResponse(
 
     public static ShopInfoResponse create(Shop shop) {
         return ShopInfoResponse.builder()
-                .id(shop.getId())
-                .shopName(shop.getShopName())
-                .roadAddr(shop.getAddress().road())
-                .lotAddr(shop.getAddress().lot())
-                .flrNo(shop.getFloorInfo().flrNo())
-                .hoNo(shop.getFloorInfo().hoNo())
+                .id(shop.id())
+                .shopName(shop.shopName())
+                .roadAddr(shop.address().road())
+                .lotAddr(shop.address().lot())
+                .flrNo(shop.floorInfo().flrNo())
+                .hoNo(shop.floorInfo().hoNo())
                 .build();
     }
 

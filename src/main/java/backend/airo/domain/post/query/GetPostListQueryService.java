@@ -70,7 +70,7 @@ public class GetPostListQueryService {
         if (!posts.getContent().isEmpty()) {
             Post firstPost = posts.getContent().get(0);
             log.debug("첫 번째 Post - ID: {}, title: {}, publishedAt: {}, status: {}",
-                    firstPost.getId(), firstPost.getTitle(), firstPost.getPublishedAt(), firstPost.getStatus());
+                    firstPost.id(), firstPost.title(), firstPost.publishedAt(), firstPost.status());
         }
         return posts;
     }

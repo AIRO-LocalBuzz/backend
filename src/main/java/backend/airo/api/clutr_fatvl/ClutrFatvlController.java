@@ -7,7 +7,6 @@ import backend.airo.api.global.dto.Response;
 import backend.airo.api.global.swagger.ClutrFatvlControllerSwagger;
 import backend.airo.application.clure_fatvl.usecase.ClutrFatvlUseCase;
 import backend.airo.cache.area_code.AreaCodeCacheService;
-import backend.airo.cache.clutr_fatvl.ClutrFatvlCacheService;
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -46,8 +45,8 @@ public class ClutrFatvlController implements ClutrFatvlControllerSwagger {
         List<ClutrFatvListResponse> content = clutrFatvls.getContent().stream().map(list ->
                 ClutrFatvListResponse.create(
                         list,
-                        areaCodeCacheService.getMegaName(Long.valueOf(list.getAddress().megaCodeId())),
-                        areaCodeCacheService.getCityName(Long.valueOf(list.getAddress().ctprvnCodeId()), Long.valueOf(list.getAddress().megaCodeId())))
+                        areaCodeCacheService.getMegaName(Long.valueOf(list.address().megaCodeId())),
+                        areaCodeCacheService.getCityName(Long.valueOf(list.address().ctprvnCodeId()), Long.valueOf(list.address().megaCodeId())))
         ).toList();
         return Response.success(
                 new PageResponse<>(

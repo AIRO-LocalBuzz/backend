@@ -48,16 +48,16 @@ public record PostThumbnailResponse(
                 ) : null;
 
         return new PostThumbnailResponse(
-                post.getId(),
-                post.getTitle(),
-                post.getSummary(),
-                post.getStatus(),
-                post.getTravelDate(),
-                post.getViewCount(),
-                post.getLikeCount(),
-                post.getCommentCount(),
-                post.getIsFeatured(),
-                post.getPublishedAt(),
+                post.id(),
+                post.title(),
+                post.summary(),
+                post.status(),
+                post.travelDate(),
+                post.viewCount(),
+                post.likeCount(),
+                post.commentCount(),
+                post.isFeatured(),
+                post.publishedAt(),
                 thumbnailInfo
         );
     }

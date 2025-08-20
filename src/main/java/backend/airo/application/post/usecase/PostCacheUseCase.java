@@ -12,9 +12,9 @@ import backend.airo.domain.post.Post;
 import backend.airo.domain.post.command.CreatePostCommandService;
 import backend.airo.domain.post.command.DeletePostCommandService;
 import backend.airo.domain.post.command.UpdatePostCommandService;
+import backend.airo.domain.post.command.UpdatePostViewCountCommand;
 import backend.airo.domain.post.enums.PostStatus;
 import backend.airo.domain.post.exception.PostException;
-import backend.airo.domain.post.query.GetPostListQueryService;
 import backend.airo.domain.post.query.GetPostQueryService;
 import backend.airo.domain.post.vo.AuthorInfo;
 import backend.airo.domain.thumbnail.Thumbnail;
@@ -26,7 +26,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +34,6 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class PostCacheUseCase {
 
     private final CreatePostCommandService createPostCommandService;
@@ -43,6 +41,7 @@ public class PostCacheUseCase {
     private final DeletePostCommandService deletePostCommandService;
     private final UpsertPointCommand upsertPointCommand;
     private final CreatePointHistoryCommand createPointHistoryCommand;
+    private final UpdatePostViewCountCommand updatePostViewCountCommand;
 
     private final GetPostQueryService getPostQueryService;
     private final GetUserQuery getUserQueryService;
@@ -52,7 +51,6 @@ public class PostCacheUseCase {
 
 
 
-    @Transactional
     public Post createPost(PostCreateRequest request, Long userId) {
         Post savedPost;
 
@@ -61,7 +59,7 @@ public class PostCacheUseCase {
         }else{
             savedPost = createPostCommandService.handle(request, userId);
 
-            boolean handle = createPointHistoryCommand.handle(userId, 100L, savedPost.getId(), PointType.REPORT);
+            boolean handle = createPointHistoryCommand.handle(userId, 100L, savedPost.id(), PointType.REPORT);
             if (handle) {
                 upsertPointCommand.handle(userId, 100L);
             }
@@ -77,20 +75,13 @@ public class PostCacheUseCase {
     public PostDetailResponse getPostDetail(Long postId, Long requesterId) {
         log.debug("게시물 조회: id={}, requesterId={}", postId, requesterId);
 
-        Post post;
-        try {
-            post = postCacheService.getPost(postId);
-        } catch (Exception e) {
-            log.warn("캐시에서 게시물 조회 실패, DB에서 직접 조회: postId={}, error={}",
-                    postId, e.getMessage());
-            post = getPostQueryService.handle(postId);
+        Post post = postCacheService.getPost(postId);
+        if(post.isPostOwner(requesterId)) {
+            updatePostViewCountCommand.handle(postId);
+//            post.incrementViewCount();
         }
 
-        if(!isPostOwner(post, requesterId)) {
-            post.incrementViewCount();
-        }
-
-        AuthorInfo authorInfo = getAuthorInfo(post.getUserId());
+        AuthorInfo authorInfo = getAuthorInfo(post.userId());
         List<Image> imageList = new ArrayList<>(
                 getImageQueryService.getImagesBelongsPost(postId)
         );
@@ -126,7 +117,6 @@ public class PostCacheUseCase {
 
 
 
-    @Transactional
     public Post updatePost(Long postId, Long requesterId, PostUpdateRequest request) {
         log.info("게시물 수정 시작: id={}, requesterId={}", postId, requesterId);
 
@@ -144,7 +134,6 @@ public class PostCacheUseCase {
     }
 
 
-    @Transactional
     public void deletePost(Long postId, Long requesterId) {
         log.info("게시물 삭제 시작: id={}, requesterId={}", postId, requesterId);
 
@@ -170,12 +159,12 @@ public class PostCacheUseCase {
 
     private void validatePostOwnership(Post post, Long requesterId) {
         if (!isPostOwner(post, requesterId)) {
-            throw PostException.accessDenied(post.getId(), requesterId);
+            throw PostException.accessDenied(post.id(), requesterId);
         }
     }
 
     private boolean isPostOwner(Post post, Long userId) {
-        return userId != null && userId.equals(post.getUserId());
+        return userId != null && userId.equals(post.userId());
     }
 
 

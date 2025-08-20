@@ -26,7 +26,7 @@ public class CityCodeEntity {
     }
 
     public static CityCodeEntity toEntity(CityCode cityCode) {
-        return new CityCodeEntity(cityCode.getCtprvnCd(), cityCode.getCtprvnNm(), cityCode.getMegaCodeId());
+        return new CityCodeEntity(cityCode.ctprvnCd(), cityCode.ctprvnNm(), cityCode.megaCodeId());
     }
 
     public static CityCode toDomain(CityCodeEntity cityCodeEntity) {

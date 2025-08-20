@@ -54,4 +54,6 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
     Long findMaxPostId();
 
     boolean existsByIdLessThan(Long postId);
+
+    void upsertPostViewCount(Long postId);
 }

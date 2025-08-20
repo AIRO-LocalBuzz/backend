@@ -22,14 +22,14 @@ public record PostSummaryResponse(
 ) {
     public static PostSummaryResponse fromDomain(Post post) {
         return new PostSummaryResponse(
-                post.getId(),
-                post.getTitle(),
-                post.getContent(),
-                post.getStatus(),
-                post.getViewCount(),
-                post.getEmotionTags() != null ?
-                        new ArrayList<>(post.getEmotionTags()) : new ArrayList<>(),
-                post.getUserId()
+                post.id(),
+                post.title(),
+                post.content(),
+                post.status(),
+                post.viewCount(),
+                post.emotionTags() != null ?
+                        new ArrayList<>(post.emotionTags()) : new ArrayList<>(),
+                post.userId()
         );
     }
 

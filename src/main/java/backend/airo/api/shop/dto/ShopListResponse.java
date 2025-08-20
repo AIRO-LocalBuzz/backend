@@ -15,11 +15,11 @@ public record ShopListResponse(
 
     public static ShopListResponse create(Shop shop) {
         return new ShopListResponse(
-                shop.getId(),
-                shop.getShopName(),
-                shop.getAddress().lot(),
-                shop.getAddress().road(),
-                shop.getShopType().getTypeName()
+                shop.id(),
+                shop.shopName(),
+                shop.address().lot(),
+                shop.address().road(),
+                shop.shopType().getTypeName()
         );
     }
 

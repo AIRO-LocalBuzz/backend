@@ -71,4 +71,12 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
     boolean existsByIdLessThan(@Param("postId") Long postId);
 
     void deleteByUserId(Long userId);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = """
+            UPDATE posts
+            SET view_count = view_count + 1
+            WHERE id = :postId
+            """, nativeQuery = true)
+    void upsertPostViewCountById(Long postId);
 }

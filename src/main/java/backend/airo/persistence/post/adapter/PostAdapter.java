@@ -22,7 +22,7 @@ import java.util.*;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class PostAdapter implements PostRepository {
 
     private final PostJpaRepository postJpaRepository;
@@ -31,21 +31,20 @@ public class PostAdapter implements PostRepository {
     // ===== CRUD 메서드 =====
 
     @Override
-    @Transactional
     public Post save(Post post) {
         log.debug("게시물 저장 시작: title={}, userId={}, id={}",
-                post.getTitle(), post.getUserId(), post.getId());
+                post.title(), post.userId(), post.id());
 
         PostEntity entity;
-        if (post.getId() == null) {
-            log.debug("신규 게시물 생성: title={}", post.getTitle());
+        if (post.id() == null) {
+            log.debug("신규 게시물 생성: title={}", post.title());
             entity = PostEntity.toEntity(post);
 
 
             log.debug("Entity 변환 완료: userId={}, title={}",
                     entity.getUserId() != null ? entity.getUserId() : null, entity.getTitle());
         } else {
-            log.debug("기존 게시물 업데이트: id={}", post.getId());
+            log.debug("기존 게시물 업데이트: id={}", post.id());
             entity = updateExistingEntity(post);
         }
 
@@ -61,6 +60,7 @@ public class PostAdapter implements PostRepository {
 
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Post> findByStatus(PostStatus status, Pageable pageable) {
         Page<PostEntity> entities = postJpaRepository.findByStatus(status, pageable);
         log.info("Repository 조회 결과 - Entity 개수: {}", entities.getTotalElements());
@@ -70,6 +70,7 @@ public class PostAdapter implements PostRepository {
 
 
     @Override
+    @Transactional(readOnly = true)
     public Post findById(Long id) {
         log.debug("게시물 DB조회: ID={}", id);
         PostEntity postEntity = postJpaRepository.findById(id)
@@ -80,6 +81,7 @@ public class PostAdapter implements PostRepository {
 
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsById(Long id) {
         return postJpaRepository.existsById(id);
     }
@@ -104,7 +106,6 @@ public class PostAdapter implements PostRepository {
 
 
     @Override
-    @Transactional
     public Collection<Post> saveAll(Collection<Post> posts) {
         log.debug("게시물 일괄 저장: {} 건", posts.size());
 
@@ -121,12 +122,14 @@ public class PostAdapter implements PostRepository {
 
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Post> findAllOrderByLikeCountDesc(Pageable pageable) {
         Page<PostEntity> entities = postJpaRepository.findAllOrderByLikeCountDesc(pageable);
         return entities.map(PostEntity::toDomain);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<Post> findAllOrderByViewCountDesc(Pageable pageable) {
         Page<PostEntity> entities = postJpaRepository.findAllOrderByViewCountDesc(pageable);
         return entities.map(PostEntity::toDomain);
@@ -134,6 +137,7 @@ public class PostAdapter implements PostRepository {
 
 
     @Override
+    @Transactional(readOnly = true)
     public Slice<Post> findSliceAfterCursor(Long lastPostId, int size) {
         log.debug("커서 기반 게시물 조회: lastPostId={}, size={}", lastPostId, size);
 
@@ -157,6 +161,7 @@ public class PostAdapter implements PostRepository {
 
 
     @Override
+    @Transactional(readOnly = true)
     public PostSummaryResponse findPostSummaryById(Long postId) {
         log.debug("게시물 요약 정보 조회: ID={}", postId);
 
@@ -187,21 +192,28 @@ public class PostAdapter implements PostRepository {
 
 
     @Override
+    @Transactional(readOnly = true)
     public Long findMaxPostId() {
         return postJpaRepository.findMaxPostId()
                 .orElseThrow(() -> PostException.notFound(9999L));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsByIdLessThan(Long id) {
         return postJpaRepository.existsByIdLessThan(id);
+    }
+
+    @Override
+    public void upsertPostViewCount(Long postId) {
+        postJpaRepository.upsertPostViewCountById(postId);
     }
 
     // ===== Private Helper Methods =====
 
     private PostEntity updateExistingEntity(Post post) {
-        PostEntity existingEntity = postJpaRepository.findById(post.getId())
-                .orElseThrow(() -> PostException.notFound(post.getId()));
+        PostEntity existingEntity = postJpaRepository.findById(post.id())
+                .orElseThrow(() -> PostException.notFound(post.id()));
 
         return PostEntity.toEntity(post);
     }

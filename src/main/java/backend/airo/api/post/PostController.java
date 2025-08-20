@@ -4,7 +4,6 @@ import backend.airo.api.annotation.UserPrincipal;
 import backend.airo.api.global.dto.Response;
 import backend.airo.api.global.swagger.PostControllerSwagger;
 import backend.airo.application.post.usecase.PostCacheUseCase;
-import backend.airo.application.post.usecase.PostUseCase;
 import backend.airo.domain.post.Post;
 import backend.airo.api.post.dto.*;
 import backend.airo.domain.user.User;
