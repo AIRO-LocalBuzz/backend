@@ -47,18 +47,12 @@ public class PromotionController implements PromotionControllerSwagger {
         CompletableFuture<PromotionResult> future = promotionUsecase.generatePromotion(postId, user.getId());
         PromotionResult result = future.join(); // 동기 대기
 
-        // PromotionResult를 Promotion으로 변환 (임시)
-        Promotion promotion = new backend.airo.domain.promotion.Promotion(
-                null, postId,
-                result.spotName(), result.mainImageUrl(),
-                result.recommendedTags(), result.emotions(),
-                result.suggestedTitle(), result.content()
-        );
+    // 🔧 동기 메서드 사용
+    Promotion promotion = promotionUsecase.generatePromotionSync(postId, user.getId());
+    PromotionResponse response = PromotionResponse.fromDomain(promotion);
 
-        PromotionResponse response = PromotionResponse.fromDomain(promotion);
-
-        log.info("홍보물 생성 완료: postId={}, spotName={}", postId, result.spotName());
-        return Response.success(response);
+    log.info("홍보물 생성 완료: postId={}, spotName={}", postId, promotion.getSpotName());
+    return Response.success(response);
     }
 
     @Override
@@ -142,6 +136,9 @@ public class PromotionController implements PromotionControllerSwagger {
 
 
 
+    /**
+     * 홍보물 이미지 조회
+     */
     @Override
     @GetMapping("/{postId}/image")
     public ResponseEntity<byte[]> getPromotionImage(
@@ -155,14 +152,21 @@ public class PromotionController implements PromotionControllerSwagger {
             Promotion promotion = promotionUsecase.getPromotion(postId, user.getId());
             if (promotion == null) {
                 log.warn("홍보물이 존재하지 않음: postId={}", postId);
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.notFound()
+                        .header("X-Error-Code", "PROMOTION_NOT_FOUND")
+                        .header("X-Error-Message", "홍보물이 존재하지 않습니다")
+                        .build();
             }
 
             // 이미지 데이터 조회 (캐시 적용)
             byte[] imageData = promotionUsecase.getPromotionImageData(postId);
             if (imageData == null || imageData.length == 0) {
                 log.warn("홍보물 이미지가 존재하지 않음: postId={}", postId);
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.status(202) // 202 Accepted
+                        .header("X-Error-Code", "IMAGE_NOT_GENERATED")
+                        .header("X-Error-Message", "이미지가 아직 생성되지 않았습니다")
+                        .header("X-Suggestion", "POST /api/v1/promotions/" + postId + "/image 로 이미지 생성을 요청하세요")
+                        .build();
             }
 
             // HTTP 헤더 설정

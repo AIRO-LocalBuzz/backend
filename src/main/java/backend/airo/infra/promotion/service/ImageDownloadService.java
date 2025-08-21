@@ -14,6 +14,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 @Slf4j
@@ -44,34 +46,43 @@ public class ImageDownloadService {
     @Cacheable(value = CacheName.DOWNLOADED_IMAGES_CACHE, key = "#imageUrl")
     public byte[] downloadImageBytes(String imageUrl) {
         try {
-            log.info("이미지 다운로드 시작: {}", imageUrl);
-
-            byte[] imageBytes = webClient.get()
-                    .uri(imageUrl)
-                    .retrieve()
-                    .bodyToMono(byte[].class)
-                    .timeout(TIMEOUT)
-                    .block();
-
-            if (imageBytes == null) {
-                throw new RuntimeException("이미지 데이터가 null입니다: " + imageUrl);
+            log.info("원본 URL: {}", imageUrl);
+            
+            // 🔧 URL 유효성 사전 검증
+            if (!isValidImageUrl(imageUrl)) {
+                log.warn("유효하지 않은 이미지 URL: {}", imageUrl);
+                return createDefaultImageBytes();
             }
+            
+            // 🔧 여러 URL 변형 시도
+            String[] urlVariants = generateUrlVariants(imageUrl);
+            
+            for (String url : urlVariants) {
+                try {
+                    log.info("이미지 다운로드 시도: {}", url);
+                    
+                    byte[] imageBytes = webClient.get()
+                            .uri(url)
+                            .retrieve()
+                            .bodyToMono(byte[].class)
+                            .timeout(TIMEOUT)
+                            .block();
 
-            if (imageBytes.length > MAX_FILE_SIZE) {
-                throw new RuntimeException("이미지 파일 크기가 너무 큽니다: " + imageBytes.length + " bytes");
+                    if (imageBytes != null && imageBytes.length > 0) {
+                        log.info("이미지 다운로드 성공: {} ({} bytes)", url, imageBytes.length);
+                        return processDownloadedImage(imageBytes, url);
+                    }
+                    
+                } catch (Exception e) {
+                    log.debug("URL 시도 실패: {} - {}", url, e.getMessage());
+                }
             }
-
-            // 이미지 유효성 검사
-            BufferedImage testImage = ImageIO.read(new ByteArrayInputStream(imageBytes));
-            if (testImage == null) {
-                throw new RuntimeException("유효하지 않은 이미지 형식입니다: " + imageUrl);
-            }
-
-            log.info("이미지 다운로드 완료: {}x{}", testImage.getWidth(), testImage.getHeight());
-            return imageBytes;
-
+            
+            log.warn("모든 URL 변형 시도 실패: {}", imageUrl);
+            return createDefaultImageBytes();
+            
         } catch (Exception e) {
-            log.warn("이미지 다운로드 실패, 기본 이미지로 대체: {}", imageUrl, e);
+            log.warn("이미지 다운로드 실패, 기본 이미지로 대체: {}", imageUrl);
             return createDefaultImageBytes();
         }
     }
@@ -143,5 +154,71 @@ public class ImageDownloadService {
                         contentType.startsWith("image/png") ||
                         contentType.startsWith("image/webp")
         );
+    }
+
+    /**
+     * URL 유효성 검증
+     */
+    private boolean isValidImageUrl(String imageUrl) {
+        if (imageUrl == null || imageUrl.trim().isEmpty()) {
+            return false;
+        }
+        
+        if (!imageUrl.startsWith("http")) {
+            return false;
+        }
+        
+        // 확장자 확인
+        String lowerUrl = imageUrl.toLowerCase();
+        return lowerUrl.contains(".jpg") || lowerUrl.contains(".jpeg") || 
+               lowerUrl.contains(".png") || lowerUrl.contains(".webp");
+    }
+
+    /**
+     * 여러 URL 변형 생성
+     */
+    private String[] generateUrlVariants(String originalUrl) {
+        try {
+            // 1. 원본 URL
+            // 2. 한번 디코딩된 URL
+            // 3. 두번 디코딩된 URL (이중 인코딩 경우)
+            
+            String decoded1 = URLDecoder.decode(originalUrl, StandardCharsets.UTF_8);
+            String decoded2 = URLDecoder.decode(decoded1, StandardCharsets.UTF_8);
+            
+            return new String[]{
+                originalUrl,
+                decoded1,
+                decoded2
+            };
+            
+        } catch (Exception e) {
+            return new String[]{originalUrl};
+        }
+    }
+
+    /**
+     * 다운로드된 이미지 바이트를 처리하고 유효성 검사
+     */
+    private byte[] processDownloadedImage(byte[] imageBytes, String url) throws IOException {
+        if (imageBytes.length > MAX_FILE_SIZE) {
+            throw new RuntimeException("이미지 파일 크기가 너무 큽니다: " + imageBytes.length + " bytes");
+        }
+
+        // 🔧 IOException 처리 추가
+        try {
+            // 이미지 유효성 검사
+            BufferedImage testImage = ImageIO.read(new ByteArrayInputStream(imageBytes));
+            if (testImage == null) {
+                throw new RuntimeException("유효하지 않은 이미지 파일입니다: " + url);
+            }
+
+            log.info("이미지 다운로드 완료: {}x{}", testImage.getWidth(), testImage.getHeight());
+            return imageBytes;
+            
+        } catch (IOException e) {
+            log.error("이미지 처리 중 오류 발생: {}", url, e);
+            throw e; // 상위에서 처리하도록 재던짐
+        }
     }
 }

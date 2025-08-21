@@ -2,8 +2,9 @@ package backend.airo.infra.promotion.config;
 
 import backend.airo.domain.promotion.LLMProvider;
 import backend.airo.domain.promotion.LLMProviderWithImage;
-import backend.airo.infra.promotion.SpringAIPromotionProvider;
 
+
+import backend.airo.infra.promotion.SpringAIPromotionProvider;
 import backend.airo.infra.promotion.service.PromotionImageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.ai.chat.ChatClient;

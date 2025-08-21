@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -139,18 +140,26 @@ public class PromotionGenerationService {
      */
     private void savePromotion(Long postId, PromotionResult result) {
         try {
-            // 기존 홍보물이 있으면 삭제
-            promotionRepository.findByPostId(postId)
-                    .ifPresent(existing -> promotionRepository.deleteByPostId(postId));
+            log.debug("홍보물 저장 시작: postId={}, spotName={}", postId, result.spotName());
+            
+            // 🔧 더 안전한 삭제 로직
+            try {
+                promotionRepository.deleteByPostId(postId);
+                log.debug("기존 홍보물 삭제 완료: postId={}", postId);
+            } catch (Exception deleteEx) {
+                log.warn("기존 홍보물 삭제 실패 (없을 수 있음): postId={}", postId);
+                // 삭제 실패는 무시 (기존 데이터가 없을 수 있음)
+            }
 
             // 새 홍보물 저장
             Promotion promotion = Promotion.create(postId, result);
-            promotionRepository.save(promotion);
+            Promotion saved = promotionRepository.save(promotion);
 
-            log.debug("홍보물 저장 완료: postId={}, spotName={}", postId, result.spotName());
+            log.debug("홍보물 저장 완료: postId={}, id={}, spotName={}", 
+                    postId, saved.getId(), result.spotName());
 
         } catch (Exception e) {
-            log.error("홍보물 저장 실패: postId={}", postId, e);
+            log.error("홍보물 저장 실패: postId={}, error={}", postId, e.getMessage(), e);
             throw new RuntimeException("홍보물 저장 실패: " + postId, e);
         }
     }

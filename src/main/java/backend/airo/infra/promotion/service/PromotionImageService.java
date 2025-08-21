@@ -5,6 +5,7 @@ import backend.airo.infra.promotion.PlaywrightBrowserPool;
 import backend.airo.support.cache.local.CacheName;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.cache.CacheManager;
 
@@ -34,22 +35,22 @@ public class PromotionImageService {
     /**
      * 홍보물 이미지 생성 (비동기)
      */
-    public CompletableFuture<byte[]> generatePromotionImage(PromotionResult promotionResult, Long postId) {  // postId 추가
+    public CompletableFuture<byte[]> generatePromotionImage(PromotionResult promotionResult, Long postId) {
         return CompletableFuture.supplyAsync(() -> {
             try {
-                String cacheKey = "post_" + postId;  // postId 기반 캐시 키
-
+                String cacheKey = "post_" + postId;  // 안정적인 캐시 키
+                
                 // 캐시에서 먼저 확인
                 var cache = cacheManager.getCache(CacheName.PROMOTION_THUMBNAILS_CACHE);
                 if (cache != null) {
                     byte[] cachedResult = cache.get(cacheKey, byte[].class);
                     if (cachedResult != null) {
-                        log.info("캐시에서 홍보물 이미지 반환: {}", promotionResult.spotName());
+                        log.info("캐시에서 홍보물 이미지 반환: postId={}, spotName={}", postId, promotionResult.spotName());
                         return cachedResult;
                     }
                 }
-
-                log.info("홍보물 이미지 생성 시작: {}", promotionResult.spotName());
+                
+                log.info("홍보물 이미지 생성 시작: postId={}, spotName={}", postId, promotionResult.spotName());
 
                 // 배경 이미지 다운로드 (캐시 적용됨)
                 BufferedImage backgroundImage = downloadBackgroundImage(promotionResult.mainImageUrl());
@@ -72,11 +73,11 @@ public class PromotionImageService {
                     log.info("홍보물 이미지 캐시에 저장: postId={}, spotName={}", postId, promotionResult.spotName());
                 }
 
-                log.info("홍보물 이미지 생성 완료: {} bytes", result.length);
+                log.info("홍보물 이미지 생성 완료: postId={}, size={} bytes", postId, result.length);
                 return result;
 
             } catch (Exception e) {
-                log.error("홍보물 이미지 생성 실패: {}", promotionResult.spotName(), e);
+                log.error("홍보물 이미지 생성 실패: postId={}, spotName={}", postId, promotionResult.spotName(), e);
                 throw new RuntimeException("홍보물 이미지 생성 실패", e);
             }
         });

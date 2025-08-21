@@ -50,7 +50,7 @@ public class Promotion {
                 result.content()
         );
     }
-
+    
     /**
      * PromotionResult로 변환
      */

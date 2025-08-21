@@ -54,12 +54,12 @@ public class PromotionUsecase {
     @Transactional
     public void deletePromotion(Long postId, Long userId) {
         Post post = getPostQueryService.handle(postId);
-
+        
         // 삭제 전 캐시 정리를 위해 기존 홍보물 조회
         Promotion existingPromotion = promotionCacheService.getPromotion(postId);
-
+        
         promotionGenerationService.deleteByPostId(postId);
-
+        
         // 캐시 삭제
         if (existingPromotion != null) {
             promotionCacheService.evictPromotionCaches(postId, existingPromotion.getPromotionResult());
@@ -72,20 +72,20 @@ public class PromotionUsecase {
     @Transactional
     public CompletableFuture<PromotionImageResult> regeneratePromotionWithImage(Long postId, Long userId) {
         Post post = getPostQueryService.handle(postId);
-
+        
         // 삭제 전 캐시 정리를 위해 기존 홍보물 조회
         Promotion existingPromotion = promotionCacheService.getPromotion(postId);
-
+        
         promotionGenerationService.deleteByPostId(postId);
-
+        
         // 캐시 삭제
         if (existingPromotion != null) {
             promotionCacheService.evictPromotionCaches(postId, existingPromotion.getPromotionResult());
         }
-
+        
         return promotionGenerationService.generatePromotionWithImageAsync(post);
     }
-
+    
     /**
      * 홍보물 이미지 데이터 조회 (캐시 적용)
      */
@@ -99,5 +99,15 @@ public class PromotionUsecase {
     public PromotionImageResult getPromotionStatusWithImage(String taskId) {
         PromotionImageResult result = promotionGenerationService.getPromotionStatus(taskId);
         return result;
+    }
+
+    /**
+     * 홍보물 동기 생성 (즉시 결과 반환)
+     */
+    @Transactional
+    public Promotion generatePromotionSync(Long postId, Long userId) {
+        Post post = getPostQueryService.handle(postId);
+        PromotionResult result = promotionGenerationService.generatePromotionSync(post);
+        return promotionGenerationService.findByPostId(postId); // 저장된 Promotion 반환
     }
 }

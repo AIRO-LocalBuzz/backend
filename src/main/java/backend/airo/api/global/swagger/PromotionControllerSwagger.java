@@ -136,7 +136,7 @@ public interface PromotionControllerSwagger {
     )
     @GetMapping("/{postId}/image")
     ResponseEntity<byte[]> getPromotionImage(
-            @Parameter(description = "게시물 ID", required = true)
+            @Parameter(description = "게시물 ID", required = true) 
             @PathVariable @Positive Long postId,  // @PathVariable @Positive 추가
             @Parameter(hidden = true) @UserPrincipal User user  // @UserPrincipal 추가
     );

@@ -35,6 +35,9 @@ public class PromotionCacheService {
         return promotion.orElse(null);
     }
 
+    /**
+     * 홍보물 이미지 데이터 조회 (캐시 적용)
+     */
     public byte[] getPromotionImageData(Long postId) {
         // 홍보물 정보 조회 (캐시 적용)
         Promotion promotion = getPromotion(postId);
@@ -45,9 +48,9 @@ public class PromotionCacheService {
 
         // 🔧 postId 기반 캐시 키로 통일
         String cacheKey = "post_" + postId;  // 변경 필요
-
+        
         log.debug("홍보물 이미지 캐시 조회: postId={}, cacheKey={}", postId, cacheKey);
-
+        
         var cache = cacheManager.getCache(CacheName.PROMOTION_THUMBNAILS_CACHE);
 
         if (cache != null) {

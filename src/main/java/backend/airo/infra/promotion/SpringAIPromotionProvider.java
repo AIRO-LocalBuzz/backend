@@ -10,9 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.ChatClient;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,11 +21,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class SpringAIPromotionProvider implements LLMProviderWithImage {
 
-//    @Qualifier("openAiChatClient")
     private final ChatClient openAiClient;
     private final ObjectMapper objectMapper;
     private final PromotionImageService promotionImageService;
-    
+
     // 진행 상태 추적을 위한 임시 저장소
     private final ConcurrentHashMap<String, PromotionImageResult> taskStatusMap = new ConcurrentHashMap<>();
 
@@ -93,11 +90,12 @@ public class SpringAIPromotionProvider implements LLMProviderWithImage {
     /**
      * 비동기 이미지 생성
      */
+    @Async("apiTaskExecutor")
     public CompletableFuture<byte[]> generateImageAsync(PromotionResult promotionResult, String taskId, Long postId) {
         try {
             log.info("이미지 생성 비동기 처리 시작: taskId={}, postId={}", taskId, postId);
 
-            return promotionImageService.generatePromotionImage(promotionResult, postId)  // postId 전달
+            return promotionImageService.generatePromotionImage(promotionResult, postId)
                     .whenComplete((result, throwable) -> {
                         if (throwable != null) {
                             log.error("이미지 생성 실패: taskId={}, postId={}", taskId, postId, throwable);
@@ -136,11 +134,11 @@ public class SpringAIPromotionProvider implements LLMProviderWithImage {
         } catch (Exception e) {
             log.warn("응답 파싱 실패, 기본값 반환: {}", response, e);
             return new PromotionResult(
-                    null, 
-                    request.imageUrls().isEmpty() ? null : request.imageUrls().get(0), 
-                    List.of(), 
-                    request.tags(), 
-                    request.title(), 
+                    null,
+                    request.imageUrls().isEmpty() ? null : request.imageUrls().get(0),
+                    List.of(),
+                    request.tags(),
+                    request.title(),
                     request.content()
             );
         }
