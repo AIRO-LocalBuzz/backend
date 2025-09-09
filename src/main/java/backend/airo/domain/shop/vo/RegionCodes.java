@@ -6,7 +6,5 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public record RegionCodes(
         String ctprvnCd,
-        String signguCd,
-        String adongCd,
-        String ldongCd
+        String signguCd
 ) {}

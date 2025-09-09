@@ -1,8 +1,7 @@
 package backend.airo.batch.jobs.cure_fatvl;
 
-import backend.airo.application.clure_fatvl.dto.OpenApiClutrFatvlInfo;
+import backend.airo.application.clure_fatvl.dto.OpenApiClutrFatvl;
 import backend.airo.application.clure_fatvl.dto.OpenApiClutrFatvlResponse;
-import backend.airo.cache.vo.AreaName;
 import backend.airo.cache.area_code.AreaCodeCacheService;
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.persistence.clutrfatvl.repository.ClutrFatvlBulkRepository;
@@ -24,22 +23,21 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
-
-import static backend.airo.batch.utils.ParsingAreaCode.areaNameParsing;
 
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
 public class ClutrFatvlJobConfiguration {
 
-    public static final String JOB_NAME = "ClutrFatvlJob";
+    private static final String JOB_NAME = "ClutrFatvlJob";
+    private static final String CONTENT_ID = "15";
 
     private final JobRepository repo;
     private final PlatformTransactionManager tx;
     private final ClutrFatvlFetcher clutrFatvlFetcher;
     private final ClutrFatvlBulkRepository clutrFatvlBulkRepository;
-    private final AreaCodeCacheService areaCodeCacheService;
 
     // === Job ===
     @Bean(name = JOB_NAME)
@@ -55,13 +53,13 @@ public class ClutrFatvlJobConfiguration {
     // === step ===
     @Bean(name = JOB_NAME + ".step")
     public Step clutrFatvlStep(
-            ItemStreamReader<List<OpenApiClutrFatvlInfo>> reader,
-            ItemProcessor<List<OpenApiClutrFatvlInfo>, List<ClutrFatvl>> processor,
+            ItemStreamReader<List<OpenApiClutrFatvl>> reader,
+            ItemProcessor<List<OpenApiClutrFatvl>, List<ClutrFatvl>> processor,
             ItemWriter<List<ClutrFatvl>> writer,
             @Value("${spring.jpa.properties.hibernate.jdbc.batch_size}") int chunkSize
     ) {
         return new StepBuilder(JOB_NAME + ".step", repo)
-                .<List<OpenApiClutrFatvlInfo>, List<ClutrFatvl>>chunk(chunkSize, tx) // 한 번에 10개의 List (최대 10,000건)
+                .<List<OpenApiClutrFatvl>, List<ClutrFatvl>>chunk(chunkSize, tx) // 한 번에 10개의 List (최대 10,000건)
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)
@@ -72,20 +70,23 @@ public class ClutrFatvlJobConfiguration {
     // === Reader ===
     @Bean(name = JOB_NAME + ".reader")
     @StepScope
-    public ItemStreamReader<List<OpenApiClutrFatvlInfo>> clutrReader(
+    public ItemStreamReader<List<OpenApiClutrFatvl>> clutrReader(
             @Value("#{jobParameters['pageSize'] ?: 1000}") Integer pageSize) {
 
         return new ItemStreamReader<>() {
-            private LocalDate current = LocalDate.now(ZoneId.of("Asia/Seoul"));
-            private final LocalDate end = current.plusMonths(6);
+            private final LocalDate getNowDate = LocalDate.now(ZoneId.of("Asia/Seoul"));
+            private final DateTimeFormatter YMD = DateTimeFormatter.BASIC_ISO_DATE;
+
+            private LocalDate current = getNowDate.minusMonths(6);
+            private final LocalDate end = getNowDate;
             private boolean finished = false;
             private int page = 1;
 
             @Override
-            public List<OpenApiClutrFatvlInfo> read() {
+            public List<OpenApiClutrFatvl> read() {
                 if (finished) return null;
 
-                List<OpenApiClutrFatvlInfo> buffer = new ArrayList<>();
+                List<OpenApiClutrFatvl> buffer = new ArrayList<>();
                 while (buffer.size() < 1000 && !finished) {
                     if (current.isAfter(end)) {
                         finished = true;
@@ -94,17 +95,17 @@ public class ClutrFatvlJobConfiguration {
 
                     OpenApiClutrFatvlResponse resp = clutrFatvlFetcher.fetchClutrFatvl(
                             String.valueOf(page),
-                            String.valueOf(pageSize),
-                            current.toString()
+                            CONTENT_ID,
+                            current.format(YMD)
                     );
 
-                    if (resp.resultCode() == null || !"00".equals(resp.resultCode())) {
+                    if (resp.resultCode() == null || !"0000".equals(resp.resultCode())) {
                         current = current.plusDays(1);
                         page = 1;
                         continue;
                     }
 
-                    List<OpenApiClutrFatvlInfo> items = resp.openApiClutrFatvlInfos();
+                    List<OpenApiClutrFatvl> items = resp.openApiClutrFatvls();
                     if (items == null || items.isEmpty()) {
                         current = current.plusDays(1);
                         page = 1;
@@ -134,15 +135,11 @@ public class ClutrFatvlJobConfiguration {
 
     // === Processor ===
     @Bean(name = JOB_NAME + ".processor")
-    public ItemProcessor<List<OpenApiClutrFatvlInfo>, List<ClutrFatvl>> clutrProcessor() {
+    public ItemProcessor<List<OpenApiClutrFatvl>, List<ClutrFatvl>> clutrProcessor() {
         return items -> items.stream()
                 .map(item -> {
                     try {
-                        AreaName region = areaNameParsing(item.road(), item.lot());
-                        Long megaCode = areaCodeCacheService.getMegaCode(region.mega());
-                        System.out.println("Area Region :: " + region.city() + " || code :: " + megaCode );
-                        Long cityCode = areaCodeCacheService.getCityCode(megaCode, region.city());
-                        return ClutrFatvl.create(item, megaCode, cityCode);
+                        return ClutrFatvl.create(item);
                     } catch (Exception e) {
                         log.error("Processor 예외 발생: {}", e.getMessage(), e);
                         return null;

@@ -1,6 +1,6 @@
 package backend.airo.infra.open_api.rural_ex.client;
 
-import backend.airo.infra.open_api.config.OpenApiFeignClientConfiguration;
+import backend.airo.infra.open_api.rural_ex.config.OpenApiFeignClientConfiguration;
 import backend.airo.infra.open_api.rural_ex.dto.OpenApiRuralExResponse;
 import backend.airo.infra.open_api.rural_ex.vo.RuralExInfo;
 import org.springframework.cloud.openfeign.FeignClient;

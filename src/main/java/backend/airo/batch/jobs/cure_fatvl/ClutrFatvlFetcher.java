@@ -12,7 +12,7 @@ public class ClutrFatvlFetcher {
 
     private final ClureFatvlPort clureFatvlPort;
 
-    public OpenApiClutrFatvlResponse fetchClutrFatvl(String page, String pageSize, String startDate) {
-        return clureFatvlPort.getOpenApiClureFatvl(page, pageSize, startDate);
+    public OpenApiClutrFatvlResponse fetchClutrFatvl(String page, String contentId, String startDate) {
+        return clureFatvlPort.getOpenApiClureFatvl(page, contentId, startDate);
     }
 }

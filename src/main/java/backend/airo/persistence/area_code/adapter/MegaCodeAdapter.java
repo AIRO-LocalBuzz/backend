@@ -4,7 +4,6 @@ import backend.airo.domain.area_code.MegaCode;
 import backend.airo.domain.area_code.repository.MegaRepository;
 import backend.airo.persistence.area_code.entity.MegaCodeEntity;
 import backend.airo.persistence.area_code.repository.MegaCodeJpaRepository;
-import backend.airo.persistence.shop.entity.ShopEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

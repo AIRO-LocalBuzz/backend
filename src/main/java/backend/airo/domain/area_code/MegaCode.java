@@ -9,9 +9,8 @@ public class MegaCode {
     private final Long ctprvnCd;
     private final String ctprvnNm;
 
-    @JsonCreator
-    public MegaCode(@JsonProperty("ctprvnCd") Long ctprvnCd,
-                    @JsonProperty("ctprvnNm") String ctprvnNm) {
+    public MegaCode(Long ctprvnCd,
+                    String ctprvnNm) {
         this.ctprvnCd = ctprvnCd;
         this.ctprvnNm = ctprvnNm;
     }

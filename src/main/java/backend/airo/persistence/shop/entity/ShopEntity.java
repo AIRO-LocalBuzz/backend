@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "shop_entity",
+@Table(name = "shop",
         indexes = {
                 @Index(name = "idx_shop_region", columnList = "ctprvn_cd, signgu_cd"),
                 @Index(
@@ -21,8 +21,10 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ShopEntity extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Id
+    private Long contentId;
+
+    private Integer contentTypeId;
 
     @Column(name = "shopName", length = 200, nullable = false)
     private String shopName;
@@ -43,51 +45,48 @@ public class ShopEntity extends BaseEntity {
     @Embedded
     private ShopGeoPoint location;
 
-    //세부 주소[ 지점, 층, 호 ]
-    @Embedded
-    private FloorInfo floorInfo;
+    private String representativeImageURL;
 
-    @Enumerated(EnumType.STRING)
-    private ShopType shopType;
+    private String thumbnailImageURl;
 
-    @Column(name = "brch_nm")
-    private String brchNm;
 
-    public ShopEntity(String shopName, IndustryCodes industry, RegionCodes region, ShopAddress address, ShopGeoPoint location, FloorInfo floorInfo, ShopType shopType, String brchNm) {
+    public ShopEntity(Long contentId, Integer contentTypeId, String shopName, IndustryCodes industry, RegionCodes region, ShopAddress address, ShopGeoPoint location, String representativeImageURL, String thumbnailImageURl) {
+        this.contentId = contentId;
+        this.contentTypeId = contentTypeId;
         this.shopName = shopName;
         this.industry = industry;
         this.region = region;
         this.address = address;
         this.location = location;
-        this.floorInfo = floorInfo;
-        this.shopType = shopType;
-        this.brchNm = brchNm;
+        this.representativeImageURL = representativeImageURL;
+        this.thumbnailImageURl = thumbnailImageURl;
     }
 
     public static ShopEntity toEntity(Shop shop) {
         return new ShopEntity(
-                shop.getShopName(),
-                shop.getIndustry(),
-                shop.getRegion(),
-                shop.getAddress(),
-                shop.getLocation(),
-                shop.getFloorInfo(),
-                shop.getShopType(),
-                shop.getBrchNm()
+                shop.contentId(),
+                shop.contentTypeId(),
+                shop.shopName(),
+                shop.industry(),
+                shop.region(),
+                shop.address(),
+                shop.location(),
+                shop.representativeImageURL(),
+                shop.thumbnailImageURl()
         );
     }
 
     public static Shop toDomain(ShopEntity shopEntity) {
         return new Shop(
-                shopEntity.id,
+                shopEntity.contentId,
+                shopEntity.contentTypeId,
                 shopEntity.shopName,
                 shopEntity.industry,
                 shopEntity.region,
                 shopEntity.address,
                 shopEntity.location,
-                shopEntity.floorInfo,
-                shopEntity.shopType,
-                shopEntity.brchNm
+                shopEntity.getRepresentativeImageURL(),
+                shopEntity.getThumbnailImageURl()
         );
     }
 }

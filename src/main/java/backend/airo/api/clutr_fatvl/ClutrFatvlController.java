@@ -31,12 +31,11 @@ public class ClutrFatvlController implements ClutrFatvlControllerSwagger {
     private final ClutrFatvlUseCase clutrFatvlUseCase;
     private final AreaCodeCacheService areaCodeCacheService;
 
-
     @Override
     @GetMapping("/clutr/fatvl")
     public Response<PageResponse<ClutrFatvListResponse>> getClureFatvlList(
-            @RequestParam() String megaCode,
-            @RequestParam() String cityCode,
+            @RequestParam() Integer megaCode,
+            @RequestParam() Integer cityCode,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
@@ -65,6 +64,6 @@ public class ClutrFatvlController implements ClutrFatvlControllerSwagger {
     public Response<ClutrFatvInfoResponse> getClutrFatvlInfo(
             @RequestParam Long clutrFatvlId) {
         ClutrFatvl clutrFatvlInfo = clutrFatvlUseCase.getClutrFatvlInfo(clutrFatvlId);
-        return Response.success(ClutrFatvInfoResponse.create(clutrFatvlInfo));
+        return Response.success(ClutrFatvInfoResponse.create(clutrFatvlInfo, null));
     }
 }

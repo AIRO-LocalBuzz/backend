@@ -13,7 +13,7 @@ public class GetClutrFatvlListQuery {
 
     private final ClutrFatvlRepository clutrFatvlRepository;
 
-    public Page<ClutrFatvl> handle(String megaName, String cityName, Pageable pageable) {
+    public Page<ClutrFatvl> handle(Integer megaName, Integer cityName, Pageable pageable) {
         return clutrFatvlRepository.findAll(megaName, cityName, pageable);
     }
 

@@ -2,6 +2,7 @@ package backend.airo.application.clure_fatvl.usecase;
 
 import backend.airo.cache.clutr_fatvl.ClutrFatvlCacheService;
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
+import backend.airo.domain.clure_fatvl.query.GetClutrFatvlInfoQuery;
 import backend.airo.domain.clure_fatvl.query.GetClutrFatvlListQuery;
 import backend.airo.domain.clure_fatvl.query.GetClutrFatvlQuery;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class ClutrFatvlUseCase {
         return clutrFatvlCacheService.getClutrFatvl(clutrFatvlId);
     }
 
-    public Page<ClutrFatvl> getClutrFatvlList(String megaName, String cityName, Pageable pageable) {
+    public Page<ClutrFatvl> getClutrFatvlList(Integer megaName, Integer cityName, Pageable pageable) {
         return getClutrFatvlListQuery.handle(megaName, cityName, pageable);
     }
 

@@ -43,8 +43,8 @@ public interface ClutrFatvlControllerSwagger {
     )
     @GetMapping("/clutr/fatvl")
     Response<PageResponse<ClutrFatvListResponse>> getClureFatvlList(
-            @RequestParam() String megaCode,
-            @RequestParam() String cityCode,
+            @RequestParam() Integer megaCode,
+            @RequestParam() Integer cityCode,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     );

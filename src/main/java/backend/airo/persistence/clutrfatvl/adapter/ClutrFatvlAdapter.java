@@ -24,21 +24,13 @@ public class ClutrFatvlAdapter implements ClutrFatvlRepository {
 
     private final ClutrFatvlJpaRepository clutrFatvlJpaRepository;
 
-    @Autowired
-    private EntityManager em;
-
     @Override
-    public Page<ClutrFatvl> findAll(String megaCode, String cityCode, Pageable pageable) {
+    public Page<ClutrFatvl> findAll(Integer megaCode, Integer cityCode, Pageable pageable) {
         Page<ClutrFatvlEntity> clutrFatvlEntities = clutrFatvlJpaRepository.findByAddress_MegaCodeIdAndAddress_CtprvnCodeId(megaCode, cityCode, pageable);
         if (clutrFatvlEntities.isEmpty()) {
             return new PageImpl<>(List.of(), pageable, 0);
         }
         return clutrFatvlEntities.map(ClutrFatvlEntity::toDomain);
-    }
-
-    @Override
-    public void deleteAllByDate(LocalDate start, LocalDate end) {
-        clutrFatvlJpaRepository.deleteAllByFstvlStartDateBetween(start, end);
     }
 
     @Override
