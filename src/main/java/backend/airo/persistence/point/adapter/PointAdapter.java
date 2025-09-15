@@ -2,13 +2,9 @@ package backend.airo.persistence.point.adapter;
 
 import backend.airo.domain.point.Point;
 import backend.airo.domain.point.repository.PointRepository;
-import backend.airo.domain.point_history.repository.PointHistoryRepository;
 import backend.airo.persistence.point.entity.PointEntity;
 import backend.airo.persistence.point.repository.PointJpaRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,8 +16,6 @@ import java.util.Optional;
 @Transactional
 @RequiredArgsConstructor
 public class PointAdapter implements PointRepository {
-
-    private final EntityManagerFactoryBuilder
 
     private final PointJpaRepository pointJpaRepository;
 
