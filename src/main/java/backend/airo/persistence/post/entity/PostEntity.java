@@ -35,13 +35,13 @@ public class PostEntity extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String summary;
 
+    @Column(columnDefinition = "TEXT")
+    private String businessName;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PostStatus status = PostStatus.DRAFT;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PostWithWhoTag withWhoTag = PostWithWhoTag.ALLONE;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = true)
@@ -85,8 +85,8 @@ public class PostEntity extends BaseEntity {
 
 
 
-    public PostEntity(Long postId, Long userId, String title, String content, String summary,
-                      PostStatus status, PostWithWhoTag withWhoTag, PostForWhatTag forWhatTag,
+    public PostEntity(Long postId, Long userId, String title, String content, String summary, String businessName,
+                      PostStatus status, PostForWhatTag forWhatTag,
                       List<PostEmotionTag> emotionTags, PostCategory category, LocalDate travelDate, Location location, String address, Boolean isFeatured, LocalDateTime publishedAt) {
         super();
         this.id = postId;
@@ -94,8 +94,8 @@ public class PostEntity extends BaseEntity {
         this.title = title;
         this.content = content;
         this.summary = summary;
+        this.businessName = businessName;
         this.status = status != null ? status : PostStatus.DRAFT;
-        this.withWhoTag = withWhoTag != null ? withWhoTag : PostWithWhoTag.ALLONE;
         this.forWhatTag = forWhatTag != null ? forWhatTag : PostForWhatTag.HEALING;
         this.emotionTags = emotionTags;
         this.category = category != null ? category : PostCategory.RESTAURANT;
@@ -112,38 +112,36 @@ public class PostEntity extends BaseEntity {
 
     public static PostEntity toEntity(Post post) {
         return new PostEntity(
-                post.id(),
-                post.userId(),
-                post.title(),
-                post.content(),
-                post.summary(),
-                post.status(),
-                post.withWhoTag(),
-                post.forWhatTag(),
-                post.emotionTags(),
-                post.category(),
-                post.travelDate(),
-                post.location(),
-                post.address(),
-                post.isFeatured(),
-                post.publishedAt()
+                post.getId(),
+                post.getUserId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getSummary(),
+                post.getBusinessName(),
+                post.getStatus(),
+                post.getForWhatTag(),
+                post.getEmotionTags(),
+                post.getCategory(),
+                post.getTravelDate(),
+                post.getLocation(),
+                post.getAddress(),
+                post.getIsFeatured(),
+                post.getPublishedAt()
         );
     }
 
 
     public static Post toDomain(PostEntity entity) {
-        List<PostEmotionTag> collect = entity.getEmotionTags().stream()
-                .toList();
         return new Post(
                 entity.getId(),
                 entity.getUserId(),
                 entity.getTitle(),
                 entity.getContent(),
                 entity.getSummary(),
+                entity.getBusinessName(),
                 entity.getStatus(),
-                entity.getWithWhoTag(),
                 entity.getForWhatTag(),
-                collect,
+                entity.getEmotionTags(),
                 entity.getCategory(),
                 entity.getTravelDate(),
                 entity.getLocation(),

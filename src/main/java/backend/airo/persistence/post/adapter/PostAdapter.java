@@ -31,6 +31,7 @@ public class PostAdapter implements PostRepository {
     // ===== CRUD 메서드 =====
 
     @Override
+    @Transactional
     public Post save(Post post) {
         log.debug("게시물 저장 시작: title={}, userId={}, id={}",
                 post.title(), post.userId(), post.id());
@@ -209,6 +210,20 @@ public class PostAdapter implements PostRepository {
         postJpaRepository.upsertPostViewCountById(postId);
     }
 
+
+
+    @Override
+    public Page<Post> findByUserId(Long userId, Pageable pageable) {
+        log.debug("사용자 ID로 게시물 조회: userId={}, 페이지: {}", userId, pageable);
+        Page<PostEntity> entities = postJpaRepository.findByUserId(userId, pageable);
+        return entities.map(PostEntity::toDomain);
+    }
+
+
+
+
+
+
     // ===== Private Helper Methods =====
 
     private PostEntity updateExistingEntity(Post post) {
@@ -217,4 +232,7 @@ public class PostAdapter implements PostRepository {
 
         return PostEntity.toEntity(post);
     }
+
+
+
 }

@@ -55,5 +55,10 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
 
     boolean existsByIdLessThan(Long postId);
 
+    Page<Post> findByUserId(
+            Long userId,
+            Pageable pageable
+    );
+
     void upsertPostViewCount(Long postId);
 }

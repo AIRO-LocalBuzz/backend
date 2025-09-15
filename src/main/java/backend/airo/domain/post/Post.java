@@ -21,8 +21,8 @@ public record Post(
         String title,
         String content,
         String summary,
+        String businessName,
         PostStatus status,
-        PostWithWhoTag withWhoTag,
         PostForWhatTag forWhatTag,
         List<PostEmotionTag> emotionTags,
         PostCategory category,
@@ -51,8 +51,8 @@ public record Post(
                 title,
                 content,
                 null, // summary
+                "gootshp",
                 PostStatus.PUBLISHED,
-                PostWithWhoTag.ALLONE,
                 PostForWhatTag.HEALING,
                 emotionTags,
                 category,
@@ -74,13 +74,13 @@ public record Post(
                 request.title(),
                 request.content(),
                 null, // AI로 생성될 요약
+                request.businessName(),
                 request.status(),
-                request.withWhoTag(),
                 request.forWhatTag(),
                 request.emotionTags(),
                 request.category(),
                 request.travelDate(),
-                null, // 발행일은 별도 로직으로 처리
+                request.location(),
                 request.address(),
                 0, // 초기 조회수
                 0, // 초기 좋아요 수
@@ -92,22 +92,22 @@ public record Post(
 
     public static Post updatePostFromCommand(Post existingPost, PostUpdateRequest request) {
         return new Post(
-                existingPost.id(),
-                existingPost.userId(),
+                existingPost.id,
+                existingPost.userId,
                 request.title() != null ? request.title() : existingPost.title(),
                 request.content() != null ? request.content() : existingPost.content(),
-                existingPost.summary(),
+                existingPost.summary,
+                existingPost.businessName,
                 request.status() != null ? request.status() : existingPost.status(),
-                request.withWhoTag() != null ? request.withWhoTag() : existingPost.withWhoTag(),
                 request.forWhatTag() != null ? request.forWhatTag() : existingPost.forWhatTag(),
                 request.emotionTags() != null ? request.emotionTags() : existingPost.emotionTags(),
-                existingPost.category(),
+                existingPost.category,
                 request.travelDate() != null ? request.travelDate() : existingPost.travelDate(),
                 request.location() != null ? request.location() : existingPost.location(),
                 request.address() != null ? request.address() : existingPost.address(),
-                existingPost.viewCount(),
-                existingPost.likeCount(),
-                existingPost.commentCount(),
+                existingPost.viewCount,
+                existingPost.likeCount,
+                existingPost.commentCount,
                 request.isFeatured() != null ? request.isFeatured() : existingPost.isFeatured(),
                 request.status() == PostStatus.PUBLISHED && existingPost.publishedAt() == null
                         ? LocalDateTime.now() : existingPost.publishedAt()

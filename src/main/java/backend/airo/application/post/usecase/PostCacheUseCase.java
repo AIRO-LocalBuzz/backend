@@ -15,6 +15,7 @@ import backend.airo.domain.post.command.UpdatePostCommandService;
 import backend.airo.domain.post.command.UpdatePostViewCountCommand;
 import backend.airo.domain.post.enums.PostStatus;
 import backend.airo.domain.post.exception.PostException;
+import backend.airo.domain.post.query.GetPostListQueryService;
 import backend.airo.domain.post.query.GetPostQueryService;
 import backend.airo.domain.post.vo.AuthorInfo;
 import backend.airo.domain.thumbnail.Thumbnail;
@@ -26,6 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,7 @@ public class PostCacheUseCase {
     private final CreatePointHistoryCommand createPointHistoryCommand;
     private final UpdatePostViewCountCommand updatePostViewCountCommand;
 
+    private final GetPostListQueryService getPostListQueryService;
     private final GetPostQueryService getPostQueryService;
     private final GetUserQuery getUserQueryService;
     private final GetImageQueryService getImageQueryService;
@@ -149,6 +152,11 @@ public class PostCacheUseCase {
     }
 
 
+    public PostListResponse getMyPostList(PostListRequest request, Long userId) {
+         Page<Post> posts = getPostListQueryService.handleMyPosts(request, userId);
+        PostListResponse postListResponse = PostListResponse.fromDomain(posts);
+         return postListResponse;
+    }
 
     // private method
 

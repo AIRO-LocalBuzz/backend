@@ -86,4 +86,10 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
     @Override
     @EntityGraph(attributePaths = {"emotionTags"})
     Optional<PostEntity> findById(@NotNull Long postId);
+
+
+    Page<PostEntity> findByUserId(
+            Long userId,
+            Pageable pageable
+    );
 }

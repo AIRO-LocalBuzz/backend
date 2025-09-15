@@ -67,6 +67,9 @@ public class PostUseCase {
     }
 
 
+
+
+
     public PostDetailResponse getPostDetail(Long postId, Long requesterId) {
         log.debug("게시물 조회: id={}, requesterId={}", postId, requesterId);
         Post post = getPostQueryService.handle(postId);
