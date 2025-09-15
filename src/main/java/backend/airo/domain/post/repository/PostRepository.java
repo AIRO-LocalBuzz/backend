@@ -59,4 +59,6 @@ public interface PostRepository extends AggregateSupport<Post, Long> {
             Long userId,
             Pageable pageable
     );
+
+    void upsertPostViewCount(Long postId);
 }

@@ -54,18 +54,18 @@ public record ClutrFatvInfoResponse(
 
     public static ClutrFatvInfoResponse create(ClutrFatvl clutrFatvlInfo) {
         return ClutrFatvInfoResponse.builder()
-                .id(clutrFatvlInfo.getId())
-                .fstvlNm(clutrFatvlInfo.getFstvlNm())
-                .opar(clutrFatvlInfo.getOpar())
-                .fstvlCo(clutrFatvlInfo.getFstvlCo())
-                .period(clutrFatvlInfo.getPeriod())
-                .address(clutrFatvlInfo.getAddress())
-                .mnnstNm(clutrFatvlInfo.getMnnstNm())
-                .auspcInsttNm(clutrFatvlInfo.getAuspcInsttNm())
-                .suprtInsttNm(clutrFatvlInfo.getSuprtInsttNm())
-                .phoneNumber(clutrFatvlInfo.getPhoneNumber())
-                .homepageUrl(clutrFatvlInfo.getHomepageUrl())
-                .relateInfo(clutrFatvlInfo.getRelateInfo())
+                .id(clutrFatvlInfo.id())
+                .fstvlNm(clutrFatvlInfo.fstvlNm())
+                .opar(clutrFatvlInfo.opar())
+                .fstvlCo(clutrFatvlInfo.fstvlCo())
+                .period(clutrFatvlInfo.period())
+                .address(clutrFatvlInfo.address())
+                .mnnstNm(clutrFatvlInfo.mnnstNm())
+                .auspcInsttNm(clutrFatvlInfo.auspcInsttNm())
+                .suprtInsttNm(clutrFatvlInfo.suprtInsttNm())
+                .phoneNumber(clutrFatvlInfo.phoneNumber())
+                .homepageUrl(clutrFatvlInfo.homepageUrl())
+                .relateInfo(clutrFatvlInfo.relateInfo())
                 .build();
     }
 

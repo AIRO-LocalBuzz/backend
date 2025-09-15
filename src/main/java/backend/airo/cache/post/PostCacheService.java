@@ -24,7 +24,6 @@ public class PostCacheService {
 
     private final GetPostQueryService getPostQueryService;
     private final GetPostListQueryService getPostListQueryService;
-    private final CacheManager cacheManager;
 
     @Cacheable(
             cacheNames = CacheName.POST_DETAIL_CACHE,

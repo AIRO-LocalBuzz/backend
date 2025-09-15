@@ -9,11 +9,7 @@ import backend.airo.domain.image.repository.ImageRepository;
 import backend.airo.domain.thumbnail.repository.ThumbnailRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -30,17 +26,17 @@ public class ThumbnailGenerationService {
     public void generateThumbnailAsync(Post post) {
         CompletableFuture.runAsync(() -> {
             try {
-                log.info("썸네일 생성 시작: postId={}", post.getId());
+                log.info("썸네일 생성 시작: postId={}", post.id());
 
-                List<String> imageUrls = imageRepository.findImageUrlsByPostId(post.getId());
+                List<String> imageUrls = imageRepository.findImageUrlsByPostId(post.id());
                 ThumbnailRequest request = ThumbnailRequest.from(post, imageUrls);
                 ThumbnailResult result = llmProvider.generateThumbnail(request);
 
-                saveThumbnail(post.getId(), result);
+                saveThumbnail(post.id(), result);
 
-                log.info("썸네일 생성 완료: postId={}", post.getId());
+                log.info("썸네일 생성 완료: postId={}", post.id());
             } catch (Exception e) {
-                log.error("썸네일 생성 실패: postId={}", post.getId(), e);
+                log.error("썸네일 생성 실패: postId={}", post.id(), e);
             }
         });
     }

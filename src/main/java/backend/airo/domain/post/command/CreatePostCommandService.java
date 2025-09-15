@@ -34,9 +34,9 @@ public class CreatePostCommandService {
         Post post = createPost(request, userId);
         Post savedPost = postRepository.save(post);
 
-        processImages(request.images(), userId, savedPost.getId());
+        processImages(request.images(), userId, savedPost.id());
 
-        log.info("게시물 저장 완료: id={}, title={}", savedPost.getId(), savedPost.getTitle());
+        log.info("게시물 저장 완료: id={}, title={}", savedPost.id(), savedPost.title());
         return savedPost;
     }
 

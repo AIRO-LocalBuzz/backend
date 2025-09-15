@@ -32,7 +32,7 @@ public class AreaCodeService {
 
         // 2. 이름 기준으로 MegaCode ID 매핑
         Map<String, Long> megaCodeIdMap = handle.stream()
-                .collect(Collectors.toMap(MegaCode::getCtprvnNm, MegaCode::getCtprvnCd));
+                .collect(Collectors.toMap(MegaCode::ctprvnNm, MegaCode::ctprvnCd));
 
         // 3. 시군구 코드 수집 및 MegaCode ID 할당
         List<CityCode> codeCodes = areaCodePort.getCityCode(megaCodes,megaCodeIdMap);

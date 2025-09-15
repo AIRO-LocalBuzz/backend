@@ -1,7 +1,6 @@
 package backend.airo.application.post.usecase;
 
 import backend.airo.api.post.dto.*;
-import backend.airo.cache.post.PostCacheService;
 import backend.airo.domain.image.Image;
 import backend.airo.domain.image.query.GetImageQueryService;
 import backend.airo.domain.point.command.UpsertPointCommand;
@@ -11,6 +10,7 @@ import backend.airo.domain.post.command.CreatePostCommandService;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.command.DeletePostCommandService;
 import backend.airo.domain.post.command.UpdatePostCommandService;
+import backend.airo.domain.post.command.UpdatePostViewCountCommand;
 import backend.airo.domain.post.enums.PostStatus;
 import backend.airo.domain.post.exception.PostException;
 import backend.airo.domain.post.query.GetPostListQueryService;
@@ -45,6 +45,7 @@ public class PostUseCase {
     private final GetPostListQueryService getPostListQueryService;
     private final UpdatePostCommandService updatePostCommandService;
     private final DeletePostCommandService deletePostCommandService;
+    private final UpdatePostViewCountCommand updatePostViewCountCommand;
 
 
     @Transactional
@@ -56,7 +57,7 @@ public class PostUseCase {
         }else{
             savedPost = createPostCommandService.handle(request, userId);
 
-            boolean handle = createPointHistoryCommand.handle(userId, 100L, savedPost.getId(), PointType.REPORT);
+            boolean handle = createPointHistoryCommand.handle(userId, 100L, savedPost.id(), PointType.REPORT);
             if (handle) {
                 upsertPointCommand.handle(userId, 100L);
             }
@@ -73,11 +74,11 @@ public class PostUseCase {
         log.debug("게시물 조회: id={}, requesterId={}", postId, requesterId);
         Post post = getPostQueryService.handle(postId);
 
-        if(!isPostOwner(post, requesterId)) {
-            post.incrementViewCount();
+        if(post.isPostOwner(requesterId)) {
+            updatePostViewCountCommand.handle(postId);
         }
 
-        AuthorInfo authorInfo = getAuthorInfo(post.getUserId());
+        AuthorInfo authorInfo = getAuthorInfo(post.userId());
 
         List<Image> imageList = new ArrayList<>(
                 getImageQueryService.getImagesBelongsPost(postId)
@@ -142,12 +143,12 @@ public class PostUseCase {
 
     private void validatePostOwnership(Post post, Long requesterId) {
         if (!isPostOwner(post, requesterId)) {
-            throw PostException.accessDenied(post.getId(), requesterId);
+            throw PostException.accessDenied(post.id(), requesterId);
         }
     }
 
     private boolean isPostOwner(Post post, Long userId) {
-        return userId != null && userId.equals(post.getUserId());
+        return userId != null && userId.equals(post.userId());
     }
 
 

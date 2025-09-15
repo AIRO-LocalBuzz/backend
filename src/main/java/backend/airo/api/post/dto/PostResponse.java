@@ -1,13 +1,11 @@
 package backend.airo.api.post.dto;
 
-import backend.airo.domain.comment.Comment;
 import backend.airo.domain.post.Post;
 import backend.airo.domain.post.enums.PostStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * 게시물 응답 DTO
@@ -48,16 +46,16 @@ public record PostResponse(
 ) {
     public static PostResponse fromDomain(Post post) {
         return new PostResponse(
-                post.getId(),
-                post.getTitle(),
-                post.getSummary(),
-                post.getStatus(),
-                post.getTravelDate(),
-                post.getViewCount(),
-                post.getLikeCount(),
-                post.getCommentCount(),
-                post.getIsFeatured(),
-                post.getPublishedAt()
+                post.id(),
+                post.title(),
+                post.summary(),
+                post.status(),
+                post.travelDate(),
+                post.viewCount(),
+                post.likeCount(),
+                post.commentCount(),
+                post.isFeatured(),
+                post.publishedAt()
         );
     }
 }

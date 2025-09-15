@@ -66,14 +66,14 @@ public class ShopEntity extends BaseEntity {
 
     public static ShopEntity toEntity(Shop shop) {
         return new ShopEntity(
-                shop.getShopName(),
-                shop.getIndustry(),
-                shop.getRegion(),
-                shop.getAddress(),
-                shop.getLocation(),
-                shop.getFloorInfo(),
-                shop.getShopType(),
-                shop.getBrchNm()
+                shop.shopName(),
+                shop.industry(),
+                shop.region(),
+                shop.address(),
+                shop.location(),
+                shop.floorInfo(),
+                shop.shopType(),
+                shop.brchNm()
         );
     }
 

@@ -25,7 +25,7 @@ public class ShopDataCollector {
                     String.valueOf(pageNo),
                     "10000",
                     "ctprvnCd",
-                    String.valueOf(megaCode.getCtprvnCd())
+                    String.valueOf(megaCode.ctprvnCd())
             );
 
             if (shopPage.items().isEmpty()) break;

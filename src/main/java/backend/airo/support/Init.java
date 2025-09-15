@@ -22,7 +22,7 @@ public class Init {
 
     private final MegaRepository megaRepository;
 
-    @EventListener(ApplicationReadyEvent.class)
+//    @EventListener(ApplicationReadyEvent.class)
     public void initAreaCode() {
         List<MegaCode> megaCodes = megaRepository.findAll();
         if (megaCodes.isEmpty()) {

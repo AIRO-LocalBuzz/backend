@@ -2,16 +2,11 @@ package backend.airo.domain.area_code;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
 
-@Getter
-public class CityCode {
-
-    private final Long ctprvnCd;
-
-    private final String ctprvnNm;
-
-    private final Long megaCodeId;
+public record CityCode(
+        Long ctprvnCd,
+        String ctprvnNm,
+        Long megaCodeId) {
 
     @JsonCreator
     public CityCode(@JsonProperty("ctprvnCd") Long ctprvnCd,
