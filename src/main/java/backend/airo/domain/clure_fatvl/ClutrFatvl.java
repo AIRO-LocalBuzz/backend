@@ -70,7 +70,6 @@ public class ClutrFatvl {
                 .firstImage2(dto.firstImage2())
                 .modifiedDate(dto.modifiedDate())
                 .build();
-
     }
 
 

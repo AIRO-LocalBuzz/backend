@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Entity
@@ -111,21 +112,21 @@ public class PostEntity extends BaseEntity {
 
     public static PostEntity toEntity(Post post) {
         return new PostEntity(
-                post.getId(),
-                post.getUserId(),
-                post.getTitle(),
-                post.getContent(),
-                post.getSummary(),
-                post.getBusinessName(),
-                post.getStatus(),
-                post.getForWhatTag(),
-                post.getEmotionTags(),
-                post.getCategory(),
-                post.getTravelDate(),
-                post.getLocation(),
-                post.getAddress(),
-                post.getIsFeatured(),
-                post.getPublishedAt()
+                post.id(),
+                post.userId(),
+                post.title(),
+                post.content(),
+                post.summary(),
+                post.businessName(),
+                post.status(),
+                post.forWhatTag(),
+                post.emotionTags(),
+                post.category(),
+                post.travelDate(),
+                post.location(),
+                post.address(),
+                post.isFeatured(),
+                post.publishedAt()
         );
     }
 

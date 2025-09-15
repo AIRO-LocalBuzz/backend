@@ -32,14 +32,14 @@ public class UpdatePostCommandService{
         Post updatedPost = updatePostFromCommand(existingPost, request);
         Post savedPost = postRepository.save(updatedPost);
 
-        log.info("게시물 수정 완료: id={}", savedPost.getId());
+        log.info("게시물 수정 완료: id={}", savedPost.id());
         return savedPost;
     }
 
 
     private void validateStatusChange(Post post, PostStatus newStatus) {
-        if (!isValidStatusTransition(post.getStatus(), newStatus)) {
-            throw PostException.statusChange(post.getId(), post.getStatus(), newStatus, POST_CANNOT_CHANGE_STATUS);
+        if (!isValidStatusTransition(post.status(), newStatus)) {
+            throw PostException.statusChange(post.id(), post.status(), newStatus, POST_CANNOT_CHANGE_STATUS);
         }
     }
 

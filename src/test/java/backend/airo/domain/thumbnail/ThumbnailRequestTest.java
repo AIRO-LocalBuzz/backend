@@ -21,7 +21,7 @@ class ThumbnailRequestTest {
         ThumbnailRequest request = ThumbnailRequest.from(post, imageUrls);
 
         // then
-        assertThat(request.content()).isEqualTo(post.getContent());
+        assertThat(request.content()).isEqualTo(post.content());
         assertThat(request.imageUrls()).hasSize(2);
     }
 

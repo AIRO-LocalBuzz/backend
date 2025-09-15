@@ -4,9 +4,11 @@ import backend.airo.api.post.dto.PostSummaryResponse;
 import backend.airo.domain.post.enums.PostEmotionTag;
 import backend.airo.domain.post.enums.PostStatus;
 import backend.airo.persistence.post.entity.PostEntity;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -71,6 +73,19 @@ public interface PostJpaRepository extends JpaRepository<PostEntity, Long> {
     boolean existsByIdLessThan(@Param("postId") Long postId);
 
     void deleteByUserId(Long userId);
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(value = """
+            UPDATE posts
+            SET view_count = view_count + 1
+            WHERE id = :postId
+            """, nativeQuery = true)
+    void upsertPostViewCountById(Long postId);
+
+    @NotNull
+    @Override
+    @EntityGraph(attributePaths = {"emotionTags"})
+    Optional<PostEntity> findById(@NotNull Long postId);
 
 
     Page<PostEntity> findByUserId(
