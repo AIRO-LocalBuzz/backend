@@ -1,16 +1,16 @@
 package backend.airo.domain.shop.vo;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
-@Getter
-public enum ShopType {
+@Embeddable
+public record ShopType(
+        @Column(name = "road_addr", length = 512)
+        String road,
+        @Column(name = "lot_addr",  length = 512)
+        String lot
+) {
 
-    I1("숙박"), I2("음식")
-    ;
-
-
-    private final String typeName;
-    // I1 -> 숙박업, I2 -> 음식점업
 }

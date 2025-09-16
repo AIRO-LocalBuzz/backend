@@ -1,51 +1,77 @@
 package backend.airo.domain.clure_fatvl;
 
-import backend.airo.application.clure_fatvl.dto.OpenApiClutrFatvlInfo;
+import backend.airo.application.clure_fatvl.dto.OpenApiClutrFatvl;
+import backend.airo.domain.clure_fatvl.utils.PhoneNormalizer;
 import backend.airo.domain.clure_fatvl.vo.Address;
-import backend.airo.domain.clure_fatvl.vo.FestivalPeriod;
 import backend.airo.domain.clure_fatvl.vo.GeoPoint;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Embedded;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.List;
 
-@Builder
-public record ClutrFatvl(
-        String id,
-        String fstvlNm,
-        String opar,
-        String fstvlCo,
-        @Embedded FestivalPeriod period,
-        @Embedded GeoPoint location,
-        @Embedded Address address,
-        String mnnstNm,
-        String auspcInsttNm,
-        String suprtInsttNm,
-        String phoneNumber,
-        String homepageUrl,
-        String relateInfo,
-        LocalDate referenceDate,
-        String insttCode,
-        String insttNm)
-{
-    public static ClutrFatvl create(OpenApiClutrFatvlInfo dto, Long megaCode, Long cityCode) {
+@Getter
+@ToString
+public class ClutrFatvl {
+
+    private final Long contentId;
+
+    private final Integer contenttypeId;
+
+    private final String title;
+
+    @Embedded
+    private final GeoPoint location;
+
+    @Embedded
+    private final Address address;
+
+    private final List<String> phoneNumber;
+
+    private final String cat1;
+
+    private final String firstImage;
+
+    private final String firstImage2;
+
+    @JsonFormat(pattern = "yyyyMMdd")
+    private final LocalDate modifiedDate;
+
+    @Builder
+
+    public ClutrFatvl(Long contentId, Integer contenttypeId, String title, GeoPoint location, Address address, List<String> phoneNumber, String cat1, String firstImage, String firstImage2, LocalDate modifiedDate) {
+        this.contentId = contentId;
+        this.contenttypeId = contenttypeId;
+        this.title = title;
+        this.location = location;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.cat1 = cat1;
+        this.firstImage = firstImage;
+        this.firstImage2 = firstImage2;
+        this.modifiedDate = modifiedDate;
+    }
+
+
+
+    public static ClutrFatvl create(OpenApiClutrFatvl dto) {
         return ClutrFatvl.builder()
-                .fstvlNm(dto.fstvlNm())
-                .opar(dto.opar())
-                .fstvlCo(dto.fstvlCo())
-                .period(new FestivalPeriod(dto.start(), dto.end()))
-                .location(new GeoPoint(dto.lat(), dto.lon()))
-                .address(new Address(dto.road(), dto.lot(), String.valueOf(megaCode), String.valueOf(cityCode)))
-                .mnnstNm(dto.mnnstNm())
-                .auspcInsttNm(dto.auspcInsttNm())
-                .suprtInsttNm(dto.suprtInsttNm())
-                .phoneNumber(dto.phoneNumber())
-                .homepageUrl(dto.homepageUrl())
-                .relateInfo(dto.relateInfo())
-                .referenceDate(dto.referenceDate())
-                .insttCode(dto.insttCode())
-                .insttNm(dto.insttNm())
+                .contentId(dto.contentId())
+                .contenttypeId(dto.contenttypeId())
+                .title(dto.title())
+                .location(new GeoPoint(dto.lat(),dto.lon()))
+                .address(new Address(dto.addr1(), dto.addr2(), dto.megaCodeId(), dto.ctprvnCodeId()))
+                .phoneNumber(PhoneNormalizer.allPhones(dto.phoneNumber()))
+                .cat1(dto.cat1())
+                .firstImage(dto.firstImage())
+                .firstImage2(dto.firstImage2())
+                .modifiedDate(dto.modifiedDate())
                 .build();
     }
+
+
 }
 

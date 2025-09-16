@@ -32,11 +32,11 @@ public class ShopController implements ShopControllerSwagger {
     @Override
     @GetMapping("/shop")
     public Response<PageResponse<ShopListResponse>> getShoplList(
-            @RequestParam() String megaCode,
-            @RequestParam() String cityCode,
-            @RequestParam() String largeCategoryCode,
-            @RequestParam(defaultValue = "") String middleCategoryCode,
-            @RequestParam(defaultValue = "") String smallCategoryCode,
+                    @RequestParam() String megaCode,
+                    @RequestParam() String cityCode,
+                    @RequestParam() String largeCategoryCode,
+                    @RequestParam(defaultValue = "") String middleCategoryCode,
+                    @RequestParam(defaultValue = "") String smallCategoryCode,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {

@@ -8,35 +8,20 @@ import java.time.LocalDate;
 @Builder
 public record ClutrFatvListResponse(
 
-        String id,
-        String name,
-        LocalDate startDate,
-        LocalDate endDate,
-        String region,
-        String place,
-        String shortDesc,
-        boolean progressCheck,
-        boolean periodCheck,
-        boolean ended
+        Long contentId,
+        String title,
+        String firstImage1,
+        String firstImage2
 
 ) {
 
     public static ClutrFatvListResponse create(ClutrFatvl clutrFatvl, String megaName, String cityName) {
         return ClutrFatvListResponse.builder()
-                .id(clutrFatvl.id())
-                .name(clutrFatvl.fstvlNm())
-                .startDate(clutrFatvl.period().start())
-                .endDate(clutrFatvl.period().end())
-                .region(addMegaNameCityName(megaName, cityName))
-                .place(clutrFatvl.opar())
-                .progressCheck(clutrFatvl.period().progressCheck())
-                .periodCheck(clutrFatvl.period().periodCheck())
-                .ended(clutrFatvl.period().ended())
+                .contentId(clutrFatvl.getContentId())
+                .title(clutrFatvl.getTitle())
+                .firstImage1(clutrFatvl.getFirstImage())
+                .firstImage2(clutrFatvl.getFirstImage2())
                 .build();
-    }
-
-    private static String addMegaNameCityName(String megaName, String cityName) {
-        return megaName + " " + cityName;
     }
 
 }

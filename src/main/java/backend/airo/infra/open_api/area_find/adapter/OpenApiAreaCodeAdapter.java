@@ -25,7 +25,7 @@ public class OpenApiAreaCodeAdapter implements AreaCodePort {
         List<OpenApiCtyCode> cityList = new ArrayList<>();
         for (MegaCode code : megaCodes) {
             try {
-                cityList.addAll(openApiAreaFeignClient.getListSigungusBySido("cty", code.ctprvnCd().toString()).items());
+                cityList.addAll(openApiAreaFeignClient.getListSigungusBySido("cty", code.getCtprvnCd().toString()).items());
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException();

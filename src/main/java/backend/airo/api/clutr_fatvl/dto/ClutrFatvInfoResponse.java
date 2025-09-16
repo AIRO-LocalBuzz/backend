@@ -1,73 +1,52 @@
 package backend.airo.api.clutr_fatvl.dto;
 
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
+import backend.airo.domain.clure_fatvl.ClutrFatvlInfo;
 import backend.airo.domain.clure_fatvl.vo.Address;
 import backend.airo.domain.clure_fatvl.vo.FestivalPeriod;
 import lombok.Builder;
 
 @Builder
 public record ClutrFatvInfoResponse(
-        String id,
-
-        // 축제/행사 이름
-        String fstvlNm,
-
-        // 행사 장소
-        String opar,
-
-        // 행사 상세 내용
-        String fstvlCo,
-
-        // 행사 기간 [시작일, 종료일]
-        FestivalPeriod period,
-
-        // 행사 주소 [지번, 도로명]
-        Address address,
-
-        // 주관 기관명(Organizer / 실제 운영)
-        String mnnstNm,
-
-        // 주최 기관명(Host)
-        String auspcInsttNm,
-
-        // 후원 기관명(Sponsor)
-        String suprtInsttNm,
-
-        // 행사 담당 전화번호
+        Long contentId,
+        String title,
+        String firstImage1,
+        String firstImage2,
+        String homepage,
+        String addr1,
+        String addr2,
+        String cat1,
+        String usetimefestival,
+        String playTime,
+        String start,
+        String end,
         String phoneNumber,
-
-        // 행사 홈페이지 URL
-        String homepageUrl,
-
-        // 관련 정보(비고/추가 안내/링크 등)
-        String relateInfo
-
-//        // 이 데이터(레코드)의 기준/갱신 일자
-//        LocalDate referenceDate
-
-//        // 공공데이터포털 제공 기관 코드
-//        String insttCode,
-//
-//        // 공공데이터포털 제공 기관명
-//        String insttNm
+        String agelimit,
+        String clutrFatvlIntro,
+        String mainProgramInfo,
+        String guestProgramInfo
 ) {
 
-    public static ClutrFatvInfoResponse create(ClutrFatvl clutrFatvlInfo) {
+    public static ClutrFatvInfoResponse create(ClutrFatvl clutrFatvl, ClutrFatvlInfo clutrFatvlInfo) {
         return ClutrFatvInfoResponse.builder()
-                .id(clutrFatvlInfo.id())
-                .fstvlNm(clutrFatvlInfo.fstvlNm())
-                .opar(clutrFatvlInfo.opar())
-                .fstvlCo(clutrFatvlInfo.fstvlCo())
-                .period(clutrFatvlInfo.period())
-                .address(clutrFatvlInfo.address())
-                .mnnstNm(clutrFatvlInfo.mnnstNm())
-                .auspcInsttNm(clutrFatvlInfo.auspcInsttNm())
-                .suprtInsttNm(clutrFatvlInfo.suprtInsttNm())
-                .phoneNumber(clutrFatvlInfo.phoneNumber())
-                .homepageUrl(clutrFatvlInfo.homepageUrl())
-                .relateInfo(clutrFatvlInfo.relateInfo())
+                .contentId(clutrFatvl.getContentId())
+                .title(clutrFatvl.getTitle())
+                .firstImage1(clutrFatvl.getFirstImage())
+                .firstImage2(clutrFatvl.getFirstImage2())
+                .homepage(clutrFatvlInfo.getEventHomePage())
+                .addr1(clutrFatvl.getAddress().addr1())
+                .addr2(clutrFatvl.getAddress().addr2())
+                .cat1(clutrFatvl.getCat1())
+                .usetimefestival(clutrFatvlInfo.getUsetimefestival())
+                .playTime(clutrFatvlInfo.getPlayTime())
+                .start(clutrFatvlInfo.getStart())
+                .end(clutrFatvlInfo.getEnd())
+                .phoneNumber(clutrFatvlInfo.getPhoneNumber())
+                .agelimit(clutrFatvlInfo.getAgelimit())
+                .clutrFatvlIntro(clutrFatvlInfo.getClutrFatvlIntro())
+                .mainProgramInfo(clutrFatvlInfo.getMainProgramInfo())
+                .guestProgramInfo(clutrFatvlInfo.getGuestProgramInfo())
                 .build();
     }
 
-    private static String nz(String s) { return s == null ? "" : s; }
 }

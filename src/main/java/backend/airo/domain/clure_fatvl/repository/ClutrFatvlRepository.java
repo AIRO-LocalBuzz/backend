@@ -10,8 +10,7 @@ import java.util.List;
 
 public interface ClutrFatvlRepository extends AggregateSupport<ClutrFatvl, Long> {
 
-    Page<ClutrFatvl> findAll(String megaName, String cityName, Pageable pageable);
+    Page<ClutrFatvl> findAll(Integer megaName, Integer cityName, Pageable pageable);
 
-    void deleteAllByDate(LocalDate start,LocalDate end);
 
 }

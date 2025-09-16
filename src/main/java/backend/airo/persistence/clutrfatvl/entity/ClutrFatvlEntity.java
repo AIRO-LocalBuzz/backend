@@ -2,14 +2,14 @@ package backend.airo.persistence.clutrfatvl.entity;
 
 import backend.airo.domain.clure_fatvl.ClutrFatvl;
 import backend.airo.domain.clure_fatvl.vo.Address;
-import backend.airo.domain.clure_fatvl.vo.FestivalPeriod;
 import backend.airo.domain.clure_fatvl.vo.GeoPoint;
-import backend.airo.infra.open_api.clure_fatvl.vo.ClutrFatvlInfo;
-import backend.airo.persistence.abstracts.BaseEntity;
+import backend.airo.persistence.abstracts.ImmutableEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -21,19 +21,14 @@ import java.util.UUID;
         uniqueConstraints = @UniqueConstraint(name = "uk_clutr_bizkey", columnNames = "biz_key")
 )
 
-public class ClutrFatvlEntity extends BaseEntity {
+public class ClutrFatvlEntity extends ImmutableEntity {
 
     @Id
-    private String id;
+    private Long contentId;
 
-    private String fstvlNm;
+    private Integer contenttypeId;
 
-    private String opar;
-
-    private String fstvlCo;
-
-    @Embedded
-    private FestivalPeriod period;
+    private String title;
 
     @Embedded
     private GeoPoint location;
@@ -41,147 +36,72 @@ public class ClutrFatvlEntity extends BaseEntity {
     @Embedded
     private Address address;
 
-    private String mnnstNm;
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "clutr_fatvl_phone", joinColumns = @JoinColumn(name = "content_id"))
+    @Column(name = "phone_number", length = 32, nullable = false)
+    @OrderColumn(name = "seq")
+    private List<String> phoneNumber;
 
-    private String auspcInsttNm;
+    private String cat1;
 
-    private String suprtInsttNm;
+    private String firstImage;
 
-    private String phoneNumber;
+    private String firstImage2;
 
-    private String homepageUrl;
-
-    private String relateInfo;
-
-    private LocalDate referenceDate;
-
-    private String insttCode;
-
-    private String insttNm;
-
-    @Column(name="biz_key", nullable=false, updatable=false, length=64, unique=true)
-    private String bizKey;
+    @JsonFormat(pattern = "yyyyMMddHH")
+    private LocalDate modifiedDate;
 
     @Builder
-    public ClutrFatvlEntity(
-            String id, String fstvlNm, String opar, String fstvlCo,
-            FestivalPeriod period, GeoPoint location, Address address,
-            String mnnstNm, String auspcInsttNm, String suprtInsttNm,
-            String phoneNumber, String homepageUrl, String relateInfo,
-            LocalDate referenceDate, String insttCode, String insttNm,
-            String bizKey) {
-        this.id = id;
-        this.fstvlNm = fstvlNm;
-        this.opar = opar;
-        this.fstvlCo = fstvlCo;
-        this.period = period;
+    public ClutrFatvlEntity(Long contentId, Integer contenttypeId, String title, GeoPoint location, Address address, List<String> phoneNumber, String cat1, String firstImage, String firstImage2, LocalDate modifiedDate) {
+        this.contentId = contentId;
+        this.contenttypeId = contenttypeId;
+        this.title = title;
         this.location = location;
         this.address = address;
-        this.mnnstNm = mnnstNm;
-        this.auspcInsttNm = auspcInsttNm;
-        this.suprtInsttNm = suprtInsttNm;
         this.phoneNumber = phoneNumber;
-        this.homepageUrl = homepageUrl;
-        this.relateInfo = relateInfo;
-        this.referenceDate = referenceDate;
-        this.insttCode = insttCode;
-        this.insttNm = insttNm;
-        this.bizKey = bizKey;
+        this.cat1 = cat1;
+        this.firstImage = firstImage;
+        this.firstImage2 = firstImage2;
+        this.modifiedDate = modifiedDate;
     }
+
 
     public static ClutrFatvlEntity toEntity(ClutrFatvl dto) {
         return ClutrFatvlEntity.builder()
-                .id(generateId())
-                .fstvlNm(dto.fstvlNm())
-                .opar(dto.opar())
-                .fstvlCo(dto.fstvlCo())
-                .period(new FestivalPeriod(dto.period().start(), dto.period().end()))
-                .location(new GeoPoint(dto.location().lat(), dto.location().lon()))
-                .address(new Address(dto.address().road(), dto.address().lot(), dto.address().megaCodeId(), dto.address().ctprvnCodeId()))
-                .mnnstNm(dto.mnnstNm())
-                .auspcInsttNm(dto.auspcInsttNm())
-                .suprtInsttNm(dto.suprtInsttNm())
-                .phoneNumber(dto.phoneNumber())
-                .homepageUrl(dto.homepageUrl())
-                .relateInfo(dto.relateInfo())
-                .referenceDate(dto.referenceDate())
-                .insttCode(dto.insttCode())
-                .insttNm(dto.insttNm())
-                .bizKey(computeBizKey(dto.fstvlNm(), dto.insttCode(), dto.period()))
+                .contentId(dto.getContentId())
+                .contenttypeId(dto.getContenttypeId())
+                .title(dto.getTitle())
+                .location(dto.getLocation())
+                .address(dto.getAddress())
+                .phoneNumber(dto.getPhoneNumber())
+                .cat1(dto.getCat1())
+                .firstImage(dto.getFirstImage())
+                .firstImage2(dto.getFirstImage2())
+                .modifiedDate(dto.getModifiedDate())
                 .build();
     }
-
-    public static ClutrFatvl toDomain(ClutrFatvlInfo dto, String megaCodeId, String ctprvnCodeId) {
-        return ClutrFatvl.builder()
-                .fstvlNm(dto.fstvlNm())
-                .opar(dto.opar())
-                .fstvlCo(dto.fstvlCo())
-                .period(new FestivalPeriod(dto.fstvlStartDate(), dto.fstvlEndDate()))
-                .location(new GeoPoint(dto.latitude(), dto.longitude()))
-                .address(new Address(dto.rdnmadr(), dto.lnmadr(), megaCodeId, ctprvnCodeId))
-                .mnnstNm(dto.mnnstNm())
-                .auspcInsttNm(dto.auspcInsttNm())
-                .suprtInsttNm(dto.suprtInsttNm())
-                .phoneNumber(dto.phoneNumber())
-                .homepageUrl(dto.homepageUrl())
-                .relateInfo(dto.relateInfo())
-                .referenceDate(dto.referenceDate())
-                .insttCode(dto.insttCode())
-                .insttNm(dto.insttNm())
-                .build();
-    }
+//
+//    public static ClutrFatvl toDomain(ClutrFatvlInfo dto, String megaCodeId, String ctprvnCodeId) {
+//        return ClutrFatvl.builder()
+//                .contentId()
+//                .build();
+//    }
 
     public static ClutrFatvl toDomain(ClutrFatvlEntity clutrFatvlEntity) {
-        FestivalPeriod period = clutrFatvlEntity.period;
-        GeoPoint location = clutrFatvlEntity.location;
-        Address address = clutrFatvlEntity.address;
         return ClutrFatvl.builder()
-                .id(clutrFatvlEntity.id)
-                .fstvlNm(clutrFatvlEntity.fstvlNm)
-                .opar(clutrFatvlEntity.opar)
-                .fstvlCo(clutrFatvlEntity.fstvlCo)
-                .period(new FestivalPeriod(period.start(), period.end()))
-                .location(new GeoPoint(location.lat(), location.lon()))
-                .address(new Address(address.road(), address.lot(), address.megaCodeId(), address.ctprvnCodeId()))
-                .mnnstNm(clutrFatvlEntity.mnnstNm)
-                .auspcInsttNm(clutrFatvlEntity.auspcInsttNm)
-                .suprtInsttNm(clutrFatvlEntity.suprtInsttNm)
+                .contentId(clutrFatvlEntity.contentId)
+                .contenttypeId(clutrFatvlEntity.contenttypeId)
+                .title(clutrFatvlEntity.title)
+                .location(clutrFatvlEntity.location)
+                .address(clutrFatvlEntity.address)
                 .phoneNumber(clutrFatvlEntity.phoneNumber)
-                .homepageUrl(clutrFatvlEntity.homepageUrl)
-                .relateInfo(clutrFatvlEntity.relateInfo)
-                .referenceDate(clutrFatvlEntity.referenceDate)
-                .insttCode(clutrFatvlEntity.insttCode)
-                .insttNm(clutrFatvlEntity.insttNm)
+                .cat1(clutrFatvlEntity.cat1)
+                .firstImage(clutrFatvlEntity.firstImage)
+                .firstImage2(clutrFatvlEntity.firstImage2)
+                .modifiedDate(clutrFatvlEntity.modifiedDate)
                 .build();
     }
 
-    private static String generateId() {
-        return UUID.randomUUID().toString();
-    }
-
-    private static String computeBizKey(String fstvlNm, String insttCode, FestivalPeriod festivalPeriod) {
-        String normName = normalize(fstvlNm);
-        String normInst = insttCode == null ? "" : insttCode.trim();
-        String parsingStart = festivalPeriod != null && festivalPeriod.start() != null ? festivalPeriod.start().toString() : "";
-        return sha256(normName + "|" + parsingStart + "|" + normInst);
-    }
-
-    private static String normalize(String s) {
-        if (s == null) return "";
-        return java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFKC)
-                .toLowerCase().trim()
-                .replaceAll("\\s+", " ");
-    }
-
-    private static String sha256(String val) {
-        try {
-            var md = java.security.MessageDigest.getInstance("SHA-256");
-            byte[] d = md.digest(val.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-            StringBuilder sb = new StringBuilder(d.length*2);
-            for (byte b : d) sb.append(String.format("%02x", b));
-            return sb.toString();
-        } catch (Exception e) { throw new IllegalStateException(e); }
-    }
 
 }
 
