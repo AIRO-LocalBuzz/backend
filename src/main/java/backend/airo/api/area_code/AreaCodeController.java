@@ -29,7 +29,7 @@ public class AreaCodeController implements AreaCodeControllerSwagger {
         List<MegaCode> megaCodes = areaCodeUseCase.getMegaCodeList();
         return Response.success(
                 megaCodes.stream().map(list ->
-                        new MegaCodeResponse(list.ctprvnCd(), list.ctprvnNm())
+                        new MegaCodeResponse(list.getCtprvnCd(), list.getCtprvnNm())
                 ).toList()
         );
     }

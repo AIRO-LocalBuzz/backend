@@ -44,8 +44,8 @@ public class ClutrFatvlController implements ClutrFatvlControllerSwagger {
         List<ClutrFatvListResponse> content = clutrFatvls.getContent().stream().map(list ->
                 ClutrFatvListResponse.create(
                         list,
-                        areaCodeCacheService.getMegaName(Long.valueOf(list.address().megaCodeId())),
-                        areaCodeCacheService.getCityName(Long.valueOf(list.address().ctprvnCodeId()), Long.valueOf(list.address().megaCodeId())))
+                        areaCodeCacheService.getMegaName(Long.valueOf(list.getAddress().megaCodeId())),
+                        areaCodeCacheService.getCityName(Long.valueOf(list.getAddress().ctprvnCodeId()), Long.valueOf(list.getAddress().megaCodeId())))
         ).toList();
         return Response.success(
                 new PageResponse<>(
